@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 using Main_Bot.Database;
 using Main_Bot.Utilities.Extensions;
@@ -26,16 +21,16 @@ internal class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
         var mutedUserEntry = await Services.AutoUnmuteUserService._muteUsers.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == user.Id);
         if (mutedUserEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Unmute User", $"", 60, true);
+            await Context.ReplyWithEmbedAsync("Unmute User", $"User is not muted.", 60, true);
             return;
         }
-        Services.AutoUnmuteUserService._muteUsers.Remove(mutedUserEntry);
         var role = Context.Guild.GetRole(guildEntry.guildSettings.muteRoleId);
         if (role is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", 60, true);
             return;
         }
+        Services.AutoUnmuteUserService._muteUsers.Remove(mutedUserEntry);
         //remove mute role on user
         await Context.Guild.GetUser(user.Id).RemoveRoleAsync(role);
         await Context.ReplyWithEmbedAsync("Unmute User", $"Successfully unmuted {user.Mention}", 60);

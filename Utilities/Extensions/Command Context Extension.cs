@@ -37,8 +37,7 @@ internal static class CommandContextExtension
                 _ = Task.Run(() =>
                 {
                     Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
-                    var msg = context.Interaction.GetOriginalResponseAsync().Result;
-                    msg.DeleteAsync();
+                    context.Interaction.DeleteOriginalResponseAsync();
                 });
         }
         catch { }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 using Main_Bot.Database;
 using Main_Bot.Utilities.Extensions;
@@ -37,21 +32,29 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Mute User", $"Failed to mute {user.Mention}, user is already muted.", 60, true);
             return;
         }
-        mutedUserEntry = new Models.MuteUserModel
+        switch (durationOptions)
         {
-            id = user.Id,
-            guildId = Context.Guild.Id,
-            muted = true,
-            muteExpiryDate = DateTime.Now.AddMinutes(duration),
-        };
-        Services.AutoUnmuteUserService._muteUsers.Add(mutedUserEntry);
+            case muteDurationOptions.minutes:
+                break;
+            default:
+                await Context.ReplyWithEmbedAsync("", "", 60, true);
+                return;
+        }
         //get mute role
         var role = Context.Guild.GetRole(guildEntry.guildSettings.muteRoleId);
         if (role is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn;t exist.", 60, true);
+            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", 60, true);
             return;
         }
+        mutedUserEntry = new Models.MuteUserModel
+        {
+            id = user.Id,
+            guildId = Context.Guild.Id,
+            muteRoleId = role.Id,
+            muteExpiryDate = DateTime.Now.AddMinutes(duration),
+        };
+        Services.AutoUnmuteUserService._muteUsers.Add(mutedUserEntry);
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
         await Context.ReplyWithEmbedAsync("Mute User", $"Successfully muted {user.Mention} until {mutedUserEntry.muteExpiryDate}", 60);
