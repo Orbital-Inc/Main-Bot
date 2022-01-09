@@ -32,6 +32,7 @@ internal class StartupService
         await provider.GetRequiredService<DatabaseContext>().Database.MigrateAsync();
         provider.GetRequiredService<LogService>();
         provider.GetRequiredService<CustomService>();
+        provider.GetRequiredService<ChannelEventHandler>();
         provider.GetRequiredService<MessageEventHandler>();
         provider.GetRequiredService<UserEventHandler>();
         await provider.GetRequiredService<InteractionEventHandler>().InitializeAsync();
@@ -54,6 +55,7 @@ internal class StartupService
         .AddSingleton<UserEventHandler>()
         .AddSingleton<DailyChannelNukeService>()
         .AddSingleton<RainbowRoleService>()
+        .AddSingleton<ChannelEventHandler>()
         .AddSingleton<AutoUnmuteUserService>()
         .AddSingleton<CustomService>()
         .AddSingleton(new Random())

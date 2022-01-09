@@ -33,7 +33,11 @@ internal class ChannelEventHandler
             }
             var role = text.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
             if (role is not null)
-                await text.AddPermissionOverwriteAsync(role, Utilities.Miscallenous.MutePermsChannel());
+            {
+                var perms = text.GetPermissionOverwrite(role);
+                if (perms is null)
+                    await text.AddPermissionOverwriteAsync(role, Utilities.Miscallenous.MutePermsChannel());
+            }
             return;
         }
         var voice = arg as IVoiceChannel;

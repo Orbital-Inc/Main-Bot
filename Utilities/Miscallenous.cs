@@ -15,7 +15,7 @@ internal class Miscallenous
     }
     internal static OverwritePermissions MutePermsChannel()
     {
-        return new OverwritePermissions(addReactions: PermValue.Deny, sendMessages: PermValue.Deny);
+        return new OverwritePermissions(addReactions: PermValue.Deny, sendMessages: PermValue.Deny, usePublicThreads: PermValue.Deny);
     }
     internal static OverwritePermissions TicketPermsChannel()
     {
