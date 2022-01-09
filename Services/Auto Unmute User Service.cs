@@ -4,11 +4,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace Main_Bot.Services;
 
-internal class AutoUnmuteUserService : BackgroundService
+public class AutoUnmuteUserService : BackgroundService
 {
     internal static HashSet<Models.MuteUserModel> _muteUsers = new();
     private readonly DiscordShardedClient _client;
-    internal AutoUnmuteUserService(DiscordShardedClient client)
+    public AutoUnmuteUserService(DiscordShardedClient client)
     {
         _client = client;
     }

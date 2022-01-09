@@ -20,7 +20,7 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
                 $"{guild.Name} | {guild.Id} | {guild.MemberCount} ~ {guild.Owner.Username}#{guild.Owner.Discriminator} | BACKED UP\n"
                 : $"{guild.Name} | {guild.Id} | {guild.MemberCount} ~ {guild.Owner.Username}#{guild.Owner.Discriminator}\n";
         });
-        await Context.ReplyWithEmbedAsync("Server List", serverDetails, 120);
+        await Context.ReplyWithEmbedAsync("Server List", serverDetails, deleteTimer: 120);
     }
 
 

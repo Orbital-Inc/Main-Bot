@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="API_Token" xml:space="preserve">
+    <value>XZIhcchejgfzLK7ZCXcMKZ2kTrWGlHrvVbxftHw2zlycXhHwY1iHc/h05uIlKW8kaNiD+SbIdJgXcuZS+rURwg==</value>
+  </data>
   <data name="Token" xml:space="preserve">
     <value>NzgxMjQwODExMzIwMjQ2MzIz.X76xNA.cvWfrobHnuyt8a9fqSvB02pez8Y</value>
   </data>

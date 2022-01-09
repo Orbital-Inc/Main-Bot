@@ -5,7 +5,7 @@ namespace Main_Bot.Utilities.Extensions;
 
 internal static class CommandContextExtension
 {
-    internal static async Task ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, int? deleteTimer = null, bool invisible = false)
+    internal static async Task ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false)
     {
         if (context is not ShardedInteractionContext shardedContext)
             throw new ArgumentNullException(nameof(shardedContext), "Failed to convert context to a sharded context.");
@@ -25,7 +25,11 @@ internal static class CommandContextExtension
                 IconUrl = context.User.GetAvatarUrl()
             },
             Description = description,
+            Url = url,
+            ImageUrl = imageUrl,
         }.WithCurrentTimestamp().Build();
+        if (embeds is not null)
+            embed = embed.ToEmbedBuilder().WithFields(embeds).Build();
         if (shardedContext.Interaction.HasResponded)
             await context.Interaction.ModifyOriginalResponseAsync(x => x.Embed = embed);
         else
@@ -33,15 +37,14 @@ internal static class CommandContextExtension
 
         try
         {
-            if (deleteTimer is not null)
+            if (deleteTimer is not null && invisible is false)
                 _ = Task.Run(() =>
                 {
                     Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
-                    context.Interaction.DeleteOriginalResponseAsync();
+                    var msg = context.Interaction.GetOriginalResponseAsync().Result;
+                    msg?.DeleteAsync();
                 });
         }
         catch { }
     }
-
-
 }

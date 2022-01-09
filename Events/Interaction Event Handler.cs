@@ -6,12 +6,12 @@ using System.Reflection;
 
 namespace Main_Bot.Events;
 
-internal class InteractionHandler
+internal class InteractionEventHandler
 {
     private readonly DiscordShardedClient _client;
     private readonly InteractionService _commands;
     private readonly IServiceProvider _services;
-    public InteractionHandler(DiscordShardedClient discord, InteractionService interactionService, IServiceProvider service)
+    public InteractionEventHandler(DiscordShardedClient discord, InteractionService interactionService, IServiceProvider service)
     {
         _client = discord;
         _commands = interactionService;
@@ -42,13 +42,13 @@ internal class InteractionHandler
             switch (arg3.Error)
             {
                 case InteractionCommandError.UnmetPrecondition:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.UnknownCommand:
                     // implement
                     break;
                 case InteractionCommandError.BadArgs:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Exception:
                     await using (var database = new Database.DatabaseContext())
@@ -62,10 +62,10 @@ internal class InteractionHandler
                         await database.AddAsync(entry);
                         await database.ApplyChangesAsync();
                     };
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Unsuccessful:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 default:
                     break;
@@ -109,13 +109,13 @@ internal class InteractionHandler
             switch (arg3.Error)
             {
                 case InteractionCommandError.UnmetPrecondition:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.UnknownCommand:
                     // implement
                     break;
                 case InteractionCommandError.BadArgs:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Exception:
                     await using (var database = new Database.DatabaseContext())
@@ -129,10 +129,10 @@ internal class InteractionHandler
                         await database.AddAsync(entry);
                         await database.ApplyChangesAsync();
                     };
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Unsuccessful:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, 60);
+                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 default:
                     break;

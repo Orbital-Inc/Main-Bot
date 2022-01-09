@@ -5,11 +5,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace Main_Bot.Services;
 
-internal class DailyChannelNukerService : BackgroundService
+public class DailyChannelNukeService : BackgroundService
 {
     internal static HashSet<Models.NukeChannelModel> _nukeChannels = new();
     private readonly DiscordShardedClient _client;
-    internal DailyChannelNukerService(DiscordShardedClient client)
+    public DailyChannelNukeService(DiscordShardedClient client)
     {
         _client = client;
     }

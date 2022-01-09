@@ -61,6 +61,15 @@ namespace Main_Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to XZIhcchejgfzLK7ZCXcMKZ2kTrWGlHrvVbxftHw2zlycXhHwY1iHc/h05uIlKW8kaNiD+SbIdJgXcuZS+rURwg==.
+        /// </summary>
+        internal static string API_Token {
+            get {
+                return ResourceManager.GetString("API_Token", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NzgxMjQwODExMzIwMjQ2MzIz.X76xNA.cvWfrobHnuyt8a9fqSvB02pez8Y.
         /// </summary>
         internal static string Token {

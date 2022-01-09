@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Main_Bot.Commands.Slash_Commands.User_Commands;
 
-internal class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
+public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
     [SlashCommand("unmute", "Unmute a user")]
     public async Task UnmuteUserCommand(IUser user)
@@ -15,24 +15,29 @@ internal class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
         var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", 60, true);
+            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
         var mutedUserEntry = await Services.AutoUnmuteUserService._muteUsers.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == user.Id);
         if (mutedUserEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Unmute User", $"User is not muted.", 60, true);
+            await Context.ReplyWithEmbedAsync("Unmute User", $"User is not muted.", deleteTimer: 60, invisible: true);
             return;
         }
-        var role = Context.Guild.GetRole(guildEntry.guildSettings.muteRoleId);
+        if (guildEntry.guildSettings.muteRoleId is null)
+        {
+            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
+            return;
+        }
+        var role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
         if (role is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", 60, true);
+            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
         Services.AutoUnmuteUserService._muteUsers.Remove(mutedUserEntry);
         //remove mute role on user
         await Context.Guild.GetUser(user.Id).RemoveRoleAsync(role);
-        await Context.ReplyWithEmbedAsync("Unmute User", $"Successfully unmuted {user.Mention}", 60);
+        await Context.ReplyWithEmbedAsync("Unmute User", $"Successfully unmuted {user.Mention}", deleteTimer: 60);
     }
 }
