@@ -1,13 +1,13 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Main_Bot.Utilities.Attributes;
-using Main_Bot.Utilities.Extensions;
 
-namespace Main_Bot.Commands.Slash_Commands;
+namespace Main_Bot.Commands.SlashCommands;
 
+[RequireModerator]
 public class NukeCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [RequireUserPermission(ChannelPermission.ManageMessages, NotAGuildErrorMessage = "This command can only be executed in a guild.")]
+    //[RequireUserPermission(ChannelPermission.ManageMessages, NotAGuildErrorMessage = "This command can only be executed in a guild.")]
     [SlashCommand("nuke", "Clear all messages in a channel.")]
     public async Task NukeChannelCommand() => await NukeChannelAsync(Context.Channel);
 
@@ -34,40 +34,5 @@ public class NukeCommand : InteractionModuleBase<ShardedInteractionContext>
         var nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is not null)
             nukeChannel.id = newTextChannel.Id;
-    }
-
-    [RequireAdministrator]
-    public async Task AddChannelToNukeListCommand(IChannel channel)
-    {
-        if (channel is not ITextChannel textChannel)
-            throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        var nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
-        if (nukeChannel is not null)
-        {
-            await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Failed to add {textChannel.Mention} to the list of daily nuke channels, because it is already added.", deleteTimer: 60, invisible: true);
-            return;
-        }
-        Services.DailyChannelNukeService._nukeChannels.Add(new Models.NukeChannelModel
-        {
-            id = textChannel.Id,
-            name = textChannel.Name,
-            guildId = textChannel.GuildId,
-        });
-        await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Successfully added {textChannel.Mention} to the list of daily nuke channels.", deleteTimer: 60, invisible: true);
-    }
-
-    [RequireAdministrator]
-    public async Task RemoveChannelFromNukeListCommand(IChannel channel)
-    {
-        if (channel is not ITextChannel textChannel)
-            throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        var nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
-        if (nukeChannel is null)
-        {
-            await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"{textChannel.Mention} channel is not in the list of daily nuke channels, try adding it.", deleteTimer: 60, invisible: true);
-            return;
-        }
-        Services.DailyChannelNukeService._nukeChannels.Remove(nukeChannel);
-        await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Successfully removed {textChannel.Mention} from the list of daily nuke channels.", deleteTimer: 60, invisible: true);
     }
 }

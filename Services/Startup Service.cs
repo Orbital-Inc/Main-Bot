@@ -39,8 +39,11 @@ internal class StartupService
         await provider.GetRequiredService<DailyChannelNukeService>().StartAsync(new CancellationToken());
         await provider.GetRequiredService<AutoUnmuteUserService>().StartAsync(new CancellationToken());
         await provider.GetRequiredService<RainbowRoleService>().StartAsync(new CancellationToken());
+#if (DEBUG)
         await _client.LoginAsync(TokenType.Bot, "ODg5Njg4OTA4Mzc0Mzc2NTAw.YUk5XQ.B-MaZI9v1vtftx5-7_3IUWSL1QM");
-        //await _client.LoginAsync(TokenType.Bot, Properties.Resources.Token);
+#else
+        await _client.LoginAsync(TokenType.Bot, Properties.Resources.Token);
+#endif
         await _client.StartAsync();
         await Task.Delay(Timeout.Infinite);
     }

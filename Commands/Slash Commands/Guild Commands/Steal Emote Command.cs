@@ -3,7 +3,7 @@ using Discord.Interactions;
 using Main_Bot.Utilities.Extensions;
 using System.Text.RegularExpressions;
 
-namespace Main_Bot.Commands.Slash_Commands.Guild_Commands;
+namespace Main_Bot.Commands.SlashCommands.GuildCommands;
 
 public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext>
 {

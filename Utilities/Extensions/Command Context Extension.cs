@@ -26,7 +26,7 @@ internal static class CommandContextExtension
             },
             Description = description,
             Url = url,
-            ImageUrl = imageUrl,
+            ThumbnailUrl = imageUrl,
         }.WithCurrentTimestamp().Build();
         if (embeds is not null)
             embed = embed.ToEmbedBuilder().WithFields(embeds).Build();

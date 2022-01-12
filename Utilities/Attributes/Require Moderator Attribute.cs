@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Main_Bot.Utilities.Attributes;
 
-public class RequireAdministratorAttribute : PreconditionAttribute
+public class RequireModeratorAttribute : PreconditionAttribute
 {
     public override async Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext context, ICommandInfo commandInfo, IServiceProvider services)
     {
@@ -26,15 +26,21 @@ public class RequireAdministratorAttribute : PreconditionAttribute
                     var guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == context.User.Id).ConfigureAwait(false);
                     if (guild is not null)
                     {
-                        if (guild.guildSettings.administratorRoleId is not null)
+                        var roles = await user.RoleIds.ToAsyncEnumerable().ToHashSetAsync();
+
+                        if (guild.guildSettings.moderatorRoleId is not null)
                         {
-                            var roles = await user.RoleIds.ToAsyncEnumerable().ToHashSetAsync();
+                            if (roles.Contains((ulong)guild.guildSettings.moderatorRoleId))
+                                return PreconditionResult.FromSuccess();
+                        }
+                        else if (guild.guildSettings.administratorRoleId is not null)
+                        {
                             if (roles.Contains((ulong)guild.guildSettings.administratorRoleId))
                                 return PreconditionResult.FromSuccess();
                         }
                     }
                 }
-                return PreconditionResult.FromError(ErrorMessage ?? "Command can only be executed by an administrator.");
+                    return PreconditionResult.FromError(ErrorMessage ?? "Command can only be executed by a moderator.");
             default:
                 return PreconditionResult.FromError($"{nameof(RequireAdministratorAttribute)} is not supported by this {nameof(TokenType)}.");
         }

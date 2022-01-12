@@ -6,7 +6,7 @@
     <RootNamespace>Main_Bot</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Main_Bot</AssemblyName>
+    <AssemblyName>Main Bot</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

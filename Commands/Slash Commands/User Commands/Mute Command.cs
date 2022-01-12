@@ -4,7 +4,7 @@ using Main_Bot.Database;
 using Main_Bot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Commands.Slash_Commands.User_Commands;
+namespace Main_Bot.Commands.SlashCommands.UserCommands;
 
 public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
@@ -32,18 +32,34 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Mute User", $"Failed to mute {user.Mention}, user is already muted.", deleteTimer: 60, invisible: true);
             return;
         }
-        switch (durationOptions)
-        {
-            case muteDurationOptions.minutes:
-                break;
-            default:
-                await Context.ReplyWithEmbedAsync("", "", deleteTimer: 60, invisible: true);
-                return;
-        }
         if (guildEntry.guildSettings.muteRoleId is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
+        }
+        if (await user.GetUserPermissionLevel(guildEntry) >= await Context.User.GetUserPermissionLevel(guildEntry))
+        {
+            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+            return;
+        }
+        DateTime muteTime = DateTime.Now;
+        switch (durationOptions)
+        {
+            case muteDurationOptions.minutes:
+                muteTime = DateTime.Now.AddMinutes(duration);
+                break;
+                case muteDurationOptions.seconds:
+                    muteTime = DateTime.Now.AddSeconds(duration);
+                break;
+                case muteDurationOptions.hours:
+                    muteTime = DateTime.Now.AddHours(duration);
+                break;
+            case muteDurationOptions.days:
+                muteTime = DateTime.Now.AddDays(duration);
+                break;
+            default:
+                await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
+                return;
         }
         //get mute role
         var role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
@@ -57,11 +73,12 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             id = user.Id,
             guildId = Context.Guild.Id,
             muteRoleId = role.Id,
-            muteExpiryDate = DateTime.Now.AddMinutes(duration),
+            muteExpiryDate = muteTime,
         };
         Services.AutoUnmuteUserService._muteUsers.Add(mutedUserEntry);
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
-        await Context.ReplyWithEmbedAsync("Mute User", $"Successfully muted {user.Mention} until {mutedUserEntry.muteExpiryDate}", deleteTimer: 60);
+        DateTimeOffset yeet = mutedUserEntry.muteExpiryDate;
+        await Context.ReplyWithEmbedAsync("Mute User", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds()}>", deleteTimer: 60);
     }
 }

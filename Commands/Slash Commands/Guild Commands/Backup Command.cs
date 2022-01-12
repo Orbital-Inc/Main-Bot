@@ -3,7 +3,7 @@ using Main_Bot.Database;
 using Main_Bot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Commands.Slash_Commands.Guild_Commands;
+namespace Main_Bot.Commands.SlashCommands.GuildCommands;
 
 [Utilities.Attributes.RequireOwner]
 public class BackupCommand : InteractionModuleBase<ShardedInteractionContext>

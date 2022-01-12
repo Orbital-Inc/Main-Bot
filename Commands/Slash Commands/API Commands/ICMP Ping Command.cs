@@ -4,7 +4,7 @@ using Main_Bot.Utilities.Extensions;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 
-namespace Main_Bot.Commands.Slash_Commands.API_Commands;
+namespace Main_Bot.Commands.SlashCommands.APICommands;
 
 public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
 {
@@ -51,6 +51,6 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
             Name = "ICMP Ping Results",
             Value = embedvalue
         });
-        await Context.ReplyWithEmbedAsync($"ICMP Ping Complete For: {PingResults.Host}", $"https://check-host.net/ip-info?host={PingResults.Host}", "https://nebulamods.ca", string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"ICMP Ping Complete For: {PingResults.Host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.Host}", string.Empty, Fields);
     }
 }

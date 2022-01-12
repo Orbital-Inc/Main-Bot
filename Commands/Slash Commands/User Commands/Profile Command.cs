@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
+using Main_Bot.Utilities.Extensions;
 
-namespace Main_Bot.Commands.Slash_Commands.User_Commands;
+namespace Main_Bot.Commands.SlashCommands.UserCommands;
 
 public class ProfileCommand : InteractionModuleBase<ShardedInteractionContext>
 {
     [SlashCommand("profile", "Display details about your account.")]
     public async Task ViewProfile(IUser? user = null)
     {
-        //finish command later.
-        await Task.CompletedTask;
+        var userInfo = user is null ? Context.Guild.GetUser(Context.User.Id) : Context.Guild.GetUser(user.Id);
+        await Context.ReplyWithEmbedAsync($"{userInfo.Username}'s Information", $"{userInfo.Mention} | {userInfo.Id}\n" +
+            $"Creation Date: <t:{userInfo.CreatedAt.ToUnixTimeSeconds()}>\n" +
+            $"Join Date: <t:{userInfo.JoinedAt.Value.ToUnixTimeSeconds()}>\n" +
+            $"Boost Date: {(userInfo.PremiumSince is null ? "N/A" : userInfo.PremiumSince)}\n" +
+            $"Mute Status: {userInfo.IsMuted}", imageUrl: userInfo.GetAvatarUrl());
     }
 }

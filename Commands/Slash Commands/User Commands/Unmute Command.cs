@@ -1,11 +1,13 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Main_Bot.Database;
+using Main_Bot.Utilities.Attributes;
 using Main_Bot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Commands.Slash_Commands.User_Commands;
+namespace Main_Bot.Commands.SlashCommands.UserCommands;
 
+[RequireModerator]
 public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
     [SlashCommand("unmute", "Unmute a user")]
@@ -27,6 +29,11 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
         if (guildEntry.guildSettings.muteRoleId is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
+            return;
+        }
+        if (await user.GetUserPermissionLevel(guildEntry) >= await Context.User.GetUserPermissionLevel(guildEntry))
+        {
+            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;
         }
         var role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);

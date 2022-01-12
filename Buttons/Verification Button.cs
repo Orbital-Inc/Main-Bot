@@ -20,6 +20,5 @@ public class VerificationButton : InteractionModuleBase<ShardedInteractionContex
         if (guildEntry.guildSettings.verifyRoleId is null)
             return;
         await user.AddRoleAsync((ulong)guildEntry.guildSettings.verifyRoleId);
-        
     }
 }

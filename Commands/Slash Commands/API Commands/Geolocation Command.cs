@@ -4,7 +4,7 @@ using Main_Bot.Utilities.Extensions;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 
-namespace Main_Bot.Commands.Slash_Commands.API_Commands;
+namespace Main_Bot.Commands.SlashCommands.APICommands;
 
 public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 {
@@ -82,6 +82,6 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
             $"`City`: {Information.City}"
         });
 
-        await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", null, $"https://check-host.net/ip-info?host={host}", Information.Flag, Fields);
+        await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", string.Empty, $"https://check-host.net/ip-info?host={Information.IPAddy}", Information.Flag, Fields);
     }
 }

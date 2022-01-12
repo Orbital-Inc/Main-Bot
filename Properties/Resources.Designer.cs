@@ -70,6 +70,15 @@ namespace Main_Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sNCa7dyszVdWqW9W4nKfNge9VvTd3gn2.
+        /// </summary>
+        internal static string MySql_Pass {
+            get {
+                return ResourceManager.GetString("MySql_Pass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NzgxMjQwODExMzIwMjQ2MzIz.X76xNA.cvWfrobHnuyt8a9fqSvB02pez8Y.
         /// </summary>
         internal static string Token {

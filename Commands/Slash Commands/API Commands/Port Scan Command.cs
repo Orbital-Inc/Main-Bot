@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace Main_Bot.Commands.Slash_Commands.API_Commands;
+namespace Main_Bot.Commands.SlashCommands.APICommands;
 
 public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 {
@@ -95,6 +95,6 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             Value = embedvalue
         });
 
-        await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.Host}", $"https://check-host.net/ip-info?host={PortScanResult.Host}", "https://nebulamods.ca", string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.Host}", string.Empty, $"https://check-host.net/ip-info?host={PortScanResult.Host}", string.Empty, Fields);
     }
 }
