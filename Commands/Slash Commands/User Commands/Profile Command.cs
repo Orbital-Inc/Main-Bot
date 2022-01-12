@@ -13,7 +13,7 @@ public class ProfileCommand : InteractionModuleBase<ShardedInteractionContext>
         await Context.ReplyWithEmbedAsync($"{userInfo.Username}'s Information", $"{userInfo.Mention} | {userInfo.Id}\n" +
             $"Creation Date: <t:{userInfo.CreatedAt.ToUnixTimeSeconds()}>\n" +
             $"Join Date: <t:{userInfo.JoinedAt.Value.ToUnixTimeSeconds()}>\n" +
-            $"Boost Date: {(userInfo.PremiumSince is null ? "N/A" : userInfo.PremiumSince)}\n" +
+            $"Boost Date: {(userInfo.PremiumSince is null ? "N/A" : $"<t:{userInfo.PremiumSince.Value.ToUnixTimeSeconds()}>")}\n" +
             $"Mute Status: {userInfo.IsMuted}", imageUrl: userInfo.GetAvatarUrl());
     }
 }
