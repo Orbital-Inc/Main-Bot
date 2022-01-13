@@ -23,7 +23,7 @@ public class RequireAdministratorAttribute : PreconditionAttribute
                     return PreconditionResult.FromSuccess();
                 await using (var databse = new DatabaseContext())
                 {
-                    var guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == context.User.Id).ConfigureAwait(false);
+                    var guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == context.Guild.Id).ConfigureAwait(false);
                     if (guild is not null)
                     {
                         if (guild.guildSettings.administratorRoleId is not null)

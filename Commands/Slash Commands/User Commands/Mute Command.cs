@@ -1,11 +1,13 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Main_Bot.Database;
+using Main_Bot.Utilities.Attributes;
 using Main_Bot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main_Bot.Commands.SlashCommands.UserCommands;
 
+[RequireModerator]
 public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
     public enum muteDurationOptions

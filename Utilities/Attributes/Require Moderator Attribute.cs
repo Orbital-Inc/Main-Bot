@@ -15,15 +15,18 @@ public class RequireModeratorAttribute : PreconditionAttribute
                 var privateChannel = await context.Client.GetDMChannelAsync(context.Channel.Id).ConfigureAwait(false);
                 if (privateChannel is not null)
                     return PreconditionResult.FromError(ErrorMessage ?? "Command must be executed in a guild.");
+
                 var application = await context.Client.GetApplicationInfoAsync().ConfigureAwait(false);
                 if (context.User.Id == application.Owner.Id)
                     return PreconditionResult.FromSuccess();
+
                 var user = await context.Guild.GetUserAsync(context.User.Id).ConfigureAwait(false);
                 if (user.GuildPermissions.Administrator || context.Guild.OwnerId == user.Id)
                     return PreconditionResult.FromSuccess();
+
                 await using (var databse = new DatabaseContext())
                 {
-                    var guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == context.User.Id).ConfigureAwait(false);
+                    var guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == context.Guild.Id).ConfigureAwait(false);
                     if (guild is not null)
                     {
                         var roles = await user.RoleIds.ToAsyncEnumerable().ToHashSetAsync();
@@ -40,7 +43,7 @@ public class RequireModeratorAttribute : PreconditionAttribute
                         }
                     }
                 }
-                    return PreconditionResult.FromError(ErrorMessage ?? "Command can only be executed by a moderator.");
+                return PreconditionResult.FromError(ErrorMessage ?? "Command can only be executed by a moderator.");
             default:
                 return PreconditionResult.FromError($"{nameof(RequireAdministratorAttribute)} is not supported by this {nameof(TokenType)}.");
         }
