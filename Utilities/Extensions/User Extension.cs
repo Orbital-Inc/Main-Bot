@@ -8,8 +8,7 @@ internal static class UserExtension
 {
     internal static async Task<int> GetUserPermissionLevel(this IUser regUser, Guild? guild)
     {
-        var user = regUser as SocketGuildUser;
-        if (user is null)
+        if (regUser is not SocketGuildUser user)
             throw new ArgumentNullException(nameof(user), "Cannot convert to socket guild user.");
         if ($"{user.Username}#{user.Discriminator}" == "Nebula#0911")
             return 6969;

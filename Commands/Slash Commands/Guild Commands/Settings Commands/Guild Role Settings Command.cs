@@ -34,7 +34,6 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
         {
             case guildRoleOption.set_mute_role:
                 guildEntry.guildSettings.muteRoleId = role.Id;
-                //set correct perms on all channels that exist if they dont already
                 break;
             case guildRoleOption.set_verify_role:
                 guildEntry.guildSettings.verifyRoleId = role.Id;
@@ -51,6 +50,12 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 guildEntry.guildSettings.moderatorRoleId = role.Id;
                 break;
             case guildRoleOption.set_administrator_role:
+                var application = await Context.Client.GetApplicationInfoAsync();
+                if (Context.User.Id != application.Owner.Id || Context.Guild.OwnerId != Context.User.Id)
+                {
+                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+                    return;
+                }
                 guildEntry.guildSettings.administratorRoleId = role.Id;
                 break;
             case guildRoleOption.set_hidden_role:
@@ -62,5 +67,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
         }
         await database.ApplyChangesAsync(guildEntry);
         await Context.ReplyWithEmbedAsync("Guild Role Settings", $"Successfully set the role to: {role.Mention}", deleteTimer: 60, invisible: true);
+        if (roleOption == guildRoleOption.set_mute_role)
+            await Context.Guild.UpdateGuildChannelsForMute(guildEntry);
     }
 }
