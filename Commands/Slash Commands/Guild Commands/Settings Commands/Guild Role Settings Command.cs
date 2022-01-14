@@ -39,6 +39,12 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 guildEntry.guildSettings.verifyRoleId = role.Id;
                 break;
             case guildRoleOption.set_rainbow_role:
+                var kkk = await Context.Client.GetApplicationInfoAsync();
+                if (kkk.Owner.Id != Context.User.Id)
+                {
+                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+                    return;
+                }
                 guildEntry.guildSettings.rainbowRoleId = role.Id;
                 Services.RainbowRoleService._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
                 {
