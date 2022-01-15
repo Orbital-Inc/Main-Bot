@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Utilities.Extensions;
 using Microsoft.Extensions.Hosting;
 
-namespace Main_Bot.Services;
+namespace MainBot.Services;
 
 public class DailyChannelNukeService : BackgroundService
 {

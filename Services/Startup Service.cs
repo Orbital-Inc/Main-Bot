@@ -1,12 +1,12 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Main_Bot.Database;
-using Main_Bot.Events;
+using MainBot.Database;
+using MainBot.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Main_Bot.Services;
+namespace MainBot.Services;
 
 internal class StartupService
 {

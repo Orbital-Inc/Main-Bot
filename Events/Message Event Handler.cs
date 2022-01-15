@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Main_Bot.Database;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Database;
+using MainBot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Events;
+namespace MainBot.Events;
 
 public class MessageEventHandler
 {
@@ -25,7 +25,9 @@ public class MessageEventHandler
             if (message is null)
                 return;
             await using var database = new DatabaseContext();
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == ((_client.GetChannel(message.Channel.Id) as SocketGuildChannel).Guild.Id));
+            if (_client.GetChannel(message.Channel.Id) is not SocketGuildChannel socketGuildChannel)
+                return;
+            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == socketGuildChannel.Guild.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.messageLogChannelId is null)
@@ -75,7 +77,8 @@ public class MessageEventHandler
             var messages = arg1.ToList();
             if (messages.Any() is false)
                 return;
-            var msgChannel = _client.GetChannel(messages[0].Value.Channel.Id) as SocketGuildChannel;
+            if (_client.GetChannel(messages[0].Value.Channel.Id) is not SocketTextChannel msgChannel)
+                return;
             await using var database = new DatabaseContext();
             var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == msgChannel.Guild.Id);
             if (guildEntry is null)
@@ -85,7 +88,7 @@ public class MessageEventHandler
             var channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
             if (channel is not null)
                 await channel.SendEmbedAsync("Bulk Message Delete",
-                    $"{messages[0].Value.Author.Mention} deleted {arg1.Count} messages in {(msgChannel as SocketTextChannel).Mention}",
+                    $"{messages[0].Value.Author.Mention} deleted {arg1.Count} messages in {msgChannel.Mention}",
                     $"{messages[0].Value.Author.Username} | {messages[0].Value.Author.Id}",
                     messages[0].Value.Author.GetAvatarUrl());
         }
@@ -102,8 +105,10 @@ public class MessageEventHandler
             IMessage message = arg1.Value;
             if (message is null)
                 return;
+            if (_client.GetChannel(message.Channel.Id) is not SocketGuildChannel socketGuildChannel)
+                return;
             await using var database = new DatabaseContext();
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == (_client.GetChannel(message.Channel.Id) as SocketGuildChannel).Guild.Id);
+            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == socketGuildChannel.Guild.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.messageLogChannelId is null)

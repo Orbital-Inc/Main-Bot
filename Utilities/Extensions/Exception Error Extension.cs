@@ -1,6 +1,6 @@
-﻿using Main_Bot.Database;
+﻿using MainBot.Database;
 
-namespace Main_Bot.Utilities.Extensions;
+namespace MainBot.Utilities.Extensions;
 
 internal static class ExceptionErrorExtension
 {

@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.Rest;
-using Main_Bot.Database;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Database;
+using MainBot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Buttons;
+namespace MainBot.Buttons;
 
 public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
 {

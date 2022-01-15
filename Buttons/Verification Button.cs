@@ -1,8 +1,8 @@
 ﻿using Discord.Interactions;
-using Main_Bot.Database;
+using MainBot.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Buttons;
+namespace MainBot.Buttons;
 
 public class VerificationButton : InteractionModuleBase<ShardedInteractionContext>
 {

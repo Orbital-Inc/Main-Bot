@@ -1,8 +1,8 @@
-﻿namespace Main_Bot.Utilities.Extensions;
+﻿namespace MainBot.Utilities.Extensions;
 
 internal static class DatabaseContext_Extension
 {
-    internal static async Task<int> ApplyChangesAsync(this Database.DatabaseContext database, object entity = null)
+    internal static async Task<int> ApplyChangesAsync(this Database.DatabaseContext database, object? entity = null)
     {
         if (entity is not null)
             database.Update(entity);

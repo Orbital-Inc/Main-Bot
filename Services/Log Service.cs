@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-namespace Main_Bot.Services;
+namespace MainBot.Services;
 
 internal class LogService
 {

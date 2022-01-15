@@ -1,4 +1,4 @@
-﻿namespace Main_Bot.Models;
+﻿namespace MainBot.Models;
 
 internal class RainbowRoleModel
 {

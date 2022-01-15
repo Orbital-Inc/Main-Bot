@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Main_Bot.Database;
+using MainBot.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Events;
+namespace MainBot.Events;
 
 internal class ChannelEventHandler
 {

@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace Main_Bot.Utilities;
+namespace MainBot.Utilities;
 
 internal class Miscallenous
 {

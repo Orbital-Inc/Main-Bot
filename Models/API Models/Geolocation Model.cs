@@ -1,4 +1,4 @@
-﻿namespace Main_Bot.Models.API_Models;
+﻿namespace MainBot.Models.API_Models;
 
 internal class GeolocationModel
 {

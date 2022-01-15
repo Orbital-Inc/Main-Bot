@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Utilities.Extensions;
 using System.Text.RegularExpressions;
 
-namespace Main_Bot.Commands.SlashCommands.GuildCommands;
+namespace MainBot.Commands.SlashCommands.GuildCommands;
 
 public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
@@ -49,7 +49,7 @@ public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext
         {
             return Tuple.Create(string.Empty, ulong.MinValue, string.Empty);
         }
-        string emoteName = split.Length >= 1 ? split[1] : null;
+        string emoteName = split.Length >= 1 ? split[1] : string.Empty;
         ulong emoteId = split.Length >= 2 ? ulong.Parse(split[2].Replace(">", "")) : ulong.MinValue;
         string fileType = split[0].Contains('a') ? "gif" : "png";
         return Tuple.Create(emoteName, emoteId, fileType);

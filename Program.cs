@@ -1,3 +1,3 @@
-﻿using Main_Bot.Services;
+﻿using MainBot.Services;
 
 await new StartupService().RunAsync();

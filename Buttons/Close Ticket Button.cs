@@ -1,6 +1,6 @@
 ﻿using Discord.Interactions;
 
-namespace Main_Bot.Buttons;
+namespace MainBot.Buttons;
 
 public class CloseTicketButton : InteractionModuleBase<ShardedInteractionContext>
 {

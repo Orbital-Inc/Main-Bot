@@ -1,8 +1,8 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Utilities.Extensions;
 
-namespace Main_Bot.Commands.SlashCommands.UserCommands;
+namespace MainBot.Commands.SlashCommands.UserCommands;
 
 public class ProfileCommand : InteractionModuleBase<ShardedInteractionContext>
 {
@@ -12,8 +12,8 @@ public class ProfileCommand : InteractionModuleBase<ShardedInteractionContext>
         var userInfo = user is null ? Context.Guild.GetUser(Context.User.Id) : Context.Guild.GetUser(user.Id);
         await Context.ReplyWithEmbedAsync($"{userInfo.Username}'s Information", $"{userInfo.Mention} | {userInfo.Id}\n" +
             $"Creation Date: <t:{userInfo.CreatedAt.ToUnixTimeSeconds()}>\n" +
-            $"Join Date: <t:{userInfo.JoinedAt.Value.ToUnixTimeSeconds()}>\n" +
+            $"Join Date: {(userInfo.JoinedAt is null ? "N/A" : $"<t:{userInfo.JoinedAt.Value.ToUnixTimeSeconds()}>")}\n" +
             $"Boost Date: {(userInfo.PremiumSince is null ? "N/A" : $"<t:{userInfo.PremiumSince.Value.ToUnixTimeSeconds()}>")}\n" +
-            $"Mute Status: {userInfo.IsMuted}", imageUrl: userInfo.GetAvatarUrl());
+            $"Mute Status: {Services.AutoUnmuteUserService._muteUsers.FirstOrDefault(x => x.id == userInfo.Id) is not null}", imageUrl: userInfo.GetAvatarUrl()).ConfigureAwait(false);
     }
 }

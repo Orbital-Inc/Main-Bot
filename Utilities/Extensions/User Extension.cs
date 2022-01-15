@@ -1,8 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Main_Bot.Models;
+using MainBot.Models;
 
-namespace Main_Bot.Utilities.Extensions;
+namespace MainBot.Utilities.Extensions;
 
 internal static class UserExtension
 {

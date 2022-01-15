@@ -1,8 +1,8 @@
 ﻿using Discord.WebSocket;
-using Main_Bot.Database;
+using MainBot.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Services;
+namespace MainBot.Services;
 
 public class CustomService
 {

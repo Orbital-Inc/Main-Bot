@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Main_Bot.Database;
+using MainBot.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Utilities.Attributes;
+namespace MainBot.Utilities.Attributes;
 
 public class RequireAdministratorAttribute : PreconditionAttribute
 {

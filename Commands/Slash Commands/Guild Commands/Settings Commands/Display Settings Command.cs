@@ -1,10 +1,10 @@
 ﻿using Discord.Interactions;
-using Main_Bot.Database;
-using Main_Bot.Utilities.Attributes;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Database;
+using MainBot.Utilities.Attributes;
+using MainBot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Commands.SlashCommands.GuildCommands.SettingsCommands;
+namespace MainBot.Commands.SlashCommands.GuildCommands.SettingsCommands;
 
 [RequireModerator]
 public class DisplaySettingsCommand : InteractionModuleBase<ShardedInteractionContext>

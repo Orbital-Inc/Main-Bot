@@ -1,16 +1,16 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Utilities.Extensions;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace Main_Bot.Commands.SlashCommands.APICommands;
+namespace MainBot.Commands.SlashCommands.APICommands;
 
 public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    private readonly string Endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
+    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
 
     public PortScan(HttpClient http)
     {
@@ -31,17 +31,18 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         if (!string.IsNullOrWhiteSpace(ports))
             if (Regex.IsMatch(ports, @"^[a-zA-Z]+$"))
             {
-                if (ports.ToUpper() is "UDP" or "BOTH")
+                switch (ports.ToUpper())
                 {
-                    protocol = ports.ToUpper();
-                    ports = "21,22,53,80,443,1194,3306,3389";
-                    MainDescription = $"Attempting to port scan {host}, on the following ports: {ports} using only {protocol}, please wait...";
-                }
-                else
-                {
-                    protocol = ports.ToUpper();
-                    ports = "0";
-                    MainDescription = $"Attempting to port scan {host} using the \"{protocol}\" template, please wait...";
+                    case "UDP" or "BOTH":
+                        protocol = ports.ToUpper();
+                        ports = "21,22,53,80,443,1194,3306,3389";
+                        MainDescription = $"Attempting to port scan {host}, on the following ports: {ports} using only {protocol}, please wait...";
+                        break;
+                    default:
+                        protocol = ports.ToUpper();
+                        ports = "0";
+                        MainDescription = $"Attempting to port scan {host} using the \"{protocol}\" template, please wait...";
+                        break;
                 }
             }
 
@@ -74,7 +75,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         #endregion
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.API_Token);
-        var PortScanResult = JsonConvert.DeserializeObject<Models.API_Models.PortScanModel>(await _http.GetStringAsync($"{Endpoint}network-tools/portscan?Host={host}&Protocol={protocol.ToUpper()}&Ports={ports}&Server={server}"));
+        var PortScanResult = JsonConvert.DeserializeObject<Models.API_Models.PortScanModel>(await _http.GetStringAsync($"{_endpoint}network-tools/portscan?Host={host}&Protocol={protocol.ToUpper()}&Ports={ports}&Server={server}"));
 
         if (PortScanResult is null)
         {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Database;
+namespace MainBot.Database;
 
 internal class DatabaseContext : DbContext
 {

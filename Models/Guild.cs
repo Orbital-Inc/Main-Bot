@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Main_Bot.Models;
+namespace MainBot.Models;
 
 public class Guild
 {

@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Main_Bot.Database;
-using Main_Bot.Utilities.Attributes;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Database;
+using MainBot.Utilities.Attributes;
+using MainBot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Main_Bot.Commands.SlashCommands.UserCommands;
+namespace MainBot.Commands.SlashCommands.UserCommands;
 
 [RequireModerator]
 public class KickCommand : InteractionModuleBase<ShardedInteractionContext>

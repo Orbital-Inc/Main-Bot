@@ -1,8 +1,8 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Main_Bot.Utilities.Attributes;
+using MainBot.Utilities.Attributes;
 
-namespace Main_Bot.Commands.SlashCommands;
+namespace MainBot.Commands.SlashCommands;
 
 [RequireModerator]
 public class NukeCommand : InteractionModuleBase<ShardedInteractionContext>

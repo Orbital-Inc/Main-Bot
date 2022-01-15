@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Utilities.Extensions;
 using System.Reflection;
 
-namespace Main_Bot.Events;
+namespace MainBot.Events;
 
 internal class InteractionEventHandler
 {

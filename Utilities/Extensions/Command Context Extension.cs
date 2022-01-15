@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 
-namespace Main_Bot.Utilities.Extensions;
+namespace MainBot.Utilities.Extensions;
 
 internal static class CommandContextExtension
 {

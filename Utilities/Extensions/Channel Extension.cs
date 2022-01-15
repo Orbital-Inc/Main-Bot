@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-namespace Main_Bot.Utilities.Extensions;
+namespace MainBot.Utilities.Extensions;
 
 internal static class ChannelExtension
 {

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Main_Bot.Migrations;
+namespace MainBot.Migrations;
 
 public partial class somenewshit : Migration
 {

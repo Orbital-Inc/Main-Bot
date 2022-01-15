@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 
-namespace Main_Bot.Utilities.Attributes;
+namespace MainBot.Utilities.Attributes;
 
 public class RequireOwnerAttribute : PreconditionAttribute
 {

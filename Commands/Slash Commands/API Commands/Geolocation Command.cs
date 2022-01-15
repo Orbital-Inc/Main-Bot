@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Main_Bot.Utilities.Extensions;
+using MainBot.Utilities.Extensions;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 
-namespace Main_Bot.Commands.SlashCommands.APICommands;
+namespace MainBot.Commands.SlashCommands.APICommands;
 
 public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 {
