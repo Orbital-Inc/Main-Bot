@@ -40,7 +40,7 @@ public class UserEventHandler
         try
         {
             await using var database = new DatabaseContext();
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == arg.Id);
+            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == arg.Guild.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.userLogChannelId is null)
