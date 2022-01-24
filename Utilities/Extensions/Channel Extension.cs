@@ -16,7 +16,7 @@ internal static class ChannelExtension
             Author = new EmbedAuthorBuilder
             {
                 Url = "https://nebulamods.ca",
-                Name = "Nebula Mods Inc.",
+                Name = "Nebula Mods, Inc.",
                 IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder

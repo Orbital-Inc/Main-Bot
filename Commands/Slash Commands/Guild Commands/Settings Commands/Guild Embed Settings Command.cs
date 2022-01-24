@@ -16,7 +16,8 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
         send_ticket_embed,
         send_rules_embed,
         send_announcement,
-        send_rule_ticket_embed 
+        send_rule_ticket_embed,
+        send_aio_embed
     }
 
     [SlashCommand("guild-embed-settings", "Guild settings that involve sending an embed.")]
@@ -53,6 +54,9 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             case guildEmbedOption.send_rule_ticket_embed:
                 await SendRulesMessage(textChannel, true);
                 break;
+            case guildEmbedOption.send_aio_embed:
+                await SendRulesMessage(textChannel, true, true);
+                break;
             default:
                 await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;
@@ -87,7 +91,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Author = new EmbedAuthorBuilder
             {
                 Url = "https://nebulamods.ca",
-                Name = "Nebula Mods Inc.",
+                Name = "Nebula Mods, Inc.",
                 IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
@@ -127,7 +131,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Author = new EmbedAuthorBuilder
             {
                 Url = "https://nebulamods.ca",
-                Name = "Nebula Mods Inc.",
+                Name = "Nebula Mods, Inc.",
                 IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
@@ -142,7 +146,37 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
 
     private async Task SendRulesMessage(ITextChannel channel, bool ticketButton = false, bool hiddenRoleButton = false)
     {
-        var msg = new ComponentBuilder()
+        var msg = hiddenRoleButton ? new ComponentBuilder()
+        {
+            ActionRows = new List<ActionRowBuilder>()
+            {
+                new ActionRowBuilder()
+                {
+                    Components = new List<IMessageComponent>
+                    {
+                        new ButtonBuilder()
+                        {
+                            CustomId = "open-ticket-button",
+                            Style = ButtonStyle.Primary,
+                            Label = "Open ticket",
+                        }.Build(),
+                    }
+                },
+                new ActionRowBuilder()
+                {
+                    Components = new List<IMessageComponent>
+                    {
+                        new ButtonBuilder()
+                        {
+                            CustomId = "custom-role-button",
+                            Style = ButtonStyle.Secondary,
+                            Label = "Unlock Private Access"
+                        }.Build(),
+                    }
+                }
+            }
+        }.Build()
+        : new ComponentBuilder()
         {
             ActionRows = new List<ActionRowBuilder>()
             {
@@ -167,7 +201,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Author = new EmbedAuthorBuilder
             {
                 Url = "https://nebulamods.ca",
-                Name = "Nebula Mods Inc.",
+                Name = "Nebula Mods, Inc.",
                 IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
@@ -200,7 +234,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Author = new EmbedAuthorBuilder
             {
                 Url = "https://nebulamods.ca",
-                Name = "Nebula Mods Inc.",
+                Name = "Nebula Mods, Inc.",
                 IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
