@@ -25,6 +25,7 @@ public class DisplaySettingsCommand : InteractionModuleBase<ShardedInteractionCo
             $"Moderator Role: {(guildEntry.guildSettings.moderatorRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.moderatorRoleId}>")}\n" +
             $"Rainbow Role: {(guildEntry.guildSettings.rainbowRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.rainbowRoleId}>")}\n" +
             $"Verify Role: {(guildEntry.guildSettings.verifyRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.verifyRoleId}>")}\n" +
+            $"Hidden Role: {(guildEntry.guildSettings.hiddenRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.hiddenRoleId}>")}\n" +
             $"Message Log Channel: {(guildEntry.guildSettings.messageLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.messageLogChannelId}>")}\n" +
             $"User Log Channel: {(guildEntry.guildSettings.userLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.userLogChannelId}>")}", deleteTimer: 120,invisible: true);
     }
