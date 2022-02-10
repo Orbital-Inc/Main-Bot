@@ -1,9 +1,9 @@
-﻿using Discord.Interactions;
+﻿using System.Net;
+using Discord.Interactions;
 using MainBot.Database;
 using MainBot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Net;
 
 namespace MainBot.Commands.SlashCommands;
 
@@ -41,7 +41,7 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
         public ulong? guildid { get; set; }
         public ulong? roleid { get; set; }
     }
-    internal async Task<HttpStatusCode> AddUserToGuild(bool experiment = false)
+    internal static async Task<HttpStatusCode> AddUserToGuild()
     {
         try
         {
@@ -86,15 +86,11 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
             foreach (var header in response.Headers)
                 Console.WriteLine($"{header.Key}|{header.Value.First()}");
             Console.WriteLine(response.StatusCode);
-            switch (response.StatusCode)
+            return response.StatusCode switch
             {
-                case HttpStatusCode.Created:
-                case HttpStatusCode.NoContent:
-                    return HttpStatusCode.OK;
-                default:
-                    //Console.WriteLine($"add user exception {response.StatusCode}\n{webex}\n{response}");
-                    return response.StatusCode;
-            }
+                HttpStatusCode.Created or HttpStatusCode.NoContent => HttpStatusCode.OK,
+                _ => response.StatusCode,//Console.WriteLine($"add user exception {response.StatusCode}\n{webex}\n{response}");
+            };
         }
         catch (WebException webex)
         {
@@ -115,7 +111,9 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
                 }
             }
             else
+            {
                 return HttpStatusCode.BadRequest;
+            }
         }
     }
     [SlashCommand("rainbow-refresh", "Randomly sets rainbow role colour")]

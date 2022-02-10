@@ -1,5 +1,5 @@
 ﻿using Discord.WebSocket;
-using MainBot.Utilities.Extensions;
+using MainBot.Database;
 using Microsoft.Extensions.Hosting;
 
 namespace MainBot.Services;
@@ -14,7 +14,7 @@ public class RainbowRoleService : BackgroundService
     }
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        new Thread(async() => await RainbowRoleChanger(cancellationToken)).Start();
+        new Thread(async () => await RainbowRoleChanger(cancellationToken)).Start();
         await Task.CompletedTask;
     }
 

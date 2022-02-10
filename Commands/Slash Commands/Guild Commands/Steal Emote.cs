@@ -1,7 +1,7 @@
-﻿using Discord;
+﻿using System.Text.RegularExpressions;
+using Discord;
 using Discord.Interactions;
 using MainBot.Utilities.Extensions;
-using System.Text.RegularExpressions;
 
 namespace MainBot.Commands.SlashCommands.GuildCommands;
 

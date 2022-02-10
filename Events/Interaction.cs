@@ -1,8 +1,9 @@
-﻿using Discord;
+﻿using System.Reflection;
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using MainBot.Database;
 using MainBot.Utilities.Extensions;
-using System.Reflection;
 
 namespace MainBot.Events;
 
@@ -31,9 +32,29 @@ internal class InteractionEventHandler
         _commands.ComponentCommandExecuted += ComponentCommandExecuted;
     }
 
-    private async Task GuildReady(DiscordSocketClient arg) => await _commands.RegisterCommandsGloballyAsync(true);
+    private async Task GuildReady(DiscordSocketClient arg)
+    {
+        try
+        {
+            await _commands.RegisterCommandsGloballyAsync(true);
+        }
+        catch (Exception e)
+        {
+            await e.LogErrorAsync();
+        }
+    }
 
-    private async Task HandleInteraction(SocketInteraction arg) => await _commands.ExecuteCommandAsync(new ShardedInteractionContext(_client, arg), _services);
+    private async Task HandleInteraction(SocketInteraction arg)
+    {
+        try
+        {
+            await _commands.ExecuteCommandAsync(new ShardedInteractionContext(_client, arg), _services);
+        }
+        catch (Exception e)
+        {
+            await e.LogErrorAsync();
+        }
+    }
 
     private async Task ComponentCommandExecuted(ComponentCommandInfo arg1, IInteractionContext arg2, IResult arg3)
     {
@@ -44,9 +65,6 @@ internal class InteractionEventHandler
                 case InteractionCommandError.UnmetPrecondition:
                     await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
-                case InteractionCommandError.UnknownCommand:
-                    // implement
-                    break;
                 case InteractionCommandError.BadArgs:
                     await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
@@ -56,7 +74,7 @@ internal class InteractionEventHandler
                         var entry = new Models.Logs.ErrorLog
                         {
                             errorTime = DateTime.Now,
-                            location = arg1.Name,
+                            source = arg1.Name,
                             message = arg3.ErrorReason,
                         };
                         await database.AddAsync(entry);
@@ -111,9 +129,6 @@ internal class InteractionEventHandler
                 case InteractionCommandError.UnmetPrecondition:
                     await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
-                case InteractionCommandError.UnknownCommand:
-                    // implement
-                    break;
                 case InteractionCommandError.BadArgs:
                     await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
@@ -123,7 +138,7 @@ internal class InteractionEventHandler
                         var entry = new Models.Logs.ErrorLog
                         {
                             errorTime = DateTime.Now,
-                            location = arg1.Name,
+                            source = arg1.Name,
                             message = arg3.ErrorReason
                         };
                         await database.AddAsync(entry);

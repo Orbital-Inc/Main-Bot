@@ -27,12 +27,14 @@ public class CustomService
         foreach (var guild in guilds)
         {
             if (guild.guildSettings.rainbowRoleId is not null)
+            {
                 //if (RainbowRoleService._rainbowRoleGuilds.Select(x => x.roleId) is null)
                 RainbowRoleService._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
                 {
                     roleId = (ulong)guild.guildSettings.rainbowRoleId,
                     guildId = guild.id
                 });
+            }
         }
         return Task.CompletedTask;
     }

@@ -1,6 +1,6 @@
-﻿using Discord.Interactions;
+﻿using System.Reflection;
+using Discord.Interactions;
 using MainBot.Utilities.Extensions;
-using System.Reflection;
 
 namespace MainBot.Commands.SlashCommands;
 
@@ -10,7 +10,7 @@ public class InformationCommand : InteractionModuleBase<ShardedInteractionContex
     public async Task ExecuteCommand()
     {
         var appInfo = await Context.Client.GetApplicationInfoAsync();
-        await Context.ReplyWithEmbedAsync("Information", 
+        await Context.ReplyWithEmbedAsync("Information",
             $"Guild Count: {Context.Client.Guilds.Count}\n" +
             $"Developer: {(Context.Guild.GetUser(appInfo.Owner.Id) is null ? $"{appInfo.Owner.Username}#{appInfo.Owner.Discriminator}" : appInfo.Owner.Mention)}\n" +
             $"Uptime: N/A\n" +
@@ -18,5 +18,6 @@ public class InformationCommand : InteractionModuleBase<ShardedInteractionContex
             $"Description: {appInfo.Description}\n" +
             $"Terms of Service: {appInfo.TermsOfService}"
             );
+        //fix uptime
     }
 }

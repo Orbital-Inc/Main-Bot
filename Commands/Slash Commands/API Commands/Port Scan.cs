@@ -1,9 +1,9 @@
-﻿using Discord;
+﻿using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using Discord;
 using Discord.Interactions;
 using MainBot.Utilities.Extensions;
 using Newtonsoft.Json;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
 
@@ -29,6 +29,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         }
 
         if (!string.IsNullOrWhiteSpace(ports))
+        {
             if (Regex.IsMatch(ports, @"^[a-zA-Z]+$"))
             {
                 switch (ports.ToUpper())
@@ -45,6 +46,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
                         break;
                 }
             }
+        }
 
         await Context.ReplyWithEmbedAsync("Port Scan", MainDescription);
 
@@ -61,6 +63,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             if (protocol.ToUpper() is not ("UDP" or "TCP"))
                 protocol = "Default";
             if (!(ports.Contains(',') || ports.Contains('-')))
+            {
                 try
                 {
                     Convert.ToUInt16(ports);
@@ -70,11 +73,12 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
                     await Context.ReplyWithEmbedAsync("Port Scanner Invalid Port Error", "The specified port is not valid, please try again.");
                     return;
                 }
+            }
         }
 
         #endregion
 
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.API_Token);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         var PortScanResult = JsonConvert.DeserializeObject<Models.API_Models.PortScanModel>(await _http.GetStringAsync($"{_endpoint}network-tools/portscan?Host={host}&Protocol={protocol.ToUpper()}&Ports={ports}&Server={server}"));
 
         if (PortScanResult is null)

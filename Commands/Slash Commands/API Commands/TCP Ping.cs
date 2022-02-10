@@ -1,8 +1,8 @@
-﻿using Discord;
+﻿using System.Runtime.InteropServices;
+using Discord;
 using Discord.Interactions;
 using MainBot.Utilities.Extensions;
 using Newtonsoft.Json;
-using System.Runtime.InteropServices;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
 
@@ -31,7 +31,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         #endregion
 
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.API_Token);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.APIToken);
         var PingResults = JsonConvert.DeserializeObject<Models.API_Models.TCPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/tping?Host={host}&Port={port}&Server={server}"));
         if (PingResults is null)
         {

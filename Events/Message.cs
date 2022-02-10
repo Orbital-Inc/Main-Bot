@@ -45,6 +45,7 @@ public class MessageEventHandler
                 return;
             var channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
             if (channel is not null)
+            {
                 await channel.SendEmbedAsync("Message Edited",
                     $"{message.Author.Mention}",
                     $"{message.Author.Username} | {message.Author.Id}",
@@ -63,6 +64,7 @@ public class MessageEventHandler
                             IsInline = true
                         }
                     });
+            }
         }
         catch (Exception e)
         {
@@ -87,10 +89,12 @@ public class MessageEventHandler
                 return;
             var channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
             if (channel is not null)
+            {
                 await channel.SendEmbedAsync("Bulk Message Delete",
                     $"{messages[0].Value.Author.Mention} deleted {arg1.Count} messages in {msgChannel.Mention}",
                     $"{messages[0].Value.Author.Username} | {messages[0].Value.Author.Id}",
                     messages[0].Value.Author.GetAvatarUrl());
+            }
         }
         catch (Exception e)
         {
@@ -124,6 +128,7 @@ public class MessageEventHandler
             }
             var channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
             if (channel is not null)
+            {
                 await channel.SendEmbedAsync("Message Deleted",
                     $"{message.Author.Mention}",
                     $"{message.Author.Username} | {message.Author.Id}",
@@ -135,6 +140,7 @@ public class MessageEventHandler
                             Value = message.Content,
                         }
                     });
+            }
         }
         catch (Exception e)
         {

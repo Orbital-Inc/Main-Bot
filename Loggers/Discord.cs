@@ -1,12 +1,12 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-namespace MainBot.Services;
+namespace MainBot.Loggers;
 
-internal class LogService
+internal class DiscordLogger
 {
     private readonly DiscordShardedClient _discord;
-    public LogService(DiscordShardedClient discord)
+    public DiscordLogger(DiscordShardedClient discord)
     {
         _discord = discord;
         _discord.Log += Logger;

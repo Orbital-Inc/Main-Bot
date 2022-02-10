@@ -39,7 +39,7 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
-        if (await user.GetUserPermissionLevel(guildEntry) >= await Context.User.GetUserPermissionLevel(guildEntry))
+        if (await DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;
@@ -50,11 +50,11 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             case muteDurationOptions.minutes:
                 muteTime = DateTime.Now.AddMinutes(duration);
                 break;
-                case muteDurationOptions.seconds:
-                    muteTime = DateTime.Now.AddSeconds(duration);
+            case muteDurationOptions.seconds:
+                muteTime = DateTime.Now.AddSeconds(duration);
                 break;
-                case muteDurationOptions.hours:
-                    muteTime = DateTime.Now.AddHours(duration);
+            case muteDurationOptions.hours:
+                muteTime = DateTime.Now.AddHours(duration);
                 break;
             case muteDurationOptions.days:
                 muteTime = DateTime.Now.AddDays(duration);
@@ -81,6 +81,6 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
         DateTimeOffset yeet = mutedUserEntry.muteExpiryDate;
-        await Context.ReplyWithEmbedAsync("Mute User", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds()}>", deleteTimer: 60);
+        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds()}>", deleteTimer: 60);
     }
 }

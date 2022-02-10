@@ -1,8 +1,10 @@
-﻿using Discord;
+﻿using System.Diagnostics;
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using MainBot.Database;
 using MainBot.Events;
+using MainBot.Loggers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,7 +32,7 @@ internal class StartupService
         ConfigureServices(services);
         var provider = services.BuildServiceProvider();
         await provider.GetRequiredService<DatabaseContext>().Database.MigrateAsync();
-        provider.GetRequiredService<LogService>();
+        provider.GetRequiredService<DiscordLogger>();
         provider.GetRequiredService<CustomService>();
         provider.GetRequiredService<ChannelEventHandler>();
         provider.GetRequiredService<MessageEventHandler>();
@@ -39,11 +41,10 @@ internal class StartupService
         await provider.GetRequiredService<DailyChannelNukeService>().StartAsync(new CancellationToken());
         await provider.GetRequiredService<AutoUnmuteUserService>().StartAsync(new CancellationToken());
         await provider.GetRequiredService<RainbowRoleService>().StartAsync(new CancellationToken());
-#if (DEBUG)
-        await _client.LoginAsync(TokenType.Bot, "ODg5Njg4OTA4Mzc0Mzc2NTAw.YUk5XQ.B-MaZI9v1vtftx5-7_3IUWSL1QM");
-#else
-        await _client.LoginAsync(TokenType.Bot, Properties.Resources.Token);
-#endif
+        if (Debugger.IsAttached)
+            await _client.LoginAsync(TokenType.Bot, Properties.Resources.TestToken);
+        else
+            await _client.LoginAsync(TokenType.Bot, Properties.Resources.Token);
         await _client.StartAsync();
         await Task.Delay(Timeout.Infinite);
     }
@@ -52,7 +53,7 @@ internal class StartupService
     {
         services.AddDbContext<DatabaseContext>()
         .AddSingleton(_client)
-        .AddSingleton<LogService>()
+        .AddSingleton<DiscordLogger>()
         .AddSingleton<InteractionEventHandler>()
         .AddSingleton<MessageEventHandler>()
         .AddSingleton<UserEventHandler>()

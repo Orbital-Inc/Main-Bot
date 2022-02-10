@@ -1,6 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using MainBot.Utilities.Extensions;
+using MainBot.Database;
 using Microsoft.Extensions.Hosting;
 
 namespace MainBot.Services;
@@ -22,7 +22,7 @@ public class DailyChannelNukeService : BackgroundService
     private async Task AutoNukeChannels(CancellationToken cancellationToken)
     {
         var today = DateTime.Now.Date;
-        while(cancellationToken.IsCancellationRequested is false)
+        while (cancellationToken.IsCancellationRequested is false)
         {
             try
             {
@@ -35,7 +35,9 @@ public class DailyChannelNukeService : BackgroundService
                 {
                     var guild = _client.GetGuild(channel.guildId);
                     if (guild is null)
+                    {
                         _nukeChannels.Remove(channel);
+                    }
                     else
                     {
                         var socketChannel = guild.GetTextChannel(channel.id);

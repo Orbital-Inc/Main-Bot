@@ -63,9 +63,9 @@ namespace MainBot.Properties {
         /// <summary>
         ///   Looks up a localized string similar to XZIhcchejgfzLK7ZCXcMKZ2kTrWGlHrvVbxftHw2zlycXhHwY1iHc/h05uIlKW8kaNiD+SbIdJgXcuZS+rURwg==.
         /// </summary>
-        internal static string API_Token {
+        internal static string APIToken {
             get {
-                return ResourceManager.GetString("API_Token", resourceCulture);
+                return ResourceManager.GetString("APIToken", resourceCulture);
             }
         }
         
@@ -75,6 +75,15 @@ namespace MainBot.Properties {
         internal static string MySql_Pass {
             get {
                 return ResourceManager.GetString("MySql_Pass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ODg5Njg4OTA4Mzc0Mzc2NTAw.YUk5XQ.B-MaZI9v1vtftx5-7_3IUWSL1QM.
+        /// </summary>
+        internal static string TestToken {
+            get {
+                return ResourceManager.GetString("TestToken", resourceCulture);
             }
         }
         

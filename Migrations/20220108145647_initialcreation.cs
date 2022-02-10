@@ -1,13 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MainBot.Migrations;
-#pragma warning disable IDE1006 // Naming Styles
+
 public partial class initialcreation : Migration
-#pragma warning restore IDE1006 // Naming Styles
 {
     protected override void Up(MigrationBuilder migrationBuilder)
     {

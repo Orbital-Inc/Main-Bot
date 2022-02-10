@@ -117,11 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="API_Token" xml:space="preserve">
+  <data name="APIToken" xml:space="preserve">
     <value>XZIhcchejgfzLK7ZCXcMKZ2kTrWGlHrvVbxftHw2zlycXhHwY1iHc/h05uIlKW8kaNiD+SbIdJgXcuZS+rURwg==</value>
   </data>
   <data name="MySql_Pass" xml:space="preserve">
     <value>sNCa7dyszVdWqW9W4nKfNge9VvTd3gn2</value>
+  </data>
+  <data name="TestToken" xml:space="preserve">
+    <value>ODg5Njg4OTA4Mzc0Mzc2NTAw.YUk5XQ.B-MaZI9v1vtftx5-7_3IUWSL1QM</value>
   </data>
   <data name="Token" xml:space="preserve">
     <value>NzgxMjQwODExMzIwMjQ2MzIz.X76xNA.cvWfrobHnuyt8a9fqSvB02pez8Y</value>

@@ -1,8 +1,8 @@
-﻿using Discord;
+﻿using System.Runtime.InteropServices;
+using Discord;
 using Discord.Interactions;
 using MainBot.Utilities.Extensions;
 using Newtonsoft.Json;
-using System.Runtime.InteropServices;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
 
@@ -28,7 +28,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         }
 
         //add header
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.API_Token);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.APIToken);
         //response
         var PingResults = JsonConvert.DeserializeObject<Models.API_Models.ICMPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/ping?Host={host}&Server={server}"));
 

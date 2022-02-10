@@ -31,7 +31,7 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
-        if (await user.GetUserPermissionLevel(guildEntry) >= await Context.User.GetUserPermissionLevel(guildEntry))
+        if (await DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;
@@ -45,6 +45,6 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
         Services.AutoUnmuteUserService._muteUsers.Remove(mutedUserEntry);
         //remove mute role on user
         await Context.Guild.GetUser(user.Id).RemoveRoleAsync(role);
-        await Context.ReplyWithEmbedAsync("Unmute User", $"Successfully unmuted {user.Mention}", deleteTimer: 60);
+        await Context.ReplyWithEmbedAsync("Unmute", $"Successfully unmuted {user.Mention}", deleteTimer: 60);
     }
 }
