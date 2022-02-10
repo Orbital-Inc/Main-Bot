@@ -10,7 +10,7 @@ internal class DatabaseContext : DbContext
 #if (DEBUG)
         _connectionString = $"server=localhost;user=main;database=test_discord;password=Dank123";
 #endif
-        optionsBuilder.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString)).UseLazyLoadingProxies();
+        optionsBuilder.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString)).UseLazyLoadingProxies().UseBatchEF_MySQLPomelo();
     }
     //dbsets
     public DbSet<Models.Logs.ErrorLog> Errors { get; set; }
