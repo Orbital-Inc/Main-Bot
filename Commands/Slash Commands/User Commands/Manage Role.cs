@@ -10,7 +10,7 @@ namespace MainBot.Commands.SlashCommands.UserCommands;
 [RequireModerator]
 public class ManageRoleCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("role", "Kick a user from the guild")]
+    //[SlashCommand("role", "Kick a user from the guild")]
     public async Task ExecuteCommand(IUser user, IRole role)
     {
         await using var database = new DatabaseContext();
