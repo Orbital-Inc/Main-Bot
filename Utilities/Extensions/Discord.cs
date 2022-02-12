@@ -151,5 +151,5 @@ internal static class DiscordExtensions
         return user.Hierarchy;
     }
 
-    internal static async ValueTask<bool> IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild) => await commandExecutedUser.GetUserPermissionLevel(guild) > await operationOnUser.GetUserPermissionLevel(guild);
+    internal static async ValueTask<bool> IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild) => await commandExecutedUser.GetUserPermissionLevel(guild) < await operationOnUser.GetUserPermissionLevel(guild);
 }
