@@ -1,5 +1,6 @@
 ﻿using Discord.Interactions;
 using MainBot.Database;
+using MainBot.Database.Models;
 using MainBot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,7 @@ public class BackupCommand : InteractionModuleBase<ShardedInteractionContext>
         var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
-            guildEntry = new Models.Guild
+            guildEntry = new Guild
             {
                 id = Context.Guild.Id,
                 name = Context.Guild.Name,

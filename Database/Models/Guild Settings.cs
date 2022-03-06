@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MainBot.Models;
+namespace MainBot.Database.Models;
 
 public class GuildSettings
 {

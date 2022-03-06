@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using MainBot.Models;
+using MainBot.Database.Models;
 
 namespace MainBot.Utilities.Extensions;
 
@@ -90,7 +90,7 @@ internal static class DiscordExtensions
         catch { }
     }
 
-    internal static async Task UpdateGuildChannelsForMute(this IGuild guild, Models.Guild guildEntry)
+    internal static async Task UpdateGuildChannelsForMute(this IGuild guild, Guild guildEntry)
     {
         if (guildEntry.guildSettings.muteRoleId is null)
             throw new ArgumentException("Mute role is null");
@@ -151,5 +151,5 @@ internal static class DiscordExtensions
         return user.Hierarchy;
     }
 
-    internal static async ValueTask<bool> IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild) => await commandExecutedUser.GetUserPermissionLevel(guild) < await operationOnUser.GetUserPermissionLevel(guild);
+    internal static async ValueTask<bool> IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild) => await commandExecutedUser.GetUserPermissionLevel(guild) > await operationOnUser.GetUserPermissionLevel(guild);
 }

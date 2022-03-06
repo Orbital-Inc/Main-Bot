@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MainBot.Database.Models;
+using MainBot.Database.Models.DiscordBackup;
+using MainBot.Database.Models.Logs;
+using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Database;
 
@@ -13,7 +16,7 @@ internal class DatabaseContext : DbContext
         optionsBuilder.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString)).UseLazyLoadingProxies().UseBatchEF_MySQLPomelo();
     }
     //dbsets
-    public DbSet<Models.Logs.ErrorLog> Errors { get; set; }
-    public DbSet<Models.Guild> Guilds { get; set; }
-    public DbSet<Models.User> Users { get; set; }
+    public DbSet<ErrorLog> Errors { get; set; }
+    public DbSet<Guild> Guilds { get; set; }
+    public DbSet<User> Users { get; set; }
 }

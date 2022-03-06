@@ -1,5 +1,6 @@
 ﻿using Discord.WebSocket;
 using MainBot.Database;
+using MainBot.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Services;
@@ -22,7 +23,7 @@ public class CustomService
         await Task.WhenAll(RainbowShit(guilds));
     }
 
-    private static Task RainbowShit(List<Models.Guild> guilds)
+    private static Task RainbowShit(List<Guild> guilds)
     {
         foreach (var guild in guilds)
         {

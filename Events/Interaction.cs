@@ -3,6 +3,7 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using MainBot.Database;
+using MainBot.Database.Models.Logs;
 using MainBot.Utilities.Extensions;
 
 namespace MainBot.Events;
@@ -71,7 +72,7 @@ internal class InteractionEventHandler
                 case InteractionCommandError.Exception:
                     await using (var database = new Database.DatabaseContext())
                     {
-                        var entry = new Models.Logs.ErrorLog
+                        var entry = new ErrorLog
                         {
                             errorTime = DateTime.Now,
                             source = arg1.Name,
@@ -135,7 +136,7 @@ internal class InteractionEventHandler
                 case InteractionCommandError.Exception:
                     await using (var database = new Database.DatabaseContext())
                     {
-                        var entry = new Models.Logs.ErrorLog
+                        var entry = new ErrorLog
                         {
                             errorTime = DateTime.Now,
                             source = arg1.Name,
