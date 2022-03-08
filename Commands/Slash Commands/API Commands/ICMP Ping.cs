@@ -11,10 +11,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
     private readonly HttpClient _http;
     private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
 
-    internal ICMPPing(HttpClient http)
-    {
-        _http = http;
-    }
+    internal ICMPPing(HttpClient http) => _http = http;
 
     [SlashCommand("ping-icmp", "Sends an ICMP packet to a specified host in hopes for a reponse.")]
     public async Task PingHost(string host, string server = "OVH-US")
@@ -30,7 +27,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.APIToken);
         //response
-        var PingResults = JsonConvert.DeserializeObject<Models.API_Models.ICMPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/ping?Host={host}&Server={server}"));
+        Models.API_Models.ICMPPingModel? PingResults = JsonConvert.DeserializeObject<Models.API_Models.ICMPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/ping?Host={host}&Server={server}"));
 
         if (PingResults is null)
         {

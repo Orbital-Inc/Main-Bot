@@ -19,13 +19,13 @@ public class CustomService
         await _client.SetStatusAsync(Discord.UserStatus.DoNotDisturb);
         await _client.SetGameAsync("nebulamods.ca", null, Discord.ActivityType.Listening);
         await using var database = new DatabaseContext();
-        var guilds = await database.Guilds.ToListAsync();
+        List<Guild>? guilds = await database.Guilds.ToListAsync();
         await Task.WhenAll(RainbowShit(guilds));
     }
 
     private static Task RainbowShit(List<Guild> guilds)
     {
-        foreach (var guild in guilds)
+        foreach (Guild? guild in guilds)
         {
             if (guild.guildSettings.rainbowRoleId is not null)
             {

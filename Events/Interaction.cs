@@ -22,7 +22,7 @@ internal class InteractionEventHandler
     public async Task InitializeAsync()
     {
         // Add the public modules that inherit InteractionModuleBase<T> to the InteractionService
-        var modules = await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+        IEnumerable<ModuleInfo>? modules = await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         _client.ShardReady += GuildReady;
         // Process the InteractionCreated payloads to execute Interactions commands
         _client.InteractionCreated += HandleInteraction;

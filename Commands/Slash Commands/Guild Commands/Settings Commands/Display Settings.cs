@@ -13,7 +13,7 @@ public class DisplaySettingsCommand : InteractionModuleBase<ShardedInteractionCo
     public async Task ExecuteCommand()
     {
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);

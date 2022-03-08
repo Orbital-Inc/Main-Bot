@@ -30,7 +30,7 @@ internal class StartupService
     {
         var services = new ServiceCollection();
         ConfigureServices(services);
-        var provider = services.BuildServiceProvider();
+        ServiceProvider? provider = services.BuildServiceProvider();
         await provider.GetRequiredService<DatabaseContext>().Database.MigrateAsync();
         provider.GetRequiredService<DiscordLogger>();
         provider.GetRequiredService<CustomService>();

@@ -16,7 +16,7 @@ public class BackupCommand : InteractionModuleBase<ShardedInteractionContext>
     {
         await Context.Interaction.DeferAsync();
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
             guildEntry = new Guild

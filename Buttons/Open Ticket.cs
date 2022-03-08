@@ -12,18 +12,18 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
     [ComponentInteraction("open-ticket-button")]
     public async Task OpenTicket()
     {
-        var channel = Context.Guild.Channels.FirstOrDefault(x => x.Name.Contains($"ticket-{Context.Interaction.User.Username}", StringComparison.OrdinalIgnoreCase));
+        Discord.WebSocket.SocketGuildChannel? channel = Context.Guild.Channels.FirstOrDefault(x => x.Name.Contains($"ticket-{Context.Interaction.User.Username}", StringComparison.OrdinalIgnoreCase));
         if (channel is not null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please close your open ticket, before opening a new one.", deleteTimer: 60, invisible: true);
             return;
         }
-        var ticketChannel = await Context.Guild.CreateTextChannelAsync($"ticket-{Context.Interaction.User.Username}");
+        RestTextChannel? ticketChannel = await Context.Guild.CreateTextChannelAsync($"ticket-{Context.Interaction.User.Username}");
 
         await ticketChannel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, Utilities.Miscallenous.EveryoneTicketPermsChannel());
         await ticketChannel.AddPermissionOverwriteAsync(Context.User, Utilities.Miscallenous.TicketPermsChannel());
         await using var databse = new DatabaseContext();
-        var guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guild is not null)
         {
             if (guild.guildSettings.moderatorRoleId is not null)
@@ -38,7 +38,7 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
 
     private async Task SendTicketMessage(RestTextChannel channel)
     {
-        var msg = new ComponentBuilder()
+        MessageComponent? msg = new ComponentBuilder()
         {
             ActionRows = new List<ActionRowBuilder>()
                 {
@@ -56,7 +56,7 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
                     }
                 }
         }.Build();
-        var embed = new EmbedBuilder()
+        Embed? embed = new EmbedBuilder()
         {
             Title = $"Ticket",
             Color = Utilities.Miscallenous.RandomDiscordColour(),

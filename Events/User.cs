@@ -20,7 +20,7 @@ public class UserEventHandler
         try
         {
             await using var database = new DatabaseContext();
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == arg1.Id);
+            Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == arg1.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.userLogChannelId is null)
@@ -40,7 +40,7 @@ public class UserEventHandler
         try
         {
             await using var database = new DatabaseContext();
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == arg.Guild.Id);
+            Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == arg.Guild.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.userLogChannelId is null)

@@ -8,10 +8,7 @@ namespace MainBot.Commands.SlashCommands.GuildCommands;
 public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    public StealEmoteCommand(HttpClient http)
-    {
-        _http = http;
-    }
+    public StealEmoteCommand(HttpClient http) => _http = http;
 
     [SlashCommand("steal-emote", "Steal an emote from another server.")]
     public async Task StealEmoteTask(string emote) => await StealEmoteAsync(emote);
@@ -23,7 +20,7 @@ public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext
             await Context.ReplyWithEmbedAsync("Error Occurred", "Please enter an emote.", deleteTimer: 60);
             return;
         }
-        var emoteFunc = ReturnEmote(emote);
+        Tuple<string, ulong, string>? emoteFunc = ReturnEmote(emote);
         if (string.IsNullOrWhiteSpace(emoteFunc.Item1) || emoteFunc.Item2 == 0)
         {
             await Context.ReplyWithEmbedAsync("Error Occurred", "Please enter an emote.", deleteTimer: 60);
@@ -35,7 +32,7 @@ public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext
             await Context.ReplyWithEmbedAsync("Error Occured", "Emoji is too big. (Sorry resizing isn't available yet)", deleteTimer: 60);
             return;
         }
-        var guildemote = await Context.Guild.CreateEmoteAsync(emoteFunc.Item1, new Image(ms));
+        GuildEmote? guildemote = await Context.Guild.CreateEmoteAsync(emoteFunc.Item1, new Image(ms));
         await Context.ReplyWithEmbedAsync("Emote Stealer", "Successfully added emote.", "https://nebulamods.ca", guildemote.Url, null, deleteTimer: 60);
     }
     private static Tuple<string, ulong, string> ReturnEmote(string str)
@@ -44,7 +41,7 @@ public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext
         {
             return Tuple.Create(string.Empty, ulong.MinValue, string.Empty);
         }
-        var split = Regex.Split(str, ":");
+        string[]? split = Regex.Split(str, ":");
         if (split.Length < 3)
         {
             return Tuple.Create(string.Empty, ulong.MinValue, string.Empty);

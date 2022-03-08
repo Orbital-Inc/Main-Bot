@@ -10,7 +10,7 @@ public class InformationCommand : InteractionModuleBase<ShardedInteractionContex
     [SlashCommand("information", "Display information about the bot")]
     public async Task ExecuteCommand()
     {
-        var appInfo = await Context.Client.GetApplicationInfoAsync();
+        Discord.Rest.RestApplication? appInfo = await Context.Client.GetApplicationInfoAsync();
         await Context.ReplyWithEmbedAsync("Information",
             $"Guild Count: {Context.Client.Guilds.Count}\n" +
             $"Developer: {(Context.Guild.GetUser(appInfo.Owner.Id) is null ? $"{appInfo.Owner.Username}#{appInfo.Owner.Discriminator}" : appInfo.Owner.Mention)}\n" +

@@ -16,7 +16,7 @@ public class NukeCommand : InteractionModuleBase<ShardedInteractionContext>
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(channel), "Cannot nuke channel, this channel is not a text channel.");
         //create new text channel with same exact settings
-        var newTextChannel = await textChannel.Guild.CreateTextChannelAsync(textChannel.Name, x =>
+        ITextChannel? newTextChannel = await textChannel.Guild.CreateTextChannelAsync(textChannel.Name, x =>
         {
             x.CategoryId = textChannel.CategoryId;
             x.IsNsfw = textChannel.IsNsfw;
@@ -31,7 +31,7 @@ public class NukeCommand : InteractionModuleBase<ShardedInteractionContext>
         await textChannel.DeleteAsync();
         //post image to new channel
         await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/nuke.gif");
-        var nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
+        Models.NukeChannelModel? nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is not null)
             nukeChannel.id = newTextChannel.Id;
     }

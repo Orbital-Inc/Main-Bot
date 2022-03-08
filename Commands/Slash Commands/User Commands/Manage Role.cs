@@ -10,16 +10,26 @@ namespace MainBot.Commands.SlashCommands.UserCommands;
 [RequireModerator]
 public class ManageRoleCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    //[SlashCommand("role", "Kick a user from the guild")]
+    //[SlashCommand("role", "Add/remove a role from a user")]
     public async Task ExecuteCommand(IUser user, IRole role)
     {
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (await DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry))
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;
         }
-        //finish me later derp derp
+        Discord.Rest.RestGuildUser? guildUser = await Context.Client.Rest.GetGuildUserAsync(Context.Guild.Id, user.Id);
+        if (guildUser.RoleIds.Contains(role.Id))
+        {
+            //remove da role
+            await guildUser.RemoveRoleAsync(role.Id);
+            await Context.ReplyWithEmbedAsync("Role Management", $"Successfully removed {role.Mention} role from {user.Mention}");
+            return;
+        }
+        //add da role
+        await guildUser.AddRoleAsync(role);
+        await Context.ReplyWithEmbedAsync("Role Management", $"Successfully added {role.Mention} role to {user.Mention}");
     }
 }

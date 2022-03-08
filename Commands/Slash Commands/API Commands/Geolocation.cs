@@ -11,10 +11,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
     private readonly HttpClient _http;
     private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
 
-    internal Geolocation(HttpClient http)
-    {
-        _http = http;
-    }
+    internal Geolocation(HttpClient http) => _http = http;
 
     [SlashCommand("geolocate", "Retrives the geographic location & network details of the specified host.")]
     public async Task GeoLocate(string host)
@@ -30,7 +27,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
         //adding header for request
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.APIToken);
         //deserializing request response if successful
-        var Information = JsonConvert.DeserializeObject<Models.API_Models.GeolocationModel>(await _http.GetStringAsync($"{_endpoint}network-tools/geolocation?Host={host}"));
+        Models.API_Models.GeolocationModel? Information = JsonConvert.DeserializeObject<Models.API_Models.GeolocationModel>(await _http.GetStringAsync($"{_endpoint}network-tools/geolocation?Host={host}"));
 
         if (Information is null)
         {

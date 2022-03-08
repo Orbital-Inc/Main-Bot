@@ -12,10 +12,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
     private readonly HttpClient _http;
     private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
 
-    public PortScan(HttpClient http)
-    {
-        _http = http;
-    }
+    public PortScan(HttpClient http) => _http = http;
 
     [SlashCommand("port-scan", "Scan specified host to see if the specified port(s) is open using either TCP/UDP.")]
     public async Task Scan(string host, string ports = "22,53,80,443,1194", string protocol = "TCP", string server = "OVH-US")
@@ -79,7 +76,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         #endregion
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
-        var PortScanResult = JsonConvert.DeserializeObject<Models.API_Models.PortScanModel>(await _http.GetStringAsync($"{_endpoint}network-tools/portscan?Host={host}&Protocol={protocol.ToUpper()}&Ports={ports}&Server={server}"));
+        Models.API_Models.PortScanModel? PortScanResult = JsonConvert.DeserializeObject<Models.API_Models.PortScanModel>(await _http.GetStringAsync($"{_endpoint}network-tools/portscan?Host={host}&Protocol={protocol.ToUpper()}&Ports={ports}&Server={server}"));
 
         if (PortScanResult is null)
         {

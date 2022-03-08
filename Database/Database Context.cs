@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Database;
 
-internal class DatabaseContext : DbContext
+public class DatabaseContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

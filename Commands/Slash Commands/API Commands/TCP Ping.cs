@@ -11,10 +11,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
     private readonly HttpClient _http;
     private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
 
-    public TCPPing(HttpClient http)
-    {
-        _http = http;
-    }
+    public TCPPing(HttpClient http) => _http = http;
 
     [SlashCommand("ping-tcp", "Attempts to start & complete a TCP handshake to a specified host.")]
     public async Task TCPPingHost(string host, ushort port = 80, string server = "OVH-US")
@@ -32,7 +29,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
         #endregion
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.APIToken);
-        var PingResults = JsonConvert.DeserializeObject<Models.API_Models.TCPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/tping?Host={host}&Port={port}&Server={server}"));
+        Models.API_Models.TCPPingModel? PingResults = JsonConvert.DeserializeObject<Models.API_Models.TCPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/tping?Host={host}&Port={port}&Server={server}"));
         if (PingResults is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60);

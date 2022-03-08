@@ -24,7 +24,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
     public async Task ExecuteCommand(guildRoleOption roleOption, IRole role)
     {
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
@@ -39,7 +39,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 guildEntry.guildSettings.verifyRoleId = role.Id;
                 break;
             case guildRoleOption.set_rainbow_role:
-                var kkk = await Context.Client.GetApplicationInfoAsync();
+                Discord.Rest.RestApplication? kkk = await Context.Client.GetApplicationInfoAsync();
                 if (kkk.Owner.Id != Context.User.Id)
                 {
                     await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
@@ -56,7 +56,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 guildEntry.guildSettings.moderatorRoleId = role.Id;
                 break;
             case guildRoleOption.set_administrator_role:
-                var application = await Context.Client.GetApplicationInfoAsync();
+                Discord.Rest.RestApplication? application = await Context.Client.GetApplicationInfoAsync();
                 if (Context.User.Id != application.Owner.Id || Context.Guild.OwnerId != Context.User.Id)
                 {
                     await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);

@@ -22,13 +22,13 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
     public async Task MuteUserCommand(IUser user, muteDurationOptions durationOptions, int duration)
     {
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
-        var mutedUserEntry = await Services.AutoUnmuteUserService._muteUsers.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == user.Id);
+        Models.MuteUserModel? mutedUserEntry = await Services.AutoUnmuteUserService._muteUsers.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == user.Id);
         if (mutedUserEntry is not null)
         {
             await Context.ReplyWithEmbedAsync("Mute User", $"Failed to mute {user.Mention}, user is already muted.", deleteTimer: 60, invisible: true);
@@ -64,7 +64,7 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
                 return;
         }
         //get mute role
-        var role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
+        Discord.WebSocket.SocketRole? role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
         if (role is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);

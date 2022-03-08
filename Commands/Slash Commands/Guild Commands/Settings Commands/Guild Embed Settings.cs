@@ -26,7 +26,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
@@ -66,7 +66,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
 
     private async Task SendVerifyMessage(ITextChannel channel)
     {
-        var msg = new ComponentBuilder()
+        MessageComponent? msg = new ComponentBuilder()
         {
             ActionRows = new List<ActionRowBuilder>()
                 {
@@ -84,7 +84,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
                     }
                 }
         }.Build();
-        var embed = new EmbedBuilder()
+        Embed? embed = new EmbedBuilder()
         {
             Title = "Verification",
             Color = Utilities.Miscallenous.RandomDiscordColour(),
@@ -106,7 +106,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
 
     private async Task SendTicketMessage(ITextChannel channel, string title, string description, string buttonLabel)
     {
-        var msg = new ComponentBuilder()
+        MessageComponent? msg = new ComponentBuilder()
         {
             ActionRows = new List<ActionRowBuilder>()
             {
@@ -124,7 +124,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
                 }
             }
         }.Build();
-        var embed = new EmbedBuilder()
+        Embed? embed = new EmbedBuilder()
         {
             Title = title,
             Color = Utilities.Miscallenous.RandomDiscordColour(),
@@ -146,7 +146,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
 
     private async Task SendRulesMessage(ITextChannel channel, bool ticketButton = false, bool hiddenRoleButton = false)
     {
-        var msg = hiddenRoleButton ? new ComponentBuilder()
+        MessageComponent? msg = hiddenRoleButton ? new ComponentBuilder()
         {
             ActionRows = new List<ActionRowBuilder>()
             {
@@ -194,7 +194,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
                 }
             }
         }.Build();
-        var embed = new EmbedBuilder()
+        Embed? embed = new EmbedBuilder()
         {
             Title = $"{channel.Guild.Name} Rules",
             Color = Utilities.Miscallenous.RandomDiscordColour(),
@@ -227,7 +227,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
 
     private async Task SendAnnoucementMessage(ITextChannel channel, string description)
     {
-        var embed = new EmbedBuilder()
+        Embed? embed = new EmbedBuilder()
         {
             Title = $"Server Annoucement",
             Color = Utilities.Miscallenous.RandomDiscordColour(),

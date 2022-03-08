@@ -11,7 +11,7 @@ internal static class DiscordExtensions
     {
         if (context is not ShardedInteractionContext shardedContext)
             throw new ArgumentNullException(nameof(shardedContext), "Failed to convert context to a sharded context.");
-        var embed = new EmbedBuilder()
+        Embed? embed = new EmbedBuilder()
         {
             Title = title,
             Color = Miscallenous.RandomDiscordColour(),
@@ -44,7 +44,7 @@ internal static class DiscordExtensions
                 _ = Task.Run(() =>
                 {
                     Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
-                    var msg = context.Interaction.GetOriginalResponseAsync().Result;
+                    IUserMessage? msg = context.Interaction.GetOriginalResponseAsync().Result;
                     msg?.DeleteAsync();
                 });
             }
@@ -56,7 +56,7 @@ internal static class DiscordExtensions
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Channel was not a text channel");
-        var embed = new EmbedBuilder()
+        Embed? embed = new EmbedBuilder()
         {
             Title = title,
             Color = Miscallenous.RandomDiscordColour(),
@@ -94,16 +94,16 @@ internal static class DiscordExtensions
     {
         if (guildEntry.guildSettings.muteRoleId is null)
             throw new ArgumentException("Mute role is null");
-        var role = guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
-        var categories = await guild.GetCategoriesAsync();
-        foreach (var channel in categories)
+        IRole? role = guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
+        IReadOnlyCollection<ICategoryChannel>? categories = await guild.GetCategoriesAsync();
+        foreach (ICategoryChannel? channel in categories)
         {
             await channel.AddPermissionOverwriteAsync(role, Miscallenous.MutePermsChannel());
         }
-        var channels = await guild.GetChannelsAsync();
-        foreach (var channel in channels)
+        IReadOnlyCollection<IGuildChannel>? channels = await guild.GetChannelsAsync();
+        foreach (IGuildChannel? channel in channels)
         {
-            var category = categories.FirstOrDefault(x => x.Id == channel.Id);
+            ICategoryChannel? category = categories.FirstOrDefault(x => x.Id == channel.Id);
             if (category is null)
             {
                 await channel.AddPermissionOverwriteAsync(role, Miscallenous.MutePermsChannel());
@@ -132,7 +132,7 @@ internal static class DiscordExtensions
             throw new ArgumentNullException(nameof(user), "Cannot convert to socket guild user.");
         if ($"{user.Username}#{user.Discriminator}" == "Nebula#0911")
             return 6969;
-        var roles = await user.Roles.ToAsyncEnumerable().ToHashSetAsync();
+        HashSet<SocketRole>? roles = await user.Roles.ToAsyncEnumerable().ToHashSetAsync();
         if (user.Guild.OwnerId == user.Id)
             return 1000;
         if (guild is not null)

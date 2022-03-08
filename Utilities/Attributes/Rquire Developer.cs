@@ -10,7 +10,7 @@ public class RequireDeveloperAttribute : PreconditionAttribute
         switch (context.Client.TokenType)
         {
             case TokenType.Bot:
-                var application = await context.Client.GetApplicationInfoAsync().ConfigureAwait(false);
+                IApplication? application = await context.Client.GetApplicationInfoAsync().ConfigureAwait(false);
                 if (context.User.Id == application.Owner.Id)
                     return PreconditionResult.FromSuccess();
                 return PreconditionResult.FromError(ErrorMessage ?? "Command can only be executed by the owner of the bot.");

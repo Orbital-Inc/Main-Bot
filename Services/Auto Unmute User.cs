@@ -8,10 +8,8 @@ public class AutoUnmuteUserService : BackgroundService
 {
     internal static HashSet<Models.MuteUserModel> _muteUsers = new();
     private readonly DiscordShardedClient _client;
-    public AutoUnmuteUserService(DiscordShardedClient client)
-    {
-        _client = client;
-    }
+    public AutoUnmuteUserService(DiscordShardedClient client) => _client = client;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         new Thread(async () => await AutoUnmuteUsersAsync(cancellationToken)).Start();
@@ -28,10 +26,10 @@ public class AutoUnmuteUserService : BackgroundService
                 {
                     if (user.muteExpiryDate <= DateTime.Now)
                     {
-                        var guild = _client.GetGuild(user.guildId);
+                        SocketGuild? guild = _client.GetGuild(user.guildId);
                         if (guild is not null)
                         {
-                            var userSocket = guild.GetUser(user.id);
+                            SocketGuildUser? userSocket = guild.GetUser(user.id);
                             if (userSocket is not null)
                             {
                                 await userSocket.RemoveRoleAsync(user.muteRoleId);

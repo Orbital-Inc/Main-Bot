@@ -9,11 +9,11 @@ public class UnknownButton : InteractionModuleBase<ShardedInteractionContext>
     public async Task ExecuteAsync()
     {
         await Context.Interaction.DeferAsync(true);
-        var user = Context.Guild.GetUser(Context.Interaction.User.Id);
+        Discord.WebSocket.SocketGuildUser? user = Context.Guild.GetUser(Context.Interaction.User.Id);
         if (user is null)
             return;
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
             return;
         if (guildEntry.guildSettings.hiddenRoleId is null)

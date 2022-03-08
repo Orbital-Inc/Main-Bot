@@ -27,7 +27,7 @@ public class MessageEventHandler
             await using var database = new DatabaseContext();
             if (_client.GetChannel(message.Channel.Id) is not SocketGuildChannel socketGuildChannel)
                 return;
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == socketGuildChannel.Guild.Id);
+            Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == socketGuildChannel.Guild.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.messageLogChannelId is null)
@@ -43,7 +43,7 @@ public class MessageEventHandler
             }
             if (message.Content == arg2.Content)
                 return;
-            var channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
+            SocketChannel? channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
             if (channel is not null)
             {
                 await channel.SendEmbedAsync("Message Edited",
@@ -82,12 +82,12 @@ public class MessageEventHandler
             if (_client.GetChannel(messages[0].Value.Channel.Id) is not SocketTextChannel msgChannel)
                 return;
             await using var database = new DatabaseContext();
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == msgChannel.Guild.Id);
+            Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == msgChannel.Guild.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.messageLogChannelId is null)
                 return;
-            var channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
+            SocketChannel? channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
             if (channel is not null)
             {
                 await channel.SendEmbedAsync("Bulk Message Delete",
@@ -112,7 +112,7 @@ public class MessageEventHandler
             if (_client.GetChannel(message.Channel.Id) is not SocketGuildChannel socketGuildChannel)
                 return;
             await using var database = new DatabaseContext();
-            var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == socketGuildChannel.Guild.Id);
+            Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == socketGuildChannel.Guild.Id);
             if (guildEntry is null)
                 return;
             if (guildEntry.guildSettings.messageLogChannelId is null)
@@ -126,7 +126,7 @@ public class MessageEventHandler
                 }
                 return;
             }
-            var channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
+            SocketChannel? channel = _client.GetChannel((ulong)guildEntry.guildSettings.messageLogChannelId);
             if (channel is not null)
             {
                 await channel.SendEmbedAsync("Message Deleted",

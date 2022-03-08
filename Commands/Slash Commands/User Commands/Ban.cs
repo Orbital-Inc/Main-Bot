@@ -19,7 +19,7 @@ public class BanCommand : InteractionModuleBase<ShardedInteractionContext>
     public async Task ExecuteCommand(IUser user, string? reason = null, int pruneDays = 7)
     {
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (await DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry))
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);

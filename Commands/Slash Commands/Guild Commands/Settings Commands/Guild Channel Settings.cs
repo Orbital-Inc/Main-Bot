@@ -24,7 +24,7 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
@@ -38,6 +38,12 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
             case guildChannelOption.set_user_log_channel:
                 guildEntry.guildSettings.userLogChannelId = textChannel.Id;
                 break;
+            case guildChannelOption.add_daily_nuke_channel:
+                await AddChannelToNukeListCommand(textChannel);
+                return;
+            case guildChannelOption.remove_daily_nuke_channel:
+                await RemoveChannelFromNukeListCommand(textChannel);
+                return;
             default:
                 await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;
@@ -50,7 +56,7 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        var nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
+        Models.NukeChannelModel? nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is not null)
         {
             await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Failed to add {textChannel.Mention} to the list of daily nuke channels, because it is already added.", deleteTimer: 60, invisible: true);
@@ -69,7 +75,7 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        var nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
+        Models.NukeChannelModel? nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is null)
         {
             await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"{textChannel.Mention} channel is not in the list of daily nuke channels, try adding it.", deleteTimer: 60, invisible: true);
