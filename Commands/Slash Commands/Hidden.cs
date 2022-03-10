@@ -1,9 +1,7 @@
-﻿using System.Net;
-using Discord.Interactions;
+﻿using Discord.Interactions;
 using MainBot.Database;
 using MainBot.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands;
 

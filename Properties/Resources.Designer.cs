@@ -61,7 +61,7 @@ namespace MainBot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to XZIhcchejgfzLK7ZCXcMKZ2kTrWGlHrvVbxftHw2zlycXhHwY1iHc/h05uIlKW8kaNiD+SbIdJgXcuZS+rURwg==.
+        ///   Looks up a localized string similar to eRk6Uf6XmTlDqdaYAd3q+df/f4nErdka8jcmCDJWVQZxrPaE3/CMdNQDuksmRlOPPZVAkU+430/sHA0IsXbwQ8FRPLJjCfCUlVD2boetxEDFVtdbB1vV4SegxX9yb6EKV8rU/zktIhNOjGSdTrCD3w0xYOA8rnPQdh25UNiQ94QXISJHUJMuyaVzd9/iDt9mJw5+9M18CjDvHUgnx7zszOSRNBOMooShpHzYTS7iYyYUu/sgQUEtvozLZiIAFMD7Pi0sZ/8U1Nt/NrW/WftcFw==.
         /// </summary>
         internal static string APIToken {
             get {

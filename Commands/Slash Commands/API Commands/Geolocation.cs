@@ -9,7 +9,7 @@ namespace MainBot.Commands.SlashCommands.APICommands;
 public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
+    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost:1337/" : $"https://api.nebulamods.ca/";
 
     internal Geolocation(HttpClient http) => _http = http;
 
@@ -25,60 +25,64 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
         }
 
         //adding header for request
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.APIToken);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //deserializing request response if successful
-        Models.API_Models.GeolocationModel? Information = JsonConvert.DeserializeObject<Models.API_Models.GeolocationModel>(await _http.GetStringAsync($"{_endpoint}network-tools/geolocation?Host={host}"));
+        Models.APIModels.GeolocationModel? Information = JsonConvert.DeserializeObject<Models.APIModels.GeolocationModel>(await _http.GetStringAsync($"{_endpoint}network-tools/geolocation/{host}"));
 
         if (Information is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
             return;
         }
+        if (Information.error is not null)
+        {
+            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
+            return;
+        }
         List<EmbedFieldBuilder> Fields = new();
-
         #region Security
         string ExtraInfo = string.Empty;
-        if (Information.Cloud_Provider)
+        if ((bool)Information.cloudProvider)
             ExtraInfo += $"`Cloud Provider`: True\n";
-        if (Information.Abuser)
+        if ((bool)Information.abuser)
             ExtraInfo += $"`Abuser`: True\n";
-        if (Information.Tor)
+        if ((bool)Information.tor)
             ExtraInfo += $"`Tor`: True\n";
-        if (Information.Attacker)
+        if ((bool)Information.attacker)
             ExtraInfo += $"`Attacker`: True\n";
-        if (Information.Proxy)
+        if ((bool)Information.proxy)
             ExtraInfo += $"`Proxy`: True\n";
         #endregion
 
         Fields.Add(new EmbedFieldBuilder
         {
             Name = "Network",
-            Value = $"`IP Address`: {Information.IPAddy}\n" +
-            $"`Hostname`: {Information.Hostname}\n" +
-            $"`Route`: {Information.Route}\n" +
-            $"`Type`: {Information.Type}\n" +
+            Value = $"{(string.IsNullOrWhiteSpace(Information.ip) ? "" : $"`IP Address`: {Information.ip}\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.hostname) ? "" : $"`Hostname`: {Information.hostname}\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.route) ? "" : $"`Route`: {Information.route}\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.type) ? "" : $"`Type`: {Information.type}\n")}" +
             ExtraInfo
         });
 
         Fields.Add(new EmbedFieldBuilder
         {
             Name = "Provider",
-            Value = $"`Domain`: [{Information.Domain}](http://{Information.Domain})\n" +
-            $"`Organization`: {Information.Organization}\n" +
-            $"`ISP`: {Information.ISP}\n" +
-            $"`ASN Name`: {Information.ASN_Name}"
-
+            Value = $"{(string.IsNullOrWhiteSpace(Information.domain) ? "" : $"`Domain`: [{Information.domain}](http://{Information.domain})\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.organization) ? "" : $"`Organization`: {Information.organization}\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.isp) ? "" : $"`ISP`: {Information.isp}\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.asnName) ? "" : $"`ASN Name`: {Information.asnName}\n")}" +
+            $"{(Information.asnNumber is null ? "" : $"`ASN Number`: {Information.asnNumber}\n")}"
         });
 
         Fields.Add(new EmbedFieldBuilder
         {
             Name = "Location",
-            Value = $"`Country`: {Information.Country}\n" +
-            $"`Region`: {Information.Region}\n" +
-            $"`District`: {Information.District}\n" +
-            $"`City`: {Information.City}"
+            Value = $"{(string.IsNullOrWhiteSpace(Information.countryCode) ? "" : $"`Country`: {Information.countryCode}\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.region) ? "" : $"`Region`: {Information.region}\n")}" +
+            $"{(string.IsNullOrWhiteSpace(Information.district) ? "" : $"`District`: {Information.district}\n")}" +
+           $"{(string.IsNullOrWhiteSpace(Information.city) ? "" : $"`City`: {Information.city}\n")}"
         });
 
-        await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", string.Empty, $"https://check-host.net/ip-info?host={Information.IPAddy}", Information.Flag, Fields);
+        await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", string.Empty, $"https://check-host.net/ip-info?host={Information.ip}", Information.flag, Fields);
     }
 }

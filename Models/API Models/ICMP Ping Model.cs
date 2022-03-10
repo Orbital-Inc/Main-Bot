@@ -1,4 +1,4 @@
-﻿namespace MainBot.Models.API_Models;
+﻿namespace MainBot.Models.APIModels;
 
 internal class ICMPPingModel
 {

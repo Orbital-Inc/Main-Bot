@@ -9,12 +9,12 @@ namespace MainBot.Commands.SlashCommands.APICommands;
 public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
+    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost:1337/" : $"https://api.nebulamods.ca/";
 
     public TCPPing(HttpClient http) => _http = http;
 
     [SlashCommand("ping-tcp", "Attempts to start & complete a TCP handshake to a specified host.")]
-    public async Task TCPPingHost(string host, ushort port = 80, string server = "OVH-US")
+    public async Task TCPPingHost(string host, ushort port = 80)
     {
         await Context.ReplyWithEmbedAsync("TCP Ping", $"Attempting to TCP ping {host} through port {port}, please wait...");
 
@@ -28,20 +28,20 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         #endregion
 
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Dank", Properties.Resources.APIToken);
-        Models.API_Models.TCPPingModel? PingResults = JsonConvert.DeserializeObject<Models.API_Models.TCPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/tping?Host={host}&Port={port}&Server={server}"));
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        Models.APIModels.TCPPingModel? PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/tcp-ping/{host}/{port}"));
         if (PingResults is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60);
             return;
         }
         string embedvalue = string.Empty;
-        await PingResults.Results.ToAsyncEnumerable().ForEachAsync(value =>
+        await PingResults.results.ToAsyncEnumerable().ForEachAsync(value =>
         {
-            embedvalue += $"[{PingResults.Host}](https://check-host.net/check-tcp?host={PingResults.Host}%3A{PingResults.DstPort}) {(value.RecievedResponse ? $"replied back on {PingResults.DstPort} in" : "failed to reply back")}{(value.RecievedResponse ? $" `{value.ResponseTime}`\n" : "\n")}";
+            embedvalue += $"[{PingResults.host}](https://check-host.net/check-tcp?host={PingResults.host}%3A{PingResults.dstPort}) {(value.recievedResponse ? $"replied back on {PingResults.dstPort} in" : "failed to reply back")}{(value.recievedResponse ? $" `{value.responseTime}`ms\n" : "\n")}";
         });
-        if (PingResults.AverageResponseTime is not null)
-            embedvalue += $"Average: `{PingResults.AverageResponseTime}` Maximum: `{PingResults.MaximumResponseTime}` Minimum: `{PingResults.MinimumResponseTime}`";
+        if (PingResults.averageResponseTime is not null)
+            embedvalue += $"Average: `{PingResults.averageResponseTime}`ms Maximum: `{PingResults.maximumResponseTime}`ms Minimum: `{PingResults.minimumResponseTime}`ms";
         List<EmbedFieldBuilder> Fields = new();
 
         Fields.Add(new EmbedFieldBuilder
@@ -49,6 +49,6 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
             Name = "TCP Ping Results",
             Value = embedvalue
         });
-        await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.Host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.Host}", string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, Fields);
     }
 }

@@ -10,12 +10,12 @@ namespace MainBot.Commands.SlashCommands.APICommands;
 public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost/" : $"https://api.nebulamods.ca/";
+    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost:1337/" : $"https://api.nebulamods.ca/";
 
     public PortScan(HttpClient http) => _http = http;
 
     [SlashCommand("port-scan", "Scan specified host to see if the specified port(s) is open using either TCP/UDP.")]
-    public async Task Scan(string host, string ports = "22,53,80,443,1194", string protocol = "TCP", string server = "OVH-US")
+    public async Task Scan(string host, string ports = "22,53,80,443,1194")
     {
         string MainDescription = $"Attempting to port scan {host}, on the following ports: {ports}, please wait...";
 
@@ -25,30 +25,16 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(ports))
-        {
-            if (Regex.IsMatch(ports, @"^[a-zA-Z]+$"))
-            {
-                switch (ports.ToUpper())
-                {
-                    case "UDP" or "BOTH":
-                        protocol = ports.ToUpper();
-                        ports = "21,22,53,80,443,1194,3306,3389";
-                        MainDescription = $"Attempting to port scan {host}, on the following ports: {ports} using only {protocol}, please wait...";
-                        break;
-                    default:
-                        protocol = ports.ToUpper();
-                        ports = "0";
-                        MainDescription = $"Attempting to port scan {host} using the \"{protocol}\" template, please wait...";
-                        break;
-                }
-            }
-        }
-
         await Context.ReplyWithEmbedAsync("Port Scan", MainDescription);
 
         #region Info Checks
-
+        //max port count is 10
+        var portSplit = ports.Split(',');
+        if (portSplit.Length > 10)
+        {
+            await Context.ReplyWithEmbedAsync("Port Scanner Ports Error", "The specified amount of ports is too high, please try again.");
+            return;
+        }
         if (Uri.CheckHostName(host) is not (UriHostNameType.IPv4 or UriHostNameType.Dns))
         {
             await Context.ReplyWithEmbedAsync("Port Scanner Invalid Host Error", "The specified hostname/IPv4 address is not valid, please try again.");
@@ -57,8 +43,6 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         if (ports != "0")
         {
-            if (protocol.ToUpper() is not ("UDP" or "TCP"))
-                protocol = "Default";
             if (!(ports.Contains(',') || ports.Contains('-')))
             {
                 try
@@ -76,7 +60,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         #endregion
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
-        Models.API_Models.PortScanModel? PortScanResult = JsonConvert.DeserializeObject<Models.API_Models.PortScanModel>(await _http.GetStringAsync($"{_endpoint}network-tools/portscan?Host={host}&Protocol={protocol.ToUpper()}&Ports={ports}&Server={server}"));
+        Models.APIModels.PortScanModel? PortScanResult = JsonConvert.DeserializeObject<Models.APIModels.PortScanModel>(await _http.GetStringAsync($"{_endpoint}network-tools/portscan/{host}/{ports}"));
 
         if (PortScanResult is null)
         {
@@ -85,9 +69,9 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         }
 
         string embedvalue = string.Empty;
-        await PortScanResult.Results.ToAsyncEnumerable().ForEachAsync(value =>
+        await PortScanResult.results.ToAsyncEnumerable().ForEachAsync(value =>
         {
-            embedvalue += $"{value.Protocol.ToUpper()} to port [{value.Port}({value.PortUsage})](https://check-host.net/check-{value.Protocol.ToLower()}?host={PortScanResult.Host}%3A{value.Port}) is `{value.Status}`\n";
+            embedvalue += $"{value.protocol} to port [{value.port}](https://check-host.net/check-{value.protocol.ToLower()}?host={PortScanResult.host}%3A{value.port}) is `{value.status}`\n";
         });
         List<EmbedFieldBuilder> Fields = new();
 
@@ -97,6 +81,6 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             Value = embedvalue
         });
 
-        await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.Host}", string.Empty, $"https://check-host.net/ip-info?host={PortScanResult.Host}", string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://check-host.net/ip-info?host={PortScanResult.host}", string.Empty, Fields);
     }
 }

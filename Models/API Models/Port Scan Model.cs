@@ -1,17 +1,16 @@
-﻿namespace MainBot.Models.API_Models;
+﻿namespace MainBot.Models.APIModels;
 
 internal class PortScanModel
 {
-    public string Host { get; set; }
-    public string ResponseTime { get; set; }
-    public string ServerUsed { get; set; }
-    public List<PortScanResult> Results { get; set; }
+    public string host { get; set; }
+    public string responseTime { get; set; }
+    public string serverUsed { get; set; }
+    public List<PortScanResult> results { get; set; }
 }
 internal class PortScanResult
 {
-    public int ID { get; set; }
-    public string Protocol { get; set; }
-    public short Port { get; set; }
-    public string Status { get; set; }
-    public string PortUsage { get; set; }
+    public string protocol { get; set; }
+    public short port { get; set; }
+    public string? status { get; set; }
+    public string? portUsage { get; set; }
 }

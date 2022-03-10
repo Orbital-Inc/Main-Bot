@@ -1,20 +1,19 @@
-﻿namespace MainBot.Models.API_Models;
+﻿namespace MainBot.Models.APIModels;
 
 internal class TCPPingModel
 {
-    public string Host { get; set; }
-    public string ResponseTime { get; set; }
-    public string ServerUsed { get; set; }
-    public short DstPort { get; set; }
-    public int RequestSentCount { get; set; }
-    public double? AverageResponseTime { get; set; }
-    public double? MaximumResponseTime { get; set; }
-    public double? MinimumResponseTime { get; set; }
-    public List<TPingResult> Results { get; set; }
+    public string host { get; set; }
+    public string responseTime { get; set; }
+    public string serverUsed { get; set; }
+    public short dstPort { get; set; }
+    public double? averageResponseTime { get; set; }
+    public double? maximumResponseTime { get; set; }
+    public double? minimumResponseTime { get; set; }
+    public List<TPingResult> results { get; set; }
 }
 internal class TPingResult
 {
-    public int ID { get; set; }
-    public bool RecievedResponse { get; set; }
-    public string ResponseTime { get; set; }
+    public int id { get; set; }
+    public bool recievedResponse { get; set; }
+    public double responseTime { get; set; }
 }
