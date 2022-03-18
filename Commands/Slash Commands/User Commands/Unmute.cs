@@ -31,7 +31,7 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
-        if (await DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
+        if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry))
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;

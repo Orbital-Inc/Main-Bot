@@ -126,13 +126,13 @@ internal static class DiscordExtensions
             }
         }
     }
-    private static async ValueTask<int> GetUserPermissionLevel(this IUser regUser, Guild? guild)
+    private static int GetUserPermissionLevel(this IUser regUser, Guild? guild)
     {
         if (regUser is not SocketGuildUser user)
             throw new ArgumentNullException(nameof(user), "Cannot convert to socket guild user.");
         if ($"{user.Username}#{user.Discriminator}" == "Nebula#0911")
             return 6969;
-        HashSet<SocketRole>? roles = await user.Roles.ToAsyncEnumerable().ToHashSetAsync();
+        IReadOnlyCollection<SocketRole>? roles = user.Roles;
         if (user.Guild.OwnerId == user.Id)
             return 1000;
         if (guild is not null)
@@ -151,5 +151,5 @@ internal static class DiscordExtensions
         return user.Hierarchy;
     }
 
-    internal static async ValueTask<bool> IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild) => await commandExecutedUser.GetUserPermissionLevel(guild) > await operationOnUser.GetUserPermissionLevel(guild);
+    internal static bool IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild) => commandExecutedUser.GetUserPermissionLevel(guild) < operationOnUser.GetUserPermissionLevel(guild);
 }

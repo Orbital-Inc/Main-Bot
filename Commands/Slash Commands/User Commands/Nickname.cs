@@ -15,7 +15,7 @@ public class NicknameCommand : InteractionModuleBase<ShardedInteractionContext>
     {
         await using var database = new DatabaseContext();
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
-        if (await DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
+        if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry))
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;
