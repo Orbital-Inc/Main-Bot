@@ -16,9 +16,8 @@ public class InformationCommand : InteractionModuleBase<ShardedInteractionContex
             $"Developer: {(Context.Guild.GetUser(appInfo.Owner.Id) is null ? $"{appInfo.Owner.Username}#{appInfo.Owner.Discriminator}" : appInfo.Owner.Mention)}\n" +
             $"Uptime: <t:{((DateTimeOffset)Process.GetCurrentProcess().StartTime).ToUnixTimeSeconds()}:R>\n" +
             $"Build Version: {Assembly.GetExecutingAssembly().GetName().Version}\n" +
-            $"Description: {appInfo.Description}\n" +
+            $"{appInfo.Description}\n" +
             $"Terms of Service: {appInfo.TermsOfService}"
             );
-        //fix uptime
     }
 }

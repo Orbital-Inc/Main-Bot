@@ -52,7 +52,7 @@ public class DailyChannelNukeService : BackgroundService
         }
     }
 
-    private static async Task NukeChannelAsync(IChannel channel)
+    internal static async Task NukeChannelAsync(IChannel channel)
     {
         //check if channel is even a text channel
         if (channel is not ITextChannel textChannel)
@@ -79,7 +79,18 @@ public class DailyChannelNukeService : BackgroundService
         //delete old channel
         await textChannel.DeleteAsync();
         //post image to new channel
-        await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/nuke.gif");
+        switch(new Random().Next(1, 3))
+        {
+            case 1:
+                await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/nuke.gif");
+                break;
+            case 2:
+                await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/chicken-nuke.gif");
+                break;
+            case 3:
+                await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/world-nuke.gif");
+                break;
+        }
         //add channel back to daily nuke channels if exists
         Models.NukeChannelModel? nukeChannel = await _nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is not null)
