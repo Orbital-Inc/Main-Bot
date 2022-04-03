@@ -31,7 +31,10 @@ internal class StartupService
         var services = new ServiceCollection();
         ConfigureServices(services);
         ServiceProvider? provider = services.BuildServiceProvider();
-        await provider.GetRequiredService<DatabaseContext>().Database.MigrateAsync();
+        await using (var database = new DatabaseContext())
+        {
+            await database.Database.MigrateAsync();
+        }
         provider.GetRequiredService<DiscordLogger>();
         provider.GetRequiredService<CustomService>();
         provider.GetRequiredService<ChannelEventHandler>();
@@ -51,8 +54,7 @@ internal class StartupService
 
     private void ConfigureServices(IServiceCollection services)
     {
-        services.AddDbContext<DatabaseContext>()
-        .AddSingleton(_client)
+        services.AddSingleton(_client)
         .AddSingleton<DiscordLogger>()
         .AddSingleton<InteractionEventHandler>()
         .AddSingleton<MessageEventHandler>()

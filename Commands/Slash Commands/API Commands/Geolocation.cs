@@ -26,8 +26,11 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 
         //adding header for request
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network-tools/geolocation/{host}");
+        Models.APIModels.GeolocationModel? Information = null;
         //deserializing request response if successful
-        Models.APIModels.GeolocationModel? Information = JsonConvert.DeserializeObject<Models.APIModels.GeolocationModel>(await _http.GetStringAsync($"{_endpoint}network-tools/geolocation/{host}"));
+        if (result.IsSuccessStatusCode)
+            Information = JsonConvert.DeserializeObject<Models.APIModels.GeolocationModel>(await result.Content.ReadAsStringAsync());
 
         if (Information is null)
         {

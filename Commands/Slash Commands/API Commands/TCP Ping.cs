@@ -29,7 +29,10 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
         #endregion
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
-        Models.APIModels.TCPPingModel? PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/tcp-ping/{host}/{port}"));
+        Models.APIModels.TCPPingModel? PingResults = null;
+        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network-tools/tcp-ping/{host}/{port}");
+        if (result.IsSuccessStatusCode)
+            PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await result.Content.ReadAsStringAsync());
         if (PingResults is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60);

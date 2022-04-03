@@ -27,20 +27,24 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        Models.APIModels.ICMPPingModel? PingResults = JsonConvert.DeserializeObject<Models.APIModels.ICMPPingModel>(await _http.GetStringAsync($"{_endpoint}network-tools/icmp-ping/{host}"));
-
+        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network-tools/icmp-ping/{host}");
+        Models.APIModels.ICMPPingModel? PingResults = null;
+        if (result.IsSuccessStatusCode)
+        {
+            PingResults = JsonConvert.DeserializeObject<Models.APIModels.ICMPPingModel>(await result.Content.ReadAsStringAsync());
+        }
         if (PingResults is null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to ping, please try again.", deleteTimer: 60);
             return;
         }
         string embedvalue = string.Empty;
-        await PingResults.Results.ToAsyncEnumerable().ForEachAsync(value =>
+        await PingResults.results.ToAsyncEnumerable().ForEachAsync(value =>
         {
-            embedvalue += $"[{PingResults.Host}](https://check-host.net/check-ping?host={PingResults.Host}) {(value.RecievedResponse ? $"replied back in" : "failed to reply back")}{(value.RecievedResponse ? $" `{value.ResponseTime}`\n" : "\n")}";
+            embedvalue += $"[{PingResults.host}](https://check-host.net/check-ping?host={PingResults.host}) {(value.recievedResponse ? $"replied back in `{value.responseTime}`ms" : "failed to reply back")}\n";
         });
-        if (PingResults.AverageResponseTime is not null)
-            embedvalue += $"Average: `{PingResults.AverageResponseTime}` Maximum: `{PingResults.MaximumResponseTime}` Minimum: `{PingResults.MinimumResponseTime}`";
+        if (PingResults.averageResponseTime is not null)
+            embedvalue += $"Average: `{PingResults.averageResponseTime}`ms Maximum: `{PingResults.maximumResponseTime}`ms Minimum: `{PingResults.minimumResponseTime}`ms";
         List<EmbedFieldBuilder> Fields = new();
 
         Fields.Add(new EmbedFieldBuilder
@@ -48,6 +52,6 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
             Name = "ICMP Ping Results",
             Value = embedvalue
         });
-        await Context.ReplyWithEmbedAsync($"ICMP Ping Complete For: {PingResults.Host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.Host}", string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"ICMP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, Fields);
     }
 }
