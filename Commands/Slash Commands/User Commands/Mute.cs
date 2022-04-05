@@ -28,7 +28,7 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
-        Models.MuteUserModel? mutedUserEntry = await Services.AutoUnmuteUserService._muteUsers.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == user.Id);
+        Database.Models.MuteUser? mutedUserEntry = await database.MutedUsers.FirstOrDefaultAsync(x => x.id == user.Id && x.guildId == Context.Guild.Id);
         if (mutedUserEntry is not null)
         {
             await Context.ReplyWithEmbedAsync("Mute User", $"Failed to mute {user.Mention}, user is already muted.", deleteTimer: 60, invisible: true);
@@ -70,14 +70,15 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
-        mutedUserEntry = new Models.MuteUserModel
+        mutedUserEntry = new Database.Models.MuteUser
         {
             id = user.Id,
             guildId = Context.Guild.Id,
             muteRoleId = role.Id,
             muteExpiryDate = muteTime,
         };
-        Services.AutoUnmuteUserService._muteUsers.Add(mutedUserEntry);
+        await database.MutedUsers.AddAsync(mutedUserEntry);
+        await database.ApplyChangesAsync();
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
         DateTimeOffset yeet = mutedUserEntry.muteExpiryDate;

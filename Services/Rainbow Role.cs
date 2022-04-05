@@ -31,7 +31,7 @@ public class RainbowRoleService : BackgroundService
                     SocketGuild? guildSocket = _client.GetGuild(guild.guildId);
                     if (guildSocket is not null)
                     {
-                        SocketRole? role = guildSocket.GetRole((ulong)guild.roleId);
+                        SocketRole? role = guildSocket.GetRole(guild.roleId);
                         if (role is not null)
                             await role.ModifyAsync(x => x.Color = Utilities.Miscallenous.RandomDiscordColour());
                     }

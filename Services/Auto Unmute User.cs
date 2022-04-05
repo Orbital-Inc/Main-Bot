@@ -1,12 +1,12 @@
 ﻿using Discord.WebSocket;
 using MainBot.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace MainBot.Services;
 
 public class AutoUnmuteUserService : BackgroundService
 {
-    internal static HashSet<Models.MuteUserModel> _muteUsers = new();
     private readonly DiscordShardedClient _client;
     public AutoUnmuteUserService(DiscordShardedClient client) => _client = client;
 
@@ -22,7 +22,9 @@ public class AutoUnmuteUserService : BackgroundService
         {
             try
             {
-                await _muteUsers.ToAsyncEnumerable().ForEachAwaitAsync(async user =>
+                await using var database = new DatabaseContext();
+                List<Database.Models.MuteUser>? mutedUsers = await database.MutedUsers.ToListAsync();
+                await mutedUsers.ToAsyncEnumerable().ForEachAwaitAsync(async user =>
                 {
                     if (user.muteExpiryDate <= DateTime.Now)
                     {
@@ -33,7 +35,7 @@ public class AutoUnmuteUserService : BackgroundService
                             if (userSocket is not null)
                             {
                                 await userSocket.RemoveRoleAsync(user.muteRoleId);
-                                _muteUsers.Remove(user);
+                                database.Remove(user);
                             }
                         }
                     }

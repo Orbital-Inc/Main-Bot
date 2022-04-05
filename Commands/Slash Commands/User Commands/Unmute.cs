@@ -20,7 +20,7 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
-        Models.MuteUserModel? mutedUserEntry = await Services.AutoUnmuteUserService._muteUsers.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == user.Id);
+        var mutedUserEntry = await database.MutedUsers.FirstOrDefaultAsync(x => x.id == user.Id && x.guildId == Context.Guild.Id);
         if (mutedUserEntry is null)
         {
             await Context.ReplyWithEmbedAsync("Unmute User", $"User is not muted.", deleteTimer: 60, invisible: true);
@@ -42,7 +42,8 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
-        Services.AutoUnmuteUserService._muteUsers.Remove(mutedUserEntry);
+        database.Remove(mutedUserEntry);
+        await database.ApplyChangesAsync();
         //remove mute role on user
         await Context.Guild.GetUser(user.Id).RemoveRoleAsync(role);
         await Context.ReplyWithEmbedAsync("Unmute", $"Successfully unmuted {user.Mention}", deleteTimer: 60);

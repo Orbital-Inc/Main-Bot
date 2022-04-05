@@ -18,4 +18,5 @@ public class DatabaseContext : DbContext
     public DbSet<ErrorLog> Errors { get; set; }
     public DbSet<Guild> Guilds { get; set; }
     public DbSet<DiscordChannel> NukeChannels { get; set; }
+    public DbSet<MuteUser> MutedUsers { get; set; }
 }
