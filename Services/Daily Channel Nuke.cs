@@ -1,13 +1,13 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using MainBot.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace MainBot.Services;
 
 public class DailyChannelNukeService : BackgroundService
 {
-    internal static HashSet<Models.NukeChannelModel> _nukeChannels = new();
     private readonly DiscordShardedClient _client;
     public DailyChannelNukeService(DiscordShardedClient client) => _client = client;
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -28,22 +28,24 @@ public class DailyChannelNukeService : BackgroundService
                 TimeSpan waitTime = midnight - today;
                 await Task.Delay((int)Math.Round(waitTime.TotalMilliseconds, 0), cancellationToken);
                 //start real work
-                IAsyncEnumerable<Models.NukeChannelModel>? freshList = _nukeChannels.ToAsyncEnumerable();
-                await freshList.ForEachAwaitAsync(async channel =>
+                await using var database = new DatabaseContext();
+                List<Database.Models.DiscordChannel>? freshList = await database.NukeChannels.ToListAsync(cancellationToken: cancellationToken);
+                await freshList.ToAsyncEnumerable().ForEachAsync(async channel =>
                 {
                     SocketGuild? guild = _client.GetGuild(channel.guildId);
                     if (guild is null)
                     {
-                        _nukeChannels.Remove(channel);
+                        database.Remove(channel);
                     }
                     else
                     {
-                        SocketTextChannel? socketChannel = guild.GetTextChannel(channel.id);
+                        SocketTextChannel? socketChannel = guild.GetTextChannel(channel.guildId);
                         if (socketChannel is not null)
                             await NukeChannelAsync(socketChannel);
                     }
 
                 }, cancellationToken: cancellationToken);
+                await database.ApplyChangesAsync();
             }
             catch (Exception ex)
             {
@@ -91,9 +93,14 @@ public class DailyChannelNukeService : BackgroundService
                 await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/world-nuke.gif");
                 break;
         }
+        await using var database = new DatabaseContext();
+
         //add channel back to daily nuke channels if exists
-        Models.NukeChannelModel? nukeChannel = await _nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
+        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.guildId == textChannel.Id);
         if (nukeChannel is not null)
-            nukeChannel.id = newTextChannel.Id;
+        {
+            nukeChannel.guildId = newTextChannel.Id;
+            await database.ApplyChangesAsync(nukeChannel);
+        }
     }
 }

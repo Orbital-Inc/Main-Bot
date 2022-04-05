@@ -56,13 +56,14 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        Models.NukeChannelModel? nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
+        await using var database = new DatabaseContext();
+        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.guildId == textChannel.Id);
         if (nukeChannel is not null)
         {
             await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Failed to add {textChannel.Mention} to the list of daily nuke channels, because it is already added.", deleteTimer: 60, invisible: true);
             return;
         }
-        Services.DailyChannelNukeService._nukeChannels.Add(new Models.NukeChannelModel
+        await database.NukeChannels.AddAsync(new Database.Models.DiscordChannel
         {
             id = textChannel.Id,
             name = textChannel.Name,
@@ -75,13 +76,15 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        Models.NukeChannelModel? nukeChannel = await Services.DailyChannelNukeService._nukeChannels.ToAsyncEnumerable().FirstOrDefaultAsync(x => x.id == textChannel.Id);
+        await using var database = new DatabaseContext();
+        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.guildId == textChannel.Id);
         if (nukeChannel is null)
         {
             await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"{textChannel.Mention} channel is not in the list of daily nuke channels, try adding it.", deleteTimer: 60, invisible: true);
             return;
         }
-        Services.DailyChannelNukeService._nukeChannels.Remove(nukeChannel);
+        database.Remove(nukeChannel);
+        await database.ApplyChangesAsync();
         await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Successfully removed {textChannel.Mention} from the list of daily nuke channels.", deleteTimer: 60, invisible: true);
     }
 }

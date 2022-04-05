@@ -37,24 +37,29 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
             return;
         }
-        if (Information.error is not null)
-        {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
-            return;
-        }
         List<EmbedFieldBuilder> Fields = new();
         #region Security
         string ExtraInfo = string.Empty;
-        if ((bool)Information.cloudProvider)
+        if (Information.cloudProvider is not null && (bool)Information.cloudProvider)
             ExtraInfo += $"`Cloud Provider`: True\n";
-        if ((bool)Information.abuser)
+        if (Information.abuser is not null && (bool)Information.abuser)
             ExtraInfo += $"`Abuser`: True\n";
-        if ((bool)Information.tor)
+        if (Information.tor is not null && (bool)Information.tor)
             ExtraInfo += $"`Tor`: True\n";
-        if ((bool)Information.attacker)
+        if (Information.attacker is not null && (bool)Information.attacker)
             ExtraInfo += $"`Attacker`: True\n";
-        if ((bool)Information.proxy)
+        if (Information.proxy is not null && (bool)Information.proxy)
             ExtraInfo += $"`Proxy`: True\n";
+        if (Information.relay is not null && (bool)Information.relay)
+            ExtraInfo += $"`Relay`: True\n";
+        if (Information.annonymous is not null && (bool)Information.annonymous)
+            ExtraInfo += $"`Anonymous`: True\n";
+        if (Information.bogon is not null && (bool)Information.bogon)
+            ExtraInfo += $"`Bogon`: True\n";
+        if (Information.torExit is not null && (bool)Information.torExit)
+            ExtraInfo += $"`Tor Exit`: True\n";
+        if (Information.threat is not null && (bool)Information.threat)
+            ExtraInfo += $"`Threat`: True\n";
         #endregion
 
         Fields.Add(new EmbedFieldBuilder
@@ -80,7 +85,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
         Fields.Add(new EmbedFieldBuilder
         {
             Name = "Location",
-            Value = $"{(string.IsNullOrWhiteSpace(Information.countryCode) ? "" : $"`Country`: {Information.countryCode}\n")}" +
+            Value = $"{(string.IsNullOrWhiteSpace(Information.country) ? "" : $"`Country`: {Information.country}\n")}" +
             $"{(string.IsNullOrWhiteSpace(Information.region) ? "" : $"`Region`: {Information.region}\n")}" +
             $"{(string.IsNullOrWhiteSpace(Information.district) ? "" : $"`District`: {Information.district}\n")}" +
            $"{(string.IsNullOrWhiteSpace(Information.city) ? "" : $"`City`: {Information.city}\n")}"

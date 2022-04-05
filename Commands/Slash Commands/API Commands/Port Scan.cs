@@ -29,7 +29,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         #region Info Checks
         //max port count is 10
-        var portSplit = ports.Split(',');
+        string[]? portSplit = ports.Split(',');
         if (portSplit.Length > 10)
         {
             await Context.ReplyWithEmbedAsync("Port Scanner Ports Error", "The specified amount of ports is too high, please try again.");

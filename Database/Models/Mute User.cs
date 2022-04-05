@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace MainBot.Database.Models;
-
-public class Guild
+public class MuteUser
 {
     [Key]
     public int key { get; set; }
     public ulong id { get; set; }
-    public string name { get; set; }
-    public virtual GuildSettings guildSettings { get; set; } = new GuildSettings();
+    public DateTime muteExpiryDate { get; set; }
+    public ulong guildId { get; set; }
+    public ulong muteRoleId { get; set; }
 }

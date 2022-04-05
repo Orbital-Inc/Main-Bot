@@ -17,7 +17,7 @@ public class CustomService
     private async Task ShardReady(DiscordSocketClient arg)
     {
         await _client.SetStatusAsync(Discord.UserStatus.DoNotDisturb);
-        await _client.SetGameAsync("nebulamods.ca", null, Discord.ActivityType.Listening);
+        await _client.SetGameAsync("nebulamods.ca", null, Discord.ActivityType.Watching);
         await using var database = new DatabaseContext();
         List<Guild>? guilds = await database.Guilds.ToListAsync();
         await Task.WhenAll(RainbowShit(guilds));

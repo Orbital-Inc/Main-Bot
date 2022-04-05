@@ -1,5 +1,4 @@
 ﻿using MainBot.Database.Models;
-using MainBot.Database.Models.DiscordBackup;
 using MainBot.Database.Models.Logs;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,5 +17,5 @@ public class DatabaseContext : DbContext
     //dbsets
     public DbSet<ErrorLog> Errors { get; set; }
     public DbSet<Guild> Guilds { get; set; }
-    public DbSet<User> Users { get; set; }
+    public DbSet<DiscordChannel> NukeChannels { get; set; }
 }

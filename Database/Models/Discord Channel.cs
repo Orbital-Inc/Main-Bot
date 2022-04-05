@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace MainBot.Database.Models;
-
-public class Guild
+public class DiscordChannel
 {
     [Key]
     public int key { get; set; }
+    public string? name { get; set; }
     public ulong id { get; set; }
-    public string name { get; set; }
-    public virtual GuildSettings guildSettings { get; set; } = new GuildSettings();
+    public ulong guildId { get; set; }
 }
