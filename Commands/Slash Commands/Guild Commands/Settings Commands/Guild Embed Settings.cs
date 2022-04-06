@@ -35,7 +35,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
         switch (embedOption)
         {
             case guildEmbedOption.send_verify_embed:
-                await SendVerifyMessage(textChannel);
+                await SendVerifyMessage(textChannel, description);
                 break;
             case guildEmbedOption.send_ticket_embed:
                 await SendTicketMessage(textChannel, "Ticket", "Click to open a ticket with the staff.", "Open a ticket");
@@ -64,7 +64,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
         await Context.ReplyWithEmbedAsync("Guild Embed Settings", $"Successfully sent the embed to: {textChannel.Mention}", deleteTimer: 60, invisible: true);
     }
 
-    private async Task SendVerifyMessage(ITextChannel channel)
+    private async Task SendVerifyMessage(ITextChannel channel, string? description = "Click to verify.")
     {
         MessageComponent? msg = new ComponentBuilder()
         {
@@ -99,7 +99,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
                 Text = Context.Guild.Name,
                 IconUrl = Context.Guild.IconUrl
             },
-            Description = "Click to verify.",
+            Description = description is null ? "Click to verify." : description,
         }.Build();
         await channel.SendMessageAsync(embed: embed, components: msg);
     }
@@ -211,13 +211,16 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             },
             Description =
                 "1. Always follow the Discord TOS (https://discord.com/terms) as well as community guidelines (https://discord.com/guidelines).\n" +
-                "2. Do not post or discuss any one's personal infomation without their permission\n" +
-                "3. There should be no discussion of DDOSing or other related topics in this server\n" +
+                "2. Do not share anyone's real life location, phone number or anything that could be deemed as private information.\n" +
+                "3. No discussing or sharing of illegal activities such as unethical hacking, DoSing/DDoS, botnets, webstressers, doxing or swatting.\n" +
                 "4. Do not threaten or talk about harming our users or staff in any capacity.\n" +
-                "5. Advertising is not allowed, we do this because when advertising is allowed it turns into spam and abuse. (and this server DOES NOT promote OR encourage spam)\n" +
+                "5. Advertising is not allowed (even in direct messages), we do this because when advertising is allowed it turns into spam and abuse. (This server DOES NOT promote OR encourage spam)\n" +
                 "6. Do not spam or partake in any activity designed to decrease the usability of our server.\n" +
                 "7. Do not abuse or exploit any of our built-in or bot based systems.\n" +
-                "8. Owners, and staff must be respected, along with others in the server. Owners, and staff will take action(warnings, mute, kick, ban) for unnecessary behavior or breaking the rules(some which were previously noted before this change).",
+                "8. Stick to each channel's specific topic and post content in the correct channels." +
+                "9. Owners, and staff must be respected, along with others in the server.\n" +
+                "Owners, and staff will take action (warnings, mute, kick, ban) for breaking the rules. We also reverse the right to act on misbehaviour/violations not explicitly listed.\n" +
+                "Once you said a message in this server, you agree to all above rules."
         }.WithCurrentTimestamp().Build();
         if (ticketButton)
             await channel.SendMessageAsync(embed: embed, components: msg);

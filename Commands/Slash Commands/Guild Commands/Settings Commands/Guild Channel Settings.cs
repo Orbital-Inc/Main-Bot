@@ -39,28 +39,26 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
                 guildEntry.guildSettings.userLogChannelId = textChannel.Id;
                 break;
             case guildChannelOption.add_daily_nuke_channel:
-                await AddChannelToNukeListCommand(textChannel);
+                await AddChannelToNukeListCommand(textChannel, database, Context);
                 return;
             case guildChannelOption.remove_daily_nuke_channel:
-                await RemoveChannelFromNukeListCommand(textChannel);
+                await RemoveChannelFromNukeListCommand(textChannel, database, Context);
                 return;
             default:
                 await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;
         }
-        await database.ApplyChangesAsync(guildEntry);
         await Context.ReplyWithEmbedAsync("Guild Channel Settings", $"Successfully set the channel to: {textChannel.Mention}", deleteTimer: 60, invisible: true);
     }
 
-    private async Task AddChannelToNukeListCommand(IChannel channel)
+    private static async Task AddChannelToNukeListCommand(IChannel channel, DatabaseContext database, ShardedInteractionContext context)
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        await using var database = new DatabaseContext();
-        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.guildId == textChannel.Id);
+        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is not null)
         {
-            await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Failed to add {textChannel.Mention} to the list of daily nuke channels, because it is already added.", deleteTimer: 60, invisible: true);
+            await context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Failed to add {textChannel.Mention} to the list of daily nuke channels, because it is already added.", deleteTimer: 60, invisible: true);
             return;
         }
         await database.NukeChannels.AddAsync(new Database.Models.DiscordChannel
@@ -69,22 +67,22 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
             name = textChannel.Name,
             guildId = textChannel.GuildId,
         });
-        await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Successfully added {textChannel.Mention} to the list of daily nuke channels.", deleteTimer: 60, invisible: true);
+        await database.ApplyChangesAsync();
+        await context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Successfully added {textChannel.Mention} to the list of daily nuke channels.", deleteTimer: 60, invisible: true);
     }
 
-    private async Task RemoveChannelFromNukeListCommand(IChannel channel)
+    private static async Task RemoveChannelFromNukeListCommand(IChannel channel, DatabaseContext database, ShardedInteractionContext context)
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Cannot nuke channel, this channel is not a text channel.");
-        await using var database = new DatabaseContext();
-        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.guildId == textChannel.Id);
+        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is null)
         {
-            await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"{textChannel.Mention} channel is not in the list of daily nuke channels, try adding it.", deleteTimer: 60, invisible: true);
+            await context.ReplyWithEmbedAsync("Daily Nuke Channels", $"{textChannel.Mention} channel is not in the list of daily nuke channels, try adding it.", deleteTimer: 60, invisible: true);
             return;
         }
         database.Remove(nukeChannel);
         await database.ApplyChangesAsync();
-        await Context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Successfully removed {textChannel.Mention} from the list of daily nuke channels.", deleteTimer: 60, invisible: true);
+        await context.ReplyWithEmbedAsync("Daily Nuke Channels", $"Successfully removed {textChannel.Mention} from the list of daily nuke channels.", deleteTimer: 60, invisible: true);
     }
 }

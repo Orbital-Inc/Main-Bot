@@ -36,13 +36,11 @@ public class DailyChannelNukeService : BackgroundService
                     if (guild is null)
                     {
                         database.Remove(channel);
+                        return;
                     }
-                    else
-                    {
-                        SocketTextChannel? socketChannel = guild.GetTextChannel(channel.guildId);
-                        if (socketChannel is not null)
-                            await NukeChannelAsync(socketChannel);
-                    }
+                    SocketTextChannel? socketChannel = guild.GetTextChannel(channel.guildId);
+                    if (socketChannel is not null)
+                        await NukeChannelAsync(socketChannel);
 
                 }, cancellationToken: cancellationToken);
                 await database.ApplyChangesAsync();
@@ -96,10 +94,10 @@ public class DailyChannelNukeService : BackgroundService
         await using var database = new DatabaseContext();
 
         //add channel back to daily nuke channels if exists
-        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.guildId == textChannel.Id);
+        Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is not null)
         {
-            nukeChannel.guildId = newTextChannel.Id;
+            nukeChannel.id = newTextChannel.Id;
             await database.ApplyChangesAsync(nukeChannel);
         }
     }
