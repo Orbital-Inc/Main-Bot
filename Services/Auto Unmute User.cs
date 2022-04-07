@@ -23,23 +23,27 @@ public class AutoUnmuteUserService : BackgroundService
             try
             {
                 await using var database = new DatabaseContext();
-                List<Database.Models.MuteUser>? mutedUsers = await database.MutedUsers.ToListAsync();
-                await mutedUsers.ToAsyncEnumerable().ForEachAwaitAsync(async user =>
+                if (await database.MutedUsers.AnyAsync(cancellationToken: cancellationToken))
                 {
-                    if (user.muteExpiryDate <= DateTime.Now)
+                    List<Database.Models.MuteUser>? mutedUsers = await database.MutedUsers.ToListAsync(cancellationToken: cancellationToken);
+                    await mutedUsers.ToAsyncEnumerable().ForEachAwaitAsync(async user =>
                     {
-                        SocketGuild? guild = _client.GetGuild(user.guildId);
-                        if (guild is not null)
+                        if (user.muteExpiryDate <= DateTime.Now)
                         {
-                            SocketGuildUser? userSocket = guild.GetUser(user.id);
-                            if (userSocket is not null)
+                            SocketGuild? guild = _client.GetGuild(user.guildId);
+                            if (guild is not null)
                             {
-                                await userSocket.RemoveRoleAsync(user.muteRoleId);
-                                database.Remove(user);
+                                SocketGuildUser? userSocket = guild.GetUser(user.id);
+                                if (userSocket is not null)
+                                {
+                                    await userSocket.RemoveRoleAsync(user.muteRoleId);
+                                    database.Remove(user);
+                                    await database.ApplyChangesAsync();
+                                }
                             }
                         }
-                    }
-                }, cancellationToken: cancellationToken);
+                    }, cancellationToken: cancellationToken);
+                }
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
             catch (Exception ex)
