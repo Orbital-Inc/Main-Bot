@@ -41,7 +41,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
         string embedvalue = string.Empty;
         await PingResults.results.ToAsyncEnumerable().ForEachAsync(value =>
         {
-            embedvalue += $"[{PingResults.host}](https://check-host.net/check-tcp?host={PingResults.host}%3A{PingResults.dstPort}) {(value.recievedResponse ? $"replied back on {PingResults.dstPort} in" : "failed to reply back")}{(value.recievedResponse ? $" `{value.responseTime}`ms\n" : "\n")}";
+            embedvalue += $"[{PingResults.host}](https://check-host.net/check-tcp?host={PingResults.host}%3A{PingResults.dstPort}) {(value.recievedResponse ? $"replied back on {PingResults.dstPort} in" : $"failed to reply back on {PingResults.dstPort}")}{(value.recievedResponse ? $" `{value.responseTime}`ms\n" : "\n")}";
         });
         if (PingResults.averageResponseTime is not null)
             embedvalue += $"Average: `{PingResults.averageResponseTime}`ms Maximum: `{PingResults.maximumResponseTime}`ms Minimum: `{PingResults.minimumResponseTime}`ms";
