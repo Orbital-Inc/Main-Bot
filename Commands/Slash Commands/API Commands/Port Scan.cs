@@ -61,7 +61,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.PortScanModel? PortScanResult = null;
-        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network-tools/portscan/{host}/{ports}");
+        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network/portscan/{host}/{ports}");
         if (result.IsSuccessStatusCode)
             PortScanResult = JsonConvert.DeserializeObject<Models.APIModels.PortScanModel>(await result.Content.ReadAsStringAsync());
 

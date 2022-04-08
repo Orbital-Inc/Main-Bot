@@ -35,7 +35,7 @@ public class RainbowRoleService : BackgroundService
                         if (role is not null)
                             await role.ModifyAsync(x => x.Color = Utilities.Miscallenous.RandomDiscordColour());
                     }
-                }, cancellationToken: cancellationToken);
+                }
                 int rand = new Random().Next(1, 20);
                 await Task.Delay(TimeSpan.FromMinutes(rand), cancellationToken);
             }

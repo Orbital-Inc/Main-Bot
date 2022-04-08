@@ -27,7 +27,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network-tools/icmp-ping/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network/icmp-ping/{host}");
         Models.APIModels.ICMPPingModel? PingResults = null;
         if (result.IsSuccessStatusCode)
         {

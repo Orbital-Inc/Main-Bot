@@ -30,7 +30,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.TCPPingModel? PingResults = null;
-        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network-tools/tcp-ping/{host}/{port}");
+        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network/tcp-ping/{host}/{port}");
         if (result.IsSuccessStatusCode)
             PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await result.Content.ReadAsStringAsync());
         if (PingResults is null)
