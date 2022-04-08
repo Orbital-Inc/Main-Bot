@@ -12,7 +12,7 @@ public class AutoUnmuteUserService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        new Thread(async () => await AutoUnmuteUsersAsync(cancellationToken)).Start();
+        _ = Task.Factory.StartNew(async () => await AutoUnmuteUsersAsync(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         await Task.CompletedTask;
     }
 
@@ -26,7 +26,7 @@ public class AutoUnmuteUserService : BackgroundService
                 if (await database.MutedUsers.AnyAsync(cancellationToken: cancellationToken))
                 {
                     List<Database.Models.MuteUser>? mutedUsers = await database.MutedUsers.ToListAsync(cancellationToken: cancellationToken);
-                    await mutedUsers.ToAsyncEnumerable().ForEachAwaitAsync(async user =>
+                    foreach(var user in mutedUsers)
                     {
                         if (user.muteExpiryDate <= DateTime.Now)
                         {
@@ -42,7 +42,7 @@ public class AutoUnmuteUserService : BackgroundService
                                 }
                             }
                         }
-                    }, cancellationToken: cancellationToken);
+                    };
                 }
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }

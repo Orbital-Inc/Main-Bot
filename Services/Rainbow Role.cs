@@ -11,7 +11,7 @@ public class RainbowRoleService : BackgroundService
     public RainbowRoleService(DiscordShardedClient client) => _client = client;
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        new Thread(async () => await RainbowRoleChanger(cancellationToken)).Start();
+        _ = Task.Factory.StartNew(async () => await RainbowRoleChanger(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         await Task.CompletedTask;
     }
 
@@ -26,7 +26,7 @@ public class RainbowRoleService : BackgroundService
                     await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                     continue;
                 }
-                await _rainbowRoleGuilds.ToAsyncEnumerable().ForEachAwaitAsync(async guild =>
+               foreach(var guild in _rainbowRoleGuilds)
                 {
                     SocketGuild? guildSocket = _client.GetGuild(guild.guildId);
                     if (guildSocket is not null)

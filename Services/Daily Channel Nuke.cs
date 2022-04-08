@@ -12,7 +12,7 @@ public class DailyChannelNukeService : BackgroundService
     public DailyChannelNukeService(DiscordShardedClient client) => _client = client;
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        new Thread(async () => await AutoNukeChannels(cancellationToken)).Start();
+        _ = Task.Factory.StartNew(async () => await AutoNukeChannels(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         await Task.CompletedTask;
     }
 
@@ -30,19 +30,19 @@ public class DailyChannelNukeService : BackgroundService
                 //start real work
                 await using var database = new DatabaseContext();
                 List<Database.Models.DiscordChannel>? freshList = await database.NukeChannels.ToListAsync(cancellationToken: cancellationToken);
-                await freshList.ToAsyncEnumerable().ForEachAsync(async channel =>
+                foreach(var channel in freshList)
                 {
                     SocketGuild? guild = _client.GetGuild(channel.guildId);
                     if (guild is null)
                     {
                         database.Remove(channel);
-                        return;
+                        continue;
                     }
-                    SocketTextChannel? socketChannel = guild.GetTextChannel(channel.guildId);
+                    SocketTextChannel? socketChannel = guild.GetTextChannel(channel.id);
                     if (socketChannel is not null)
-                        await NukeChannelAsync(socketChannel);
+                        await NukeChannelAsync(socketChannel, database);
 
-                }, cancellationToken: cancellationToken);
+                }
                 await database.ApplyChangesAsync();
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ public class DailyChannelNukeService : BackgroundService
         }
     }
 
-    internal static async Task NukeChannelAsync(IChannel channel)
+    internal static async Task NukeChannelAsync(IChannel channel, DatabaseContext? database = null)
     {
         //check if channel is even a text channel
         if (channel is not ITextChannel textChannel)
@@ -91,8 +91,12 @@ public class DailyChannelNukeService : BackgroundService
                 await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/world-nuke.gif");
                 break;
         }
-        await using var database = new DatabaseContext();
-
+        bool nullDB = false;
+        if (database is null)
+        {
+            database = new DatabaseContext();
+            nullDB = true;
+        }
         //add channel back to daily nuke channels if exists
         Database.Models.DiscordChannel? nukeChannel = await database.NukeChannels.FirstOrDefaultAsync(x => x.id == textChannel.Id);
         if (nukeChannel is not null)
@@ -100,5 +104,7 @@ public class DailyChannelNukeService : BackgroundService
             nukeChannel.id = newTextChannel.Id;
             await database.ApplyChangesAsync(nukeChannel);
         }
+        if (nullDB)
+            await database.DisposeAsync();
     }
 }
