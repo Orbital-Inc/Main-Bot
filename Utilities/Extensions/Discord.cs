@@ -7,7 +7,7 @@ namespace MainBot.Utilities.Extensions;
 
 internal static class DiscordExtensions
 {
-    internal static async Task ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false)
+    internal static async Task ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string thumbnailUrl = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false)
     {
         if (context is not ShardedInteractionContext shardedContext)
             throw new ArgumentNullException(nameof(shardedContext), "Failed to convert context to a sharded context.");
@@ -28,7 +28,8 @@ internal static class DiscordExtensions
             },
             Description = description,
             Url = url,
-            ThumbnailUrl = imageUrl,
+            ThumbnailUrl = thumbnailUrl,
+            ImageUrl = imageUrl,
         }.WithCurrentTimestamp().Build();
         if (embeds is not null)
             embed = embed.ToEmbedBuilder().WithFields(embeds).Build();

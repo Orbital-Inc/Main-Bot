@@ -22,6 +22,7 @@ public class ProfileCommand : InteractionModuleBase<ShardedInteractionContext>
             $"Join Date: {(userInfo.JoinedAt is null ? "N/A" : $"<t:{userInfo.JoinedAt.Value.ToUnixTimeSeconds()}>")}\n" +
             $"Boost Date: {(userInfo.PremiumSince is null ? "N/A" : $"<t:{userInfo.PremiumSince.Value.ToUnixTimeSeconds()}>")}\n" +
             userRoles + "\n" +
-            $"Mute Status: {database.MutedUsers.FirstOrDefaultAsync(x => x.id == userInfo.Id && x.guildId == Context.Guild.Id) is null}", imageUrl: userInfo.GetAvatarUrl());
+            $"Status: {userInfo.Status}\n" +
+            $"Mute Status: {database.MutedUsers.FirstOrDefaultAsync(x => x.id == userInfo.Id && x.guildId == Context.Guild.Id) is null}", thumbnailUrl: userInfo.GetAvatarUrl(), imageUrl: userInfo.GetGuildAvatarUrl());
     }
 }

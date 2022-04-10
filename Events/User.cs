@@ -26,8 +26,11 @@ public class UserEventHandler
         {
             if (string.IsNullOrWhiteSpace(GuildUserAfter.Nickname) is false)
             {
-                await ChangeUsersName(GuildUserAfter, GuildUserAfter.Nickname);
-                return;
+                if (GuildUserAfter.Nickname != GuildUserBefore.Nickname)
+                {
+                    await ChangeUsersName(GuildUserAfter, GuildUserAfter.Nickname);
+                    return;
+                }
             }
             if (GuildUserBefore.Username != GuildUserAfter.Username)
             {
