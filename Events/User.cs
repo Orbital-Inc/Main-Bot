@@ -15,6 +15,26 @@ public class UserEventHandler
         _client = client;
         _client.UserJoined += UserJoinedGuild;
         _client.UserLeft += UserLeftGuild;
+        _client.UserUpdated += UserUpdated;
+    }
+
+    private async Task UserUpdated(SocketUser arg1, SocketUser arg2)
+    {
+        var GuildUserBefore = arg1 as SocketGuildUser;
+        var GuildUserAfter = arg2 as SocketGuildUser;
+        if (GuildUserBefore is not null && GuildUserAfter is not null)
+        {
+            if (string.IsNullOrWhiteSpace(GuildUserAfter.Nickname) is false)
+            {
+                await ChangeUsersName(GuildUserAfter, GuildUserAfter.Nickname);
+                return;
+            }
+            if (GuildUserBefore.Username != GuildUserAfter.Username)
+            {
+                await ChangeUsersName(GuildUserAfter, GuildUserAfter.Username);
+                return;
+            }
+        }
     }
 
     private async Task UserLeftGuild(SocketGuild arg1, SocketUser arg2)
@@ -41,7 +61,7 @@ public class UserEventHandler
     {
         try
         {
-            await Task.WhenAll(SendUserJoinEmbed(arg), ChangeUsersName(arg), PersistentMute(arg));
+            await Task.WhenAll(SendUserJoinEmbed(arg), ChangeUsersName(arg, arg.Username), PersistentMute(arg));
         }
         catch (Exception e)
         {
@@ -70,13 +90,13 @@ public class UserEventHandler
             await channel.SendEmbedAsync("User Joined", $"User: {user.Username}#{user.Discriminator}\n{user.Mention}", $"{user.Id}", user.GetAvatarUrl());
     }
 
-    private static async Task ChangeUsersName(SocketGuildUser user)
+    private static async Task ChangeUsersName(SocketGuildUser user, string name)
     {
         try
         {
-            if (user.Username.ContainsSpecialCharacters())
+            if (name.ContainsSpecialCharacters())
             {
-                string uncanceredname = user.Username.RemoveSpecialCharacters();
+                string uncanceredname = name.RemoveSpecialCharacters();
                 if (string.IsNullOrWhiteSpace(uncanceredname))
                 {
                     string[] NewNicknames = new string[] { "Sunshine And Rainbows", "Hello World", "Just Another", "Billy", "Tyrone", "Bob", "My Nick Was Gay", "Boost For Nickname Change", "Me Over Here", "Tim", "Jimmy", "Quacha", "Freddy", "LoKo", "YeErT dErP dErPpY" };
