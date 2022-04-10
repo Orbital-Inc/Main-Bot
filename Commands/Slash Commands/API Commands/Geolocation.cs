@@ -91,6 +91,6 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
            $"{(string.IsNullOrWhiteSpace(Information.city) ? "" : $"`City`: {Information.city}\n")}"
         });
 
-        await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", string.Empty, $"https://check-host.net/ip-info?host={Information.ip}", Information.flag, Fields);
+        await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", string.Empty, string.Empty, $"https://check-host.net/ip-info?host={Information.ip}", Information.flag, Fields);
     }
 }

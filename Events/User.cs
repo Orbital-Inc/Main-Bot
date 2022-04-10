@@ -15,13 +15,12 @@ public class UserEventHandler
         _client = client;
         _client.UserJoined += UserJoinedGuild;
         _client.UserLeft += UserLeftGuild;
-        _client.UserUpdated += UserUpdated;
+        _client.GuildMemberUpdated += UserUpdated;
     }
 
-    private async Task UserUpdated(SocketUser arg1, SocketUser arg2)
+    private async Task UserUpdated(Cacheable<SocketGuildUser, ulong> arg1, SocketGuildUser GuildUserAfter)
     {
-        var GuildUserBefore = arg1 as SocketGuildUser;
-        var GuildUserAfter = arg2 as SocketGuildUser;
+        var GuildUserBefore = await arg1.GetOrDownloadAsync();
         if (GuildUserBefore is not null && GuildUserAfter is not null)
         {
             if (string.IsNullOrWhiteSpace(GuildUserAfter.Nickname) is false)

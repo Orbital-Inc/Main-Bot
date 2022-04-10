@@ -52,6 +52,6 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
             Name = "TCP Ping Results",
             Value = embedvalue
         });
-        await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, Fields);
     }
 }

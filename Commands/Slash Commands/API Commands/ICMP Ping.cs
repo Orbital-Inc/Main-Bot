@@ -52,6 +52,6 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
             Name = "ICMP Ping Results",
             Value = embedvalue
         });
-        await Context.ReplyWithEmbedAsync($"ICMP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"ICMP Ping Complete For: {PingResults.host}", string.Empty, string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, Fields);
     }
 }
