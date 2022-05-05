@@ -63,12 +63,35 @@ public class UserEventHandler
     {
         try
         {
+            _ = Task.Run(async () => await AutoKick(arg));
+            //anti raid features
             await Task.WhenAll(SendUserJoinEmbed(arg), ChangeUsersName(arg, arg.Username), PersistentMute(arg));
         }
         catch (Exception e)
         {
             await e.LogErrorAsync();
         }
+    }
+
+    private async Task AutoKick(SocketGuildUser user)
+    {
+        if (user.GuildPermissions.Administrator || user.IsBot)
+            return;
+        await using var database = new DatabaseContext();
+        var guild = await database.Guilds.FirstOrDefaultAsync(x => x.id == user.Guild.Id);
+        if (guild is null)
+            return;
+        if (user.Roles.FirstOrDefault(x => x.Id == guild.guildSettings.administratorRoleId) is not null)
+            return;
+        if (user.Roles.FirstOrDefault(x => x.Id == guild.guildSettings.moderatorRoleId) is not null)
+            return;
+        if (user.Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
+            return;
+        await Task.Delay(TimeSpan.FromMinutes(3));
+        var socketGuild = _client.GetGuild(user.Guild.Id);
+        if (socketGuild.GetUser(user.Id).Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
+            return;
+        await user.KickAsync();
     }
 
     private static async Task PersistentMute(SocketGuildUser user)

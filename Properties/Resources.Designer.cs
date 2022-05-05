@@ -79,7 +79,7 @@ namespace MainBot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ODg5Njg4OTA4Mzc0Mzc2NTAw.YUk5XQ.B-MaZI9v1vtftx5-7_3IUWSL1QM.
+        ///   Looks up a localized string similar to OTcwNzU3MTY3MDEzNTg5MDMz.GUhQ5m.x6auY52ObOJibb8peYuTZiTO33h2xUF-vTHEOo.
         /// </summary>
         internal static string TestToken {
             get {
@@ -88,7 +88,7 @@ namespace MainBot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NzgxMjQwODExMzIwMjQ2MzIz.X76xNA.cvWfrobHnuyt8a9fqSvB02pez8Y.
+        ///   Looks up a localized string similar to OTcwNzU3Mzc3MjMyMTA5NjM4.YnAmQg.rJ9Z23WGjedy_koRxciWP9xJIPk.
         /// </summary>
         internal static string Token {
             get {

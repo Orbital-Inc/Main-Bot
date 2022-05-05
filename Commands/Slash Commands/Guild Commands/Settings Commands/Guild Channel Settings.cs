@@ -34,9 +34,11 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
         {
             case guildChannelOption.set_message_log_channel:
                 guildEntry.guildSettings.messageLogChannelId = textChannel.Id;
+                await database.ApplyChangesAsync(guildEntry);
                 break;
             case guildChannelOption.set_user_log_channel:
                 guildEntry.guildSettings.userLogChannelId = textChannel.Id;
+                await database.ApplyChangesAsync(guildEntry);
                 break;
             case guildChannelOption.add_daily_nuke_channel:
                 await AddChannelToNukeListCommand(textChannel, database, Context);

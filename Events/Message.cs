@@ -15,6 +15,37 @@ public class MessageEventHandler
         _client.MessageDeleted += MessageDeleted;
         _client.MessagesBulkDeleted += MessagesDeleted;
         _client.MessageUpdated += MessageUpdated;
+        _client.MessageReceived += MessageRecieved;
+    }
+
+    private async Task MessageRecieved(SocketMessage arg)
+    {
+       _ = Task.Run(async () => await CheckMessageTextAsync(arg));
+        await Task.CompletedTask;
+    }
+
+    private async ValueTask<bool> CheckMessageTextAsync(SocketMessage message)
+    {
+        if (message.Author.IsBot || message.Author.IsWebhook || (await _client.GetApplicationInfoAsync()).Owner.Id == message.Author.Id)
+        {
+            return false;
+        }
+        if (message.MentionedChannels.Count > 4)
+        {
+            await message.DeleteAsync();
+            return true;
+        }
+        if (message.MentionedRoles.Count > 4)
+        {
+            await message.DeleteAsync();
+            return true;
+        }
+        if (message.MentionedUsers.Count > 4)
+        {
+            await message.DeleteAsync();
+            return true;
+        }
+        return false;
     }
 
     private async Task MessageUpdated(Cacheable<IMessage, ulong> arg1, SocketMessage arg2, ISocketMessageChannel arg3)
@@ -23,6 +54,8 @@ public class MessageEventHandler
         {
             IMessage message = arg1.Value;
             if (message is null)
+                return;
+            if (await CheckMessageTextAsync(arg2))
                 return;
             await using var database = new DatabaseContext();
             if (_client.GetChannel(message.Channel.Id) is not SocketGuildChannel socketGuildChannel)
