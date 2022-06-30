@@ -10,7 +10,7 @@ namespace MainBot.Commands.SlashCommands.UserCommands;
 [RequireModerator]
 public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("unmute", "Unmute a user")]
+    [SlashCommand("unmute", "Unmute a user.")]
     public async Task UnmuteUserCommand(IUser user)
     {
         await using var database = new DatabaseContext();
@@ -20,7 +20,7 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
-        var mutedUserEntry = await database.MutedUsers.FirstOrDefaultAsync(x => x.id == user.Id && x.guildId == Context.Guild.Id);
+        Database.Models.MuteUser? mutedUserEntry = await database.MutedUsers.FirstOrDefaultAsync(x => x.id == user.Id && x.guildId == Context.Guild.Id);
         if (mutedUserEntry is null)
         {
             await Context.ReplyWithEmbedAsync("Unmute User", $"User is not muted.", deleteTimer: 60, invisible: true);

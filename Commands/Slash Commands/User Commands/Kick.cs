@@ -10,7 +10,7 @@ namespace MainBot.Commands.SlashCommands.UserCommands;
 [RequireModerator]
 public class KickCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("kick", "Kick a user from the guild")]
+    [SlashCommand("kick", "Kick a user from the guild.")]
     public async Task ExecuteCommand(IUser user)
     {
         await using var database = new DatabaseContext();

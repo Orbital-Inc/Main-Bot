@@ -20,7 +20,7 @@ public class UserEventHandler
 
     private async Task UserUpdated(Cacheable<SocketGuildUser, ulong> arg1, SocketGuildUser GuildUserAfter)
     {
-        var GuildUserBefore = await arg1.GetOrDownloadAsync();
+        SocketGuildUser? GuildUserBefore = await arg1.GetOrDownloadAsync();
         if (GuildUserBefore is not null && GuildUserAfter is not null)
         {
             if (string.IsNullOrWhiteSpace(GuildUserAfter.Nickname) is false)
@@ -78,7 +78,7 @@ public class UserEventHandler
         if (user.GuildPermissions.Administrator || user.IsBot)
             return;
         await using var database = new DatabaseContext();
-        var guild = await database.Guilds.FirstOrDefaultAsync(x => x.id == user.Guild.Id);
+        Database.Models.Guild? guild = await database.Guilds.FirstOrDefaultAsync(x => x.id == user.Guild.Id);
         if (guild is null)
             return;
         if (user.Roles.FirstOrDefault(x => x.Id == guild.guildSettings.administratorRoleId) is not null)
@@ -88,7 +88,7 @@ public class UserEventHandler
         if (user.Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
             return;
         await Task.Delay(TimeSpan.FromMinutes(3));
-        var socketGuild = _client.GetGuild(user.Guild.Id);
+        SocketGuild? socketGuild = _client.GetGuild(user.Guild.Id);
         if (socketGuild.GetUser(user.Id).Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
             return;
         await user.KickAsync();

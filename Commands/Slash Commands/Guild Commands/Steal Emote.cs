@@ -11,7 +11,7 @@ public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext
     public StealEmoteCommand(HttpClient http) => _http = http;
 
     [SlashCommand("steal-emote", "Steal an emote from another server.")]
-    public async Task StealEmoteTask(string emote, string? name) => await StealEmoteAsync(emote, name);
+    public async Task StealEmoteTask(string emote, string? name = null) => await StealEmoteAsync(emote, name);
 
     private async Task StealEmoteAsync(string emote, string? name)
     {

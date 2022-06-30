@@ -217,7 +217,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
                 "5. Advertising is not allowed (even in direct messages), we do this because when advertising is allowed it turns into spam and abuse. (This server DOES NOT promote OR encourage spam)\n" +
                 "6. Do not spam or partake in any activity designed to decrease the usability of our server.\n" +
                 "7. Do not abuse or exploit any of our built-in or bot based systems.\n" +
-                "8. Stick to each channel's specific topic and post content in the correct channels." +
+                "8. Stick to each channel's specific topic and post content in the correct channels.\n" +
                 "9. Owners, and staff must be respected, along with others in the server.\n" +
                 "Owners, and staff will take action (warnings, mute, kick, ban) for breaking the rules. We also reverse the right to act on misbehaviour/violations not explicitly listed.\n" +
                 "Once you said a message in this server, you agree to all above rules."

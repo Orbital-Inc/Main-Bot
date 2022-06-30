@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 using MainBot.Database;
 using MainBot.Utilities.Attributes;
@@ -15,7 +10,7 @@ namespace MainBot.Commands.SlashCommands.UserCommands;
 [RequireModerator]
 public class BanCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("ban", "Ban a user from the guild")]
+    [SlashCommand("ban", "Ban a user from the guild.")]
     public async Task ExecuteCommand(IUser user, string? reason = null, int pruneDays = 7)
     {
         await using var database = new DatabaseContext();

@@ -7,7 +7,7 @@ namespace MainBot.Commands.SlashCommands;
 
 public class InformationCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("information", "Display information about the bot")]
+    [SlashCommand("information", "Display information about the bot.")]
     public async Task ExecuteCommand()
     {
         Discord.Rest.RestApplication? appInfo = await Context.Client.GetApplicationInfoAsync();

@@ -30,7 +30,7 @@ public class DailyChannelNukeService : BackgroundService
                 //start real work
                 await using var database = new DatabaseContext();
                 List<Database.Models.DiscordChannel>? freshList = await database.NukeChannels.ToListAsync(cancellationToken: cancellationToken);
-                foreach(var channel in freshList)
+                foreach(Database.Models.DiscordChannel? channel in freshList)
                 {
                     SocketGuild? guild = _client.GetGuild(channel.guildId);
                     if (guild is null)

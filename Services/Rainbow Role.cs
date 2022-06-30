@@ -26,7 +26,7 @@ public class RainbowRoleService : BackgroundService
                     await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                     continue;
                 }
-               foreach(var guild in _rainbowRoleGuilds)
+               foreach(Models.RainbowRoleModel? guild in _rainbowRoleGuilds)
                 {
                     SocketGuild? guildSocket = _client.GetGuild(guild.guildId);
                     if (guildSocket is not null)

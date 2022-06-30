@@ -10,7 +10,7 @@ namespace MainBot.Commands.SlashCommands.UserCommands;
 [RequireModerator]
 public class ManageRoleCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("role", "Add/remove a role from a user")]
+    [SlashCommand("role", "Add/remove a role from a user.")]
     public async Task ExecuteCommand(IUser user, IRole role)
     {
         await using var database = new DatabaseContext();

@@ -9,7 +9,7 @@ namespace MainBot.Commands.SlashCommands.GuildCommands.SettingsCommands;
 [RequireModerator]
 public class DisplaySettingsCommand : InteractionModuleBase<ShardedInteractionContext>
 {
-    [SlashCommand("guild-settings", "Display guild settings")]
+    [SlashCommand("guild-settings", "Display guild settings.")]
     public async Task ExecuteCommand()
     {
         await using var database = new DatabaseContext();

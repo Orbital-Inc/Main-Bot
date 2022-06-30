@@ -26,7 +26,7 @@ public class AutoUnmuteUserService : BackgroundService
                 if (await database.MutedUsers.AnyAsync(cancellationToken: cancellationToken))
                 {
                     List<Database.Models.MuteUser>? mutedUsers = await database.MutedUsers.ToListAsync(cancellationToken: cancellationToken);
-                    foreach(var user in mutedUsers)
+                    foreach(Database.Models.MuteUser? user in mutedUsers)
                     {
                         if (user.muteExpiryDate <= DateTime.Now)
                         {
