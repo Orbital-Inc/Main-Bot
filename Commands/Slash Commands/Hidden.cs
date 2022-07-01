@@ -59,12 +59,13 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
         
         foreach(KeyValuePair<IEmote, ReactionMetadata> react in message.Reactions)
         {
-            if (react.Key.Name == "24MBoosterbadge")
+            if (react.Key.Name == "diamond_booster")
             {
                 IEnumerable<IUser>? users = await message.GetReactionUsersAsync(react.Key, 500).FlattenAsync();
                 int randomNumber = new Random().Next(0, users.Count());
                 IUser? winner = users.ToArray()[randomNumber];
                 await Context.ReplyWithEmbedAsync("Winner", $"{winner.Mention}");
+                return;
             }
         }
     }
