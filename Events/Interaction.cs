@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
+
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+
 using MainBot.Database;
 using MainBot.Database.Models.Logs;
 using MainBot.Utilities.Extensions;
@@ -74,7 +76,7 @@ internal class InteractionEventHandler
                     {
                         var entry = new ErrorLog
                         {
-                            errorTime = DateTime.Now,
+                            errorTime = DateTime.UtcNow,
                             source = arg1.Name,
                             message = arg3.ErrorReason,
                         };
@@ -138,7 +140,7 @@ internal class InteractionEventHandler
                     {
                         var entry = new ErrorLog
                         {
-                            errorTime = DateTime.Now,
+                            errorTime = DateTime.UtcNow,
                             source = arg1.Name,
                             message = arg3.ErrorReason
                         };

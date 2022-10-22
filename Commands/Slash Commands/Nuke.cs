@@ -1,4 +1,5 @@
 ﻿using Discord.Interactions;
+
 using MainBot.Utilities.Attributes;
 
 namespace MainBot.Commands.SlashCommands;

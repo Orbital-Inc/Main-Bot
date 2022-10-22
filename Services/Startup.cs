@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics;
+
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+
 using MainBot.Database;
 using MainBot.Events;
 using MainBot.Loggers;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +20,7 @@ internal class StartupService
     {
         LogLevel = LogSeverity.Verbose,
         AlwaysDownloadUsers = true,
-        GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.AllUnprivileged,
+        GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.AllUnprivileged,// | GatewayIntents.MessageContent,
         UseSystemClock = false,
         MessageCacheSize = 250,
         UseInteractionSnowflakeDate = true,

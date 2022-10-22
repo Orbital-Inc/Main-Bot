@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Database;
 using MainBot.Utilities.Attributes;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Commands.SlashCommands.GuildCommands.SettingsCommands;
@@ -16,6 +18,7 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
         remove_daily_nuke_channel,
         set_user_log_channel,
         set_message_log_channel,
+        set_system_log_channel
     }
 
     [SlashCommand("guild-channel-settings", "Guild settings that involve setting a channel.")]
@@ -46,6 +49,10 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
             case guildChannelOption.remove_daily_nuke_channel:
                 await RemoveChannelFromNukeListCommand(textChannel, database, Context);
                 return;
+            case guildChannelOption.set_system_log_channel:
+                guildEntry.guildSettings.systemLogChannelId = textChannel.Id;
+                await database.ApplyChangesAsync(guildEntry);
+                break;
             default:
                 await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;

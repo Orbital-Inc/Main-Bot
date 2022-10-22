@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+
 using Discord.Interactions;
+
 using MainBot.Utilities.Extensions;
 
 namespace MainBot.Commands.SlashCommands;
@@ -13,7 +15,7 @@ public class InformationCommand : InteractionModuleBase<ShardedInteractionContex
         Discord.Rest.RestApplication? appInfo = await Context.Client.GetApplicationInfoAsync();
         await Context.ReplyWithEmbedAsync("Information",
             $"Guild Count: {Context.Client.Guilds.Count}\n" +
-            $"Guild Member Count: {Context.Guild.MemberCount}\n" +
+            $"Guild Member Count: {(Context.Guild is null ? "N/A" : Context.Guild.MemberCount)}\n" +
             $"Developer: {(Context.Guild is null ? $"{appInfo.Owner.Username}#{appInfo.Owner.Discriminator}" : appInfo.Owner.Mention)}\n" +
             $"Nebula Mods, Inc. ASN: [AS397441](https://asn.ipinfo.app/AS397441)\n" +
             $"Uptime: <t:{((DateTimeOffset)Process.GetCurrentProcess().StartTime).ToUnixTimeSeconds()}:R>\n" +

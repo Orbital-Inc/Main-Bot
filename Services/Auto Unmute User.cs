@@ -1,5 +1,7 @@
 ﻿using Discord.WebSocket;
+
 using MainBot.Database;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
@@ -26,9 +28,9 @@ public class AutoUnmuteUserService : BackgroundService
                 if (await database.MutedUsers.AnyAsync(cancellationToken: cancellationToken))
                 {
                     List<Database.Models.MuteUser>? mutedUsers = await database.MutedUsers.ToListAsync(cancellationToken: cancellationToken);
-                    foreach(Database.Models.MuteUser? user in mutedUsers)
+                    foreach (Database.Models.MuteUser? user in mutedUsers)
                     {
-                        if (user.muteExpiryDate <= DateTime.Now)
+                        if (user.muteExpiryDate <= DateTime.UtcNow)
                         {
                             SocketGuild? guild = _client.GetGuild(user.guildId);
                             if (guild is not null)

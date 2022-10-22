@@ -1,7 +1,8 @@
-﻿using System.Runtime.InteropServices;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Utilities.Extensions;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -9,7 +10,6 @@ namespace MainBot.Commands.SlashCommands.APICommands;
 public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost:1337/" : $"https://api.nebulamods.ca/";
 
     public PortScan(HttpClient http) => _http = http;
 
@@ -60,7 +60,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.PortScanModel? PortScanResult = null;
-        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network/portscan/{host}/{ports}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/portscan/{host}/{ports}");
         if (result.IsSuccessStatusCode)
             PortScanResult = JsonConvert.DeserializeObject<Models.APIModels.PortScanModel>(await result.Content.ReadAsStringAsync());
 
@@ -75,13 +75,14 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         {
             embedvalue += $"{value.protocol} to port [{value.port}](https://check-host.net/check-{value.protocol.ToLower()}?host={PortScanResult.host}%3A{value.port}) is `{value.status}`\n";
         });
-        List<EmbedFieldBuilder> Fields = new();
-
-        Fields.Add(new EmbedFieldBuilder
+        List<EmbedFieldBuilder> Fields = new()
         {
-            Name = "Port Scan Results",
-            Value = embedvalue
-        });
+            new EmbedFieldBuilder
+            {
+                Name = "Port Scan Results",
+                Value = embedvalue
+            }
+        };
 
         await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://check-host.net/ip-info?host={PortScanResult.host}", string.Empty, string.Empty, Fields);
     }

@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
+
 using MainBot.Database;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Events;

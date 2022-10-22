@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Database;
 using MainBot.Utilities.Attributes;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Commands.SlashCommands.UserCommands;
@@ -31,7 +33,7 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
-        if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry))
+        if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;

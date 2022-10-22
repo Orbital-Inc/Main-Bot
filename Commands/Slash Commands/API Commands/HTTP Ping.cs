@@ -6,17 +6,16 @@ using MainBot.Utilities.Extensions;
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
-
-public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
+public class HTTPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
+    //fix me
+    internal HTTPPing(HttpClient http) => _http = http;
 
-    internal ICMPPing(HttpClient http) => _http = http;
-
-    [SlashCommand("ping-icmp", "Sends an ICMP packet to a specified host in hopes for a reponse.")]
+    [SlashCommand("ping-http", "Sends an HTTP packet to a specified host in hopes for a reponse.")]
     public async Task PingHost(string host)
     {
-        await Context.ReplyWithEmbedAsync("ICMP Ping", $"Attempting to ICMP ping {host}, please wait...");
+        await Context.ReplyWithEmbedAsync("HTTP Ping", $"Attempting to HTTP ping {host}, please wait...");
 
         if (Uri.CheckHostName(host) is not (UriHostNameType.IPv4 or UriHostNameType.IPv6 or UriHostNameType.Dns))
         {
@@ -27,7 +26,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/icmp-ping/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/http-ping/{host}");
         Models.APIModels.ICMPPingModel? PingResults = null;
         if (result.IsSuccessStatusCode)
         {
@@ -49,10 +48,10 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         {
             new EmbedFieldBuilder
             {
-                Name = "ICMP Ping Results",
+                Name = "HTTP Ping Results",
                 Value = embedvalue
             }
         };
-        await Context.ReplyWithEmbedAsync($"ICMP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"HTTP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
+
 using MainBot.Database;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Events;
@@ -20,7 +22,7 @@ public class MessageEventHandler
 
     private async Task MessageRecieved(SocketMessage arg)
     {
-       _ = Task.Run(async () => await CheckMessageTextAsync(arg));
+        _ = Task.Run(async () => await CheckMessageTextAsync(arg));
         await Task.CompletedTask;
     }
 

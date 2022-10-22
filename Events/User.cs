@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
+
 using MainBot.Database;
 using MainBot.Utilities;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Events;
@@ -87,7 +89,7 @@ public class UserEventHandler
             return;
         if (user.Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
             return;
-        await Task.Delay(TimeSpan.FromMinutes(3));
+        await Task.Delay(TimeSpan.FromMinutes(10));
         SocketGuild? socketGuild = _client.GetGuild(user.Guild.Id);
         if (socketGuild.GetUser(user.Id).Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
             return;
@@ -137,7 +139,7 @@ public class UserEventHandler
                 .WithCurrentTimestamp()
                 .WithFooter("Enjoy your stay", "https://nebulamods.ca/content/media/images/Home.png")
                 .Build();
-                try { await user.SendMessageAsync(embed: RichEmbed); } catch {  }
+                try { await user.SendMessageAsync(embed: RichEmbed); } catch { }
             }
         }
         catch (Exception e) { await e.LogErrorAsync(); }

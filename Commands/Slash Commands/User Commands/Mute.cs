@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Database;
 using MainBot.Utilities.Attributes;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Commands.SlashCommands.UserCommands;
@@ -39,25 +41,25 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
-        if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry))
+        if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
             return;
         }
-        DateTime muteTime = DateTime.Now;
+        DateTime muteTime = DateTime.UtcNow;
         switch (durationOptions)
         {
             case muteDurationOptions.minutes:
-                muteTime = DateTime.Now.AddMinutes(duration);
+                muteTime = DateTime.UtcNow.AddMinutes(duration);
                 break;
             case muteDurationOptions.seconds:
-                muteTime = DateTime.Now.AddSeconds(duration);
+                muteTime = DateTime.UtcNow.AddSeconds(duration);
                 break;
             case muteDurationOptions.hours:
-                muteTime = DateTime.Now.AddHours(duration);
+                muteTime = DateTime.UtcNow.AddHours(duration);
                 break;
             case muteDurationOptions.days:
-                muteTime = DateTime.Now.AddDays(duration);
+                muteTime = DateTime.UtcNow.AddDays(duration);
                 break;
             default:
                 await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);

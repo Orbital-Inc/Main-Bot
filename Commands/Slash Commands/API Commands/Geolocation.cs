@@ -1,7 +1,8 @@
-﻿using System.Runtime.InteropServices;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Utilities.Extensions;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -9,7 +10,6 @@ namespace MainBot.Commands.SlashCommands.APICommands;
 public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost:1337/" : $"https://api.nebulamods.ca/";
 
     internal Geolocation(HttpClient http) => _http = http;
 
@@ -26,7 +26,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 
         //adding header for request
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
-        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network/geolocation/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/geolocation/{host}");
         Models.APIModels.GeolocationModel? Information = null;
         //deserializing request response if successful
         if (result.IsSuccessStatusCode)

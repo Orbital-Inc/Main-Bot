@@ -1,13 +1,18 @@
-﻿using Discord.WebSocket;
+﻿using System.Collections.Concurrent;
+
+using Discord.WebSocket;
+
 using MainBot.Database;
+
 using Microsoft.Extensions.Hosting;
 
 namespace MainBot.Services;
 
 public class RainbowRoleService : BackgroundService
 {
+    private readonly CancellationToken _cancellationToken;
     private readonly DiscordShardedClient _client;
-    internal static HashSet<Models.RainbowRoleModel> _rainbowRoleGuilds = new();
+    internal static ConcurrentBag<Models.RainbowRoleModel> _rainbowRoleGuilds = new();
     public RainbowRoleService(DiscordShardedClient client) => _client = client;
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -26,7 +31,7 @@ public class RainbowRoleService : BackgroundService
                     await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                     continue;
                 }
-               foreach(Models.RainbowRoleModel? guild in _rainbowRoleGuilds)
+                foreach (Models.RainbowRoleModel? guild in _rainbowRoleGuilds)
                 {
                     SocketGuild? guildSocket = _client.GetGuild(guild.guildId);
                     if (guildSocket is not null)
@@ -41,7 +46,7 @@ public class RainbowRoleService : BackgroundService
             }
             catch (Exception ex)
             {
-                await ex.LogErrorAsync();
+                await ex.LogErrorAsync("rainbow role service func");
             }
         }
     }

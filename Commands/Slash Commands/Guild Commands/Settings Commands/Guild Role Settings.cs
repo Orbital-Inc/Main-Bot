@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Database;
 using MainBot.Utilities.Attributes;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Commands.SlashCommands.GuildCommands.SettingsCommands;

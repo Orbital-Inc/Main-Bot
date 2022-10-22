@@ -1,7 +1,9 @@
 ﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Database;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Commands.SlashCommands;
@@ -27,46 +29,62 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("rainbow-refresh", "Randomly sets rainbow role colour.")]
     public async Task SwapRainbowRoleColour()
     {
-        await using var database = new DatabaseContext();
-        Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
-        if (guildEntry is null)
+        try
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
-            return;
-        }
-        if (guildEntry.guildSettings.rainbowRoleId is not null)
-        {
-            Discord.WebSocket.SocketRole? role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.rainbowRoleId);
-            await role.ModifyAsync(x =>
+            await using var database = new DatabaseContext();
+            Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+            if (guildEntry is null)
             {
-                x.Color = Utilities.Miscallenous.RandomDiscordColour();
-            });
-            await Context.ReplyWithEmbedAsync("Rainbow Role", "Successfully, swapped the role colour", deleteTimer: 60);
-            return;
+                await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
+                return;
+            }
+            if (guildEntry.guildSettings.rainbowRoleId is not null)
+            {
+                Discord.WebSocket.SocketRole? role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.rainbowRoleId);
+                await role.ModifyAsync(x =>
+                {
+                    x.Color = Utilities.Miscallenous.RandomDiscordColour();
+                });
+                await Context.ReplyWithEmbedAsync("Rainbow Role", "Successfully, swapped the role colour", deleteTimer: 60);
+                return;
+            }
+            await Context.ReplyWithEmbedAsync("Error Occured", "Rainbow role is not set");
         }
-        await Context.ReplyWithEmbedAsync("Error Occured", "Rainbow role is not set");
+        catch(Exception ex)
+        {
+            await Context.ReplyWithEmbedAsync("Error Occured", ex.Message);
+            await ex.LogErrorAsync();
+        }
     }
 
     [SlashCommand("giveway-picker", "Picks a giveaway winner.")]
     public async Task Test(IChannel channel, string messageId)
     {
-        IMessage? message = await Context.Guild.GetTextChannel(channel.Id).GetMessageAsync(ulong.Parse(messageId));
-        if (message is null)
+        try
         {
-            await Context.ReplyWithEmbedAsync("Error", "bad");
-            return;
-        }
-        
-        foreach(KeyValuePair<IEmote, ReactionMetadata> react in message.Reactions)
-        {
-            if (react.Key.Name == "diamond_booster")
+            IMessage? message = await Context.Guild.GetTextChannel(channel.Id).GetMessageAsync(ulong.Parse(messageId));
+            if (message is null)
             {
-                IEnumerable<IUser>? users = await message.GetReactionUsersAsync(react.Key, 500).FlattenAsync();
-                int randomNumber = new Random().Next(0, users.Count());
-                IUser? winner = users.ToArray()[randomNumber];
-                await Context.ReplyWithEmbedAsync("Winner", $"{winner.Mention}");
+                await Context.ReplyWithEmbedAsync("Error", "bad");
                 return;
             }
+
+            foreach (KeyValuePair<IEmote, ReactionMetadata> react in message.Reactions)
+            {
+                if (react.Key.Name == "diamond_booster")
+                {
+                    IEnumerable<IUser>? users = await message.GetReactionUsersAsync(react.Key, 500).FlattenAsync();
+                    int randomNumber = new Random().Next(0, users.Count());
+                    IUser? winner = users.ToArray()[randomNumber];
+                    await Context.ReplyWithEmbedAsync("Winner", $"{winner.Mention} open a ticket claim your prize.", txtMessage: winner.Mention);
+                    return;
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            await Context.ReplyWithEmbedAsync("Error Occured", ex.Message);
+            await ex.LogErrorAsync();
         }
     }
 }

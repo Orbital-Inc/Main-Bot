@@ -4,15 +4,24 @@ internal static class DatabaseExtensions
 {
     internal static async Task<int> ApplyChangesAsync(this DatabaseContext database, object? entity = null)
     {
-        if (entity is not null)
-            database.Update(entity);
-        return await database.SaveChangesAsync();
+        try
+        {
+            if (entity is not null)
+                database.Update(entity);
+            return await database.SaveChangesAsync();
+        }
+        catch(Exception ex)
+        {
+            await ex.LogErrorAsync();
+            return 0;
+        }
     }
 
     internal static async Task LogErrorAsync(this Exception e, string? extraInformation = null)
     {
         try
         {
+            //dont log specific errors
             await using var database = new DatabaseContext();
             var entry = new Models.Logs.ErrorLog
             {

@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
+
 using MainBot.Database;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
@@ -24,13 +26,14 @@ public class DailyChannelNukeService : BackgroundService
             {
                 //check date
                 DateTime today = DateTime.Now;
-                DateTime midnight = DateTime.Today.AddDays(1).AddSeconds(-1);
+                DateTime midnight = DateTime.Today.AddDays(1);
                 TimeSpan waitTime = midnight - today;
+                Console.WriteLine(waitTime);
                 await Task.Delay((int)Math.Round(waitTime.TotalMilliseconds, 0), cancellationToken);
                 //start real work
                 await using var database = new DatabaseContext();
                 List<Database.Models.DiscordChannel>? freshList = await database.NukeChannels.ToListAsync(cancellationToken: cancellationToken);
-                foreach(Database.Models.DiscordChannel? channel in freshList)
+                foreach (Database.Models.DiscordChannel? channel in freshList)
                 {
                     SocketGuild? guild = _client.GetGuild(channel.guildId);
                     if (guild is null)
@@ -44,6 +47,7 @@ public class DailyChannelNukeService : BackgroundService
 
                 }
                 await database.ApplyChangesAsync();
+                await database.DisposeAsync();
             }
             catch (Exception ex)
             {
@@ -79,7 +83,7 @@ public class DailyChannelNukeService : BackgroundService
         //delete old channel
         await textChannel.DeleteAsync();
         //post image to new channel
-        switch(new Random().Next(1, 3))
+        switch (new Random().Next(1, 3))
         {
             case 1:
                 await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/nuke.gif");

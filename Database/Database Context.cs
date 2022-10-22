@@ -1,5 +1,6 @@
 ﻿using MainBot.Database.Models;
 using MainBot.Database.Models.Logs;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Database;
@@ -8,11 +9,11 @@ public class DatabaseContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string _connectionString = $"server=localhost;user=root;database=test_discord;password={Properties.Resources.MySql_Pass}";
+        string _connectionString = $"host=localhost;user id=bot;database=nebulamods_discord_bot_db;password={Properties.Resources.MySql_Pass}";
 #if (DEBUG)
-        _connectionString = $"server=localhost;user=main;database=test_discord;password=Dank123";
+        _connectionString = $"host=localhost;user id=discord_db;database=discord_test;password=Test1234";
 #endif
-        optionsBuilder.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString)).UseLazyLoadingProxies().UseBatchEF_MySQLPomelo();
+        optionsBuilder.UseNpgsql(_connectionString, x => { }).UseLazyLoadingProxies().UseBatchEF_Npgsql();
     }
     //dbsets
     public DbSet<ErrorLog> Errors { get; set; }

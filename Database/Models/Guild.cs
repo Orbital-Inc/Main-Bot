@@ -5,7 +5,7 @@ namespace MainBot.Database.Models;
 public class Guild
 {
     [Key]
-    public int key { get; set; }
+    public Guid key { get; set; }
     public ulong id { get; set; }
     public string name { get; set; }
     public virtual GuildSettings guildSettings { get; set; } = new GuildSettings();

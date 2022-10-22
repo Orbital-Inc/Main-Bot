@@ -1,7 +1,9 @@
 ﻿using Discord.Interactions;
+
 using MainBot.Database;
 using MainBot.Database.Models;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Commands.SlashCommands.GuildCommands;

@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.Rest;
+
 using MainBot.Database;
 using MainBot.Utilities.Extensions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MainBot.Buttons;

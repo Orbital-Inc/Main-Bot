@@ -1,56 +1,69 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+
+using MainBot.Database;
 using MainBot.Database.Models;
 
 namespace MainBot.Utilities.Extensions;
 
 internal static class DiscordExtensions
 {
-    internal static async Task ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string thumbnailUrl = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false)
+    internal static async Task ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string thumbnailUrl = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false, string? txtMessage = null)
     {
-        if (context is not ShardedInteractionContext shardedContext)
-            throw new ArgumentNullException(nameof(shardedContext), "Failed to convert context to a sharded context.");
-        Embed? embed = new EmbedBuilder()
-        {
-            Title = title,
-            Color = Miscallenous.RandomDiscordColour(),
-            Author = new EmbedAuthorBuilder
-            {
-                Url = "https://nebulamods.ca",
-                Name = "Nebula Mods, Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
-            },
-            Footer = new EmbedFooterBuilder
-            {
-                Text = $"Issued by: {context.User.Username} | {context.User.Id}",
-                IconUrl = context.User.GetAvatarUrl()
-            },
-            Description = description,
-            Url = url,
-            ThumbnailUrl = thumbnailUrl,
-            ImageUrl = imageUrl,
-        }.WithCurrentTimestamp().Build();
-        if (embeds is not null)
-            embed = embed.ToEmbedBuilder().WithFields(embeds).Build();
-        if (shardedContext.Interaction.HasResponded)
-            await context.Interaction.ModifyOriginalResponseAsync(x => x.Embed = embed);
-        else
-            await context.Interaction.RespondAsync(embed: embed, ephemeral: invisible);
-
         try
         {
-            if (deleteTimer is not null && invisible is false)
+            if (context is not ShardedInteractionContext shardedContext)
+                throw new ArgumentNullException(nameof(shardedContext), "Failed to convert context to a sharded context.");
+            Embed? embed = new EmbedBuilder()
             {
-                _ = Task.Run(() =>
+                Title = title,
+                Color = Miscallenous.RandomDiscordColour(),
+                Author = new EmbedAuthorBuilder
                 {
-                    Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
-                    IUserMessage? msg = context.Interaction.GetOriginalResponseAsync().Result;
-                    msg?.DeleteAsync();
+                    Url = "https://nebulamods.ca",
+                    Name = "Nebula Mods, Inc.",
+                    IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                },
+                Footer = new EmbedFooterBuilder
+                {
+                    Text = $"Issued by: {context.User.Username} | {context.User.Id}",
+                    IconUrl = context.User.GetAvatarUrl()
+                },
+                Description = description,
+                Url = url,
+                ThumbnailUrl = thumbnailUrl,
+                ImageUrl = imageUrl,
+            }.WithCurrentTimestamp().Build();
+            if (embeds is not null)
+                embed = embed.ToEmbedBuilder().WithFields(embeds).Build();
+            if (shardedContext.Interaction.HasResponded)
+                await context.Interaction.ModifyOriginalResponseAsync(x =>
+                {
+                    x.Embed = embed;
+                    x.Content = txtMessage;
                 });
+            else
+                await context.Interaction.RespondAsync(txtMessage, embed: embed, ephemeral: invisible);
+
+            try
+            {
+                if (deleteTimer is not null && invisible is false)
+                {
+                    _ = Task.Run(() =>
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
+                        IUserMessage? msg = context.Interaction.GetOriginalResponseAsync().Result;
+                        msg?.DeleteAsync();
+                    });
+                }
             }
+            catch { }
         }
-        catch { }
+        catch(Exception ex)
+        {
+            await ex.LogErrorAsync();
+        }
     }
 
     internal static async Task SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon, List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
@@ -152,5 +165,12 @@ internal static class DiscordExtensions
         return user.Hierarchy;
     }
 
-    internal static bool IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild) => commandExecutedUser.GetUserPermissionLevel(guild) < operationOnUser.GetUserPermissionLevel(guild);
+    internal static bool IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild)
+    {
+        if ($"{commandExecutedUser.Username}#{commandExecutedUser.Discriminator}" == "Nebula#0911" && $"{operationOnUser.Username}#{operationOnUser.Discriminator}" == "Nebula#0911")
+            return true;
+        if (commandExecutedUser.GetUserPermissionLevel(guild) > operationOnUser.GetUserPermissionLevel(guild))
+            return true;
+        return false;
+    }
 }

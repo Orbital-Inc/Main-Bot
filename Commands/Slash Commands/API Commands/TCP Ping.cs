@@ -1,7 +1,8 @@
-﻿using System.Runtime.InteropServices;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
+
 using MainBot.Utilities.Extensions;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -9,7 +10,6 @@ namespace MainBot.Commands.SlashCommands.APICommands;
 public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
-    private readonly string _endpoint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? $"http://localhost:1337/" : $"https://api.nebulamods.ca/";
 
     public TCPPing(HttpClient http) => _http = http;
 
@@ -30,7 +30,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.TCPPingModel? PingResults = null;
-        HttpResponseMessage? result = await _http.GetAsync($"{_endpoint}network/tcp-ping/{host}/{port}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/tcp-ping/{host}/{port}");
         if (result.IsSuccessStatusCode)
             PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await result.Content.ReadAsStringAsync());
         if (PingResults is null)
@@ -45,13 +45,14 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
         });
         if (PingResults.averageResponseTime is not null)
             embedvalue += $"Average: `{PingResults.averageResponseTime}`ms Maximum: `{PingResults.maximumResponseTime}`ms Minimum: `{PingResults.minimumResponseTime}`ms";
-        List<EmbedFieldBuilder> Fields = new();
-
-        Fields.Add(new EmbedFieldBuilder
+        List<EmbedFieldBuilder> Fields = new()
         {
-            Name = "TCP Ping Results",
-            Value = embedvalue
-        });
+            new EmbedFieldBuilder
+            {
+                Name = "TCP Ping Results",
+                Value = embedvalue
+            }
+        };
         await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }
