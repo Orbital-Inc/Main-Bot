@@ -2,6 +2,7 @@
 using Discord.Interactions;
 
 using MainBot.Database;
+using MainBot.Services;
 using MainBot.Utilities.Attributes;
 using MainBot.Utilities.Extensions;
 
@@ -12,6 +13,12 @@ namespace MainBot.Commands.SlashCommands.GuildCommands.SettingsCommands;
 [RequireAdministrator]
 public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteractionContext>
 {
+    private readonly RainbowRoleService _roleService;
+    public GuildRoleSettingsCommand(RainbowRoleService rainbowRole)
+    {
+        _roleService = rainbowRole;
+    }
+
     public enum guildRoleOption
     {
         set_mute_role,
@@ -25,6 +32,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
     [SlashCommand("guild-role-settings", "Guild settings that involve setting a role.")]
     public async Task ExecuteCommand(guildRoleOption roleOption, IRole role)
     {
+        var rainbowRole = _roleService;
         await using var database = new DatabaseContext();
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
@@ -48,7 +56,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                     return;
                 }
                 guildEntry.guildSettings.rainbowRoleId = role.Id;
-                Services.RainbowRoleService._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
+                rainbowRole._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
                 {
                     roleId = role.Id,
                     guildId = Context.Guild.Id,

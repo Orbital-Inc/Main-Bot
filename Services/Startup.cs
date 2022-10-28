@@ -4,6 +4,7 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
+using MainBot.Commands.SlashCommands.GuildCommands.SettingsCommands;
 using MainBot.Database;
 using MainBot.Events;
 using MainBot.Loggers;
@@ -67,6 +68,7 @@ internal class StartupService
         .AddSingleton<ChannelEventHandler>()
         .AddSingleton<AutoUnmuteUserService>()
         .AddSingleton<CustomService>()
+        .AddSingleton<GuildRoleSettingsCommand>()
         .AddSingleton(new Random())
         .AddSingleton(new HttpClient())
         .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordShardedClient>(), new InteractionServiceConfig

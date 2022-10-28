@@ -10,12 +10,15 @@ namespace MainBot.Services;
 
 public class RainbowRoleService : BackgroundService
 {
-    private readonly CancellationToken _cancellationToken;
     private readonly DiscordShardedClient _client;
-    internal static ConcurrentBag<Models.RainbowRoleModel> _rainbowRoleGuilds = new();
-    public RainbowRoleService(DiscordShardedClient client) => _client = client;
+    internal ConcurrentBag<Models.RainbowRoleModel> _rainbowRoleGuilds = new();
+    public RainbowRoleService(DiscordShardedClient client)
+    {
+        _client = client;
+    }
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
+        Console.WriteLine("Rainbow Task Started!");
         _ = Task.Factory.StartNew(async () => await RainbowRoleChanger(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         await Task.CompletedTask;
     }
@@ -38,7 +41,10 @@ public class RainbowRoleService : BackgroundService
                     {
                         SocketRole? role = guildSocket.GetRole(guild.roleId);
                         if (role is not null)
+                        {
                             await role.ModifyAsync(x => x.Color = Utilities.Miscallenous.RandomDiscordColour());
+                            Console.WriteLine("Changed Rainbow Colour");
+                        }
                     }
                 }
                 int rand = new Random().Next(1, 20);
@@ -46,7 +52,9 @@ public class RainbowRoleService : BackgroundService
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 await ex.LogErrorAsync("rainbow role service func");
+                await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
             }
         }
     }
