@@ -41,7 +41,8 @@ public class CustomService
                 rainbowService._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
                 {
                     roleId = (ulong)guild.guildSettings.rainbowRoleId,
-                    guildId = guild.id
+                    guildId = guild.id,
+                    uglyColours = guild.guildSettings.uglyColours
                 });
             }
         }

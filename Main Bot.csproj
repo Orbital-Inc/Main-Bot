@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>MainBot</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>Main Bot</AssemblyName>
     <Authors>Nebula</Authors>
-    <Version>1.0.0.10</Version>
+    <Version>1.0.0.11</Version>
     <Company>Nebula Mods, Inc.</Company>
     <Copyright>Nebula Mods, Inc.</Copyright>
     <RepositoryUrl>https://github.com/NebulaMods/Main-Bot</RepositoryUrl>
@@ -36,20 +36,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="3.4.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-preview.2.22153.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0-preview.2.22153.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0-preview.2.22153.1">
+    <PackageReference Include="Discord.Net" Version="3.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0-preview.2.22152.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0-preview.2.22152.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0-preview.2.22152.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-preview.2.22152.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
-    <PackageReference Include="Zack.EFCore.Batch.Npgsql_NET6" Version="6.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>

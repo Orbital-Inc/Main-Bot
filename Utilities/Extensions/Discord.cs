@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using System.Text.RegularExpressions;
+
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
@@ -9,7 +11,7 @@ namespace MainBot.Utilities.Extensions;
 
 internal static class DiscordExtensions
 {
-    internal static async Task ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string thumbnailUrl = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false, string? txtMessage = null)
+    internal static async ValueTask<IUserMessage?> ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string thumbnailUrl = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false, string? txtMessage = null)
     {
         try
         {
@@ -37,8 +39,9 @@ internal static class DiscordExtensions
             }.WithCurrentTimestamp().Build();
             if (embeds is not null)
                 embed = embed.ToEmbedBuilder().WithFields(embeds).Build();
+            IUserMessage? msgSent = null;
             if (shardedContext.Interaction.HasResponded)
-                await context.Interaction.ModifyOriginalResponseAsync(x =>
+                msgSent = await context.Interaction.ModifyOriginalResponseAsync(x =>
                 {
                     x.Embed = embed;
                     x.Content = txtMessage;
@@ -56,17 +59,20 @@ internal static class DiscordExtensions
                         IUserMessage? msg = context.Interaction.GetOriginalResponseAsync().Result;
                         msg?.DeleteAsync();
                     });
+                    return null;
                 }
+                return msgSent is null ? await context.Interaction.GetOriginalResponseAsync() : msgSent;
             }
-            catch { }
+            catch { return null; }
         }
         catch(Exception ex)
         {
             await ex.LogErrorAsync();
+            return null;
         }
     }
 
-    internal static async Task SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon, List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
+    internal static async ValueTask<IUserMessage?> SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon = "https://nebulamods.ca/content/media/images/Home.png", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
     {
         if (channel is not ITextChannel textChannel)
             throw new ArgumentNullException(nameof(textChannel), "Channel was not a text channel");
@@ -99,9 +105,11 @@ internal static class DiscordExtensions
                     Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
                     msg.DeleteAsync();
                 });
+                return null;
             }
+            return msg;
         }
-        catch { }
+        catch { return null; }
     }
 
     internal static async Task UpdateGuildChannelsForMute(this IGuild guild, Guild guildEntry)
@@ -172,5 +180,21 @@ internal static class DiscordExtensions
         if (commandExecutedUser.GetUserPermissionLevel(guild) > operationOnUser.GetUserPermissionLevel(guild))
             return true;
         return false;
+    }
+    internal static (string emoteName, ulong emoteId, string fileType) ReturnEmote(string str)
+    {
+        if (new Regex("^[:<>]*$", RegexOptions.Compiled).IsMatch(str))
+        {
+            return (string.Empty, ulong.MinValue, string.Empty);
+        }
+        string[]? split = Regex.Split(str, ":");
+        if (split.Length < 3)
+        {
+            return (string.Empty, ulong.MinValue, string.Empty);
+        }
+        string emoteName = split.Length >= 1 ? split[1] : string.Empty;
+        ulong emoteId = split.Length >= 2 ? ulong.Parse(split[2].Replace(">", "")) : ulong.MinValue;
+        string fileType = split[0].Contains('a') ? "gif" : "png";
+        return (emoteName, emoteId, fileType);
     }
 }

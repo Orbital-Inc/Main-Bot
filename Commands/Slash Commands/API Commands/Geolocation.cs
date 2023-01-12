@@ -20,7 +20,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 
         if (Uri.CheckHostName(host) is not (UriHostNameType.IPv4 or UriHostNameType.IPv6 or UriHostNameType.Dns))
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -34,7 +34,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 
         if (Information is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
         List<EmbedFieldBuilder> Fields = new();

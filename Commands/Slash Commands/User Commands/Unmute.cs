@@ -35,7 +35,7 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
         }
         if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
             return;
         }
         Discord.WebSocket.SocketRole? role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);

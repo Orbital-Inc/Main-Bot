@@ -18,7 +18,8 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
         remove_daily_nuke_channel,
         set_user_log_channel,
         set_message_log_channel,
-        set_system_log_channel
+        set_system_log_channel,
+        set_command_log_channel
     }
 
     [SlashCommand("guild-channel-settings", "Guild settings that involve setting a channel.")]
@@ -51,6 +52,10 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
                 return;
             case guildChannelOption.set_system_log_channel:
                 guildEntry.guildSettings.systemLogChannelId = textChannel.Id;
+                await database.ApplyChangesAsync(guildEntry);
+                break;
+            case guildChannelOption.set_command_log_channel:
+                guildEntry.guildSettings.commandLogChannelId = textChannel.Id;
                 await database.ApplyChangesAsync(guildEntry);
                 break;
             default:

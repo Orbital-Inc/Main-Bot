@@ -19,10 +19,10 @@ public class KickCommand : InteractionModuleBase<ShardedInteractionContext>
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
             return;
         }
         await Context.Guild.GetUser(user.Id).KickAsync();
-        await Context.ReplyWithEmbedAsync("Kick", $"Beamed {user.Mention} lawl");
+        await Context.ReplyWithEmbedAsync("Kick", $"Beamed {user.Mention} lawl", deleteTimer: 240);
     }
 }

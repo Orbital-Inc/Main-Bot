@@ -79,7 +79,7 @@ namespace MainBot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OTcwNzU3MTY3MDEzNTg5MDMz.GUhQ5m.x6auY52ObOJibb8peYuTZiTO33h2xUF-vTHEOo.
+        ///   Looks up a localized string similar to OTcwNzU3MTY3MDEzNTg5MDMz.GYVN9v.uhtXSALcppDHQ98b00oYFPgPhwwKWrxYACghy8.
         /// </summary>
         internal static string TestToken {
             get {

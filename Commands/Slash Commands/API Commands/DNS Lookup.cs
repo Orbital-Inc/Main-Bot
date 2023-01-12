@@ -17,7 +17,7 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
 
         if (Uri.CheckHostName(host) is not (UriHostNameType.Dns))
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -38,7 +38,7 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
         }
         else
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to lookup record, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to lookup record, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
     }

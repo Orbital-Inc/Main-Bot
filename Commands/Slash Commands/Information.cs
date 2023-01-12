@@ -21,7 +21,7 @@ public class InformationCommand : InteractionModuleBase<ShardedInteractionContex
             $"Uptime: <t:{((DateTimeOffset)Process.GetCurrentProcess().StartTime).ToUnixTimeSeconds()}:R>\n" +
             $"Build Version: {Assembly.GetExecutingAssembly().GetName().Version}\n" +
             $"{appInfo.Description}\n" +
-            $"Terms of Service: {appInfo.TermsOfService}"
+            $"Terms of Service: {appInfo.TermsOfService}", deleteTimer: 180
             );
     }
 }

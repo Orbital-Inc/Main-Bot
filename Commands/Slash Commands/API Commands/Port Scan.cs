@@ -20,7 +20,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         if (string.IsNullOrWhiteSpace(host))
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -66,7 +66,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         if (PortScanResult is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to port scan, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to port scan, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 

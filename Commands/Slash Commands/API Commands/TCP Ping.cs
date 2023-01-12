@@ -22,7 +22,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         if (Uri.CheckHostName(host) is not (UriHostNameType.IPv4 or UriHostNameType.IPv6 or UriHostNameType.Dns))
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -35,7 +35,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
             PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await result.Content.ReadAsStringAsync());
         if (PingResults is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
         string embedvalue = string.Empty;

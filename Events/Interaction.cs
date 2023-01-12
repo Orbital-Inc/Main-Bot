@@ -8,6 +8,8 @@ using MainBot.Database;
 using MainBot.Database.Models.Logs;
 using MainBot.Utilities.Extensions;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace MainBot.Events;
 
 internal class InteractionEventHandler
@@ -61,6 +63,7 @@ internal class InteractionEventHandler
 
     private async Task ComponentCommandExecuted(ComponentCommandInfo arg1, IInteractionContext arg2, IResult arg3)
     {
+        _ = Task.Run(async () => await LogCommandAsync(arg1, arg2, arg3));
         if (!arg3.IsSuccess)
         {
             switch (arg3.Error)
@@ -125,6 +128,7 @@ internal class InteractionEventHandler
 
     private async Task SlashCommandExecuted(SlashCommandInfo arg1, IInteractionContext arg2, IResult arg3)
     {
+        _ = Task.Run(async () => await LogCommandAsync(arg1, arg2, arg3));
         if (!arg3.IsSuccess)
         {
             switch (arg3.Error)
@@ -156,5 +160,21 @@ internal class InteractionEventHandler
                     break;
             }
         }
+    }
+
+    private async Task LogCommandAsync(ICommandInfo arg1, IInteractionContext arg2, IResult arg3)
+    {
+        await using var database = new DatabaseContext();
+        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == arg2.Guild.Id);
+        if (guildEntry is null)
+        {
+            return;
+        }
+        if (guildEntry.guildSettings.commandLogChannelId is null)
+        {
+            return;
+        }
+        var commandLogChannel = await arg2.Guild.GetChannelAsync(guildEntry.guildSettings.commandLogChannelId.Value);
+        await commandLogChannel.SendEmbedAsync("Command Executed", $"{arg2.User.Mention} has executed {arg1.Name}\nCommand Status: {(arg3.IsSuccess ? "Success" : $"Failure: {arg3.ErrorReason}")}", $"{arg2.User.Username} | {arg2.User.Id}", arg2.User.GetAvatarUrl());
     }
 }

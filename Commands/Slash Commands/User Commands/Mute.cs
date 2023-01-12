@@ -43,7 +43,7 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
         }
         if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
             return;
         }
         DateTime muteTime = DateTime.UtcNow;
@@ -84,6 +84,6 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
         DateTimeOffset yeet = mutedUserEntry.muteExpiryDate;
-        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds()}>", deleteTimer: 60);
+        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds}>", deleteTimer: 60);
     }
 }

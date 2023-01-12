@@ -143,7 +143,8 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             },
             Description = description,
         }.Build();
-        await channel.SendMessageAsync(embed: embed, components: msg);
+        var sentMsg = await channel.SendMessageAsync(embed: embed, components: msg);
+        await sentMsg.PinAsync();
     }
 
     private async Task SendRulesMessage(ITextChannel channel, bool ticketButton = false, bool hiddenRoleButton = false)

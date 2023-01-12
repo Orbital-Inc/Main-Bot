@@ -52,7 +52,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 Discord.Rest.RestApplication? kkk = await Context.Client.GetApplicationInfoAsync();
                 if (kkk.Owner.Id != Context.User.Id)
                 {
-                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
                     return;
                 }
                 guildEntry.guildSettings.rainbowRoleId = role.Id;
@@ -69,7 +69,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 Discord.Rest.RestApplication? application = await Context.Client.GetApplicationInfoAsync();
                 if (Context.User.Id != application.Owner.Id || Context.Guild.OwnerId != Context.User.Id)
                 {
-                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60);
+                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
                     return;
                 }
                 guildEntry.guildSettings.administratorRoleId = role.Id;
