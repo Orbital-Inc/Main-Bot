@@ -84,6 +84,6 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
         DateTimeOffset yeet = mutedUserEntry.muteExpiryDate;
-        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds}>", deleteTimer: 60);
+        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds()}>", deleteTimer: 60);
     }
 }

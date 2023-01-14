@@ -107,31 +107,16 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
                 await Context.ReplyWithEmbedAsync("Error", "bad", deleteTimer: 60, invisible: true);
                 return;
             }
-
-            foreach (KeyValuePair<IEmote, ReactionMetadata> react in message.Reactions)
+            if (emote != "diamond_booster")
             {
-                if (emote != "diamond_booster")
-                {
-                    var emoteFunc = DiscordExtensions.ReturnEmote(emote);
-                    if (string.IsNullOrWhiteSpace(emoteFunc.emoteName))
-                    {
-                        //error
-                        return;
-                    }
-                    else
-                    {
-                        emote = emoteFunc.emoteName;
-                    }
-                }
-                if (react.Key.Name == "diamond_booster")
-                {
-                    IEnumerable<IUser>? users = await message.GetReactionUsersAsync(react.Key, 500).FlattenAsync();
-                    int randomNumber = new Random().Next(0, users.Count());
-                    IUser? winner = users.ToArray()[randomNumber];
-                    await Context.ReplyWithEmbedAsync("Winner", $"{winner.Mention} open a ticket claim your prize.", txtMessage: winner.Mention);
-                    return;
-                }
+                var emoteFunc = DiscordExtensions.ReturnEmote(emote);
+                emote = emoteFunc.emoteName;
             }
+            var reaction = message.Reactions.FirstOrDefault(x => x.Key.Name == emote);
+            IEnumerable<IUser>? users = await message.GetReactionUsersAsync(reaction.Key, 500).FlattenAsync();
+            int randomNumber = new Random().Next(0, users.Count());
+            IUser? winner = users.ToArray()[randomNumber];
+            await Context.ReplyWithEmbedAsync("Winner", $"{winner.Mention} open a ticket claim your prize.", txtMessage: winner.Mention);
         }
         catch(Exception ex)
         {
@@ -144,12 +129,14 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
     public async Task HostGiveAway(IChannel channel, string title, string description, string emote, GiveAwayDuration duration)
     {
         await Giveaway(Context, channel, title, description, emote, duration);
+        await Context.ReplyWithEmbedAsync("GiveAway", "Successfully started giveaway.", deleteTimer: 60, invisible: true);
     }
 
     [SlashCommand("giveaway-nitro", "Host a Nitro giveaway.")]
     public async Task HostNitroGiveAway(IChannel channel, string? emote = "diamond_booster")
     {
         await Giveaway(Context, channel, null, null, emote, GiveAwayDuration.one_month);
+        await Context.ReplyWithEmbedAsync("Nitro GiveAway", "Successfully started nitro giveaway.", deleteTimer: 60, invisible: true);
     }
 
     private async Task Giveaway(IInteractionContext context, IChannel channel, string title, string description, string emote, GiveAwayDuration duration)
@@ -160,16 +147,16 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
         switch(duration)
         {
             case GiveAwayDuration.one_month:
-                drawDate.AddDays(31);
+                drawDate = drawDate.AddDays(31);
                 break;
             case GiveAwayDuration.two_weeks:
-                drawDate.AddDays(14);
+                drawDate = drawDate.AddDays(14);
                 break;
             case GiveAwayDuration.one_week:
-                drawDate.AddDays(7);
+                drawDate = drawDate.AddDays(7);
                 break;
             case GiveAwayDuration.one_day:
-                drawDate.AddDays(1);
+                drawDate = drawDate.AddDays(1);
                 break;
         }
         (string emoteName, ulong emoteId, string fileType) = DiscordExtensions.ReturnEmote(emote);
@@ -189,9 +176,9 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
                 Text = "GiveAway Time! Enjoy!",
                 IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
             },
-            Description = (description is null ? $"Monthly Nitro giveaway, react with {guildEmote} in order to entered. Draw is in <t:{drawDate.ToUnixTimeSeconds}:R>" : description + $"\nDraw is in <t:{drawDate.ToUnixTimeSeconds}:R>"),
+            Description = (description is null ? $"Monthly Nitro giveaway, react with {guildEmote} in order to entered. Draw is in <t:{drawDate.ToUnixTimeSeconds()}:R>" : description + $"\nDraw is in <t:{drawDate.ToUnixTimeSeconds()}:R>"),
         }.WithCurrentTimestamp().Build();
-        IUserMessage msg = await (channel as ITextChannel).SendMessageAsync(embed: embed);
+        IUserMessage msg = await (channel as ITextChannel).SendMessageAsync(Context.Guild.EveryoneRole.Mention, embed: embed);
         await msg.AddReactionAsync(guildEmote);
     }
 
