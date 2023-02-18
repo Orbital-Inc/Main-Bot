@@ -27,7 +27,7 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
         HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/dns-lookup/{host}");
         if (result.IsSuccessStatusCode)
         {
-            await Context.ReplyWithEmbedAsync($"DNS Lookup Complete For: {host}", string.Empty, $"https://check-host.net/ip-info?host={host}", string.Empty, string.Empty, new List<EmbedFieldBuilder>()
+            await Context.ReplyWithEmbedAsync($"DNS Lookup Complete For: {host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={host}", string.Empty, string.Empty, new List<EmbedFieldBuilder>()
             {
                 new EmbedFieldBuilder()
                 {

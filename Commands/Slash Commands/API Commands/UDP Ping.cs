@@ -52,6 +52,6 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
                 Value = embedvalue
             }
         };
-        await Context.ReplyWithEmbedAsync($"UDP Ping Complete For: {PingResults.host}", string.Empty, $"https://check-host.net/ip-info?host={PingResults.host}", string.Empty, string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"UDP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }

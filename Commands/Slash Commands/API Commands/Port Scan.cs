@@ -84,6 +84,6 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             }
         };
 
-        await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://check-host.net/ip-info?host={PortScanResult.host}", string.Empty, string.Empty, Fields);
+        await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PortScanResult.host}", string.Empty, string.Empty, Fields);
     }
 }
