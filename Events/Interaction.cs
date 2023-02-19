@@ -128,10 +128,11 @@ internal class InteractionEventHandler
 
     private async Task SlashCommandExecuted(SlashCommandInfo arg1, IInteractionContext arg2, IResult arg3)
     {
-        if (arg2.Guild.Id != 993960228913676308)
-        {
-            _ = Task.Run(async () => await LogCommandAsync(arg1, arg2, arg3));
-        }
+        if (arg2.Guild is not null)
+            if (arg2.Guild.Id != 982587580409315328)
+            {
+                _ = Task.Run(async () => await LogCommandAsync(arg1, arg2, arg3));
+            }
         _ = Task.Run(async () => await LogAllCommandsAsync(arg1, arg2, arg3));
         if (!arg3.IsSuccess)
         {
@@ -186,7 +187,7 @@ internal class InteractionEventHandler
         //create better method of doing this
         //993960228913676308
         await using var database = new DatabaseContext();
-        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == 993960228913676308);
+        var guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == 982587580409315328);
         if (guildEntry is null)
         {
             return;
@@ -195,7 +196,8 @@ internal class InteractionEventHandler
         {
             return;
         }
-        var commandLogChannel = await arg2.Guild.GetChannelAsync(guildEntry.guildSettings.commandLogChannelId.Value);
+        var guild = await arg2.Client.GetGuildAsync(guildEntry.id);
+        var commandLogChannel = await guild.GetChannelAsync(guildEntry.guildSettings.commandLogChannelId.Value);
         await commandLogChannel.SendEmbedAsync("Command Executed", $"{arg2.User.Mention} has executed {arg1.Name}\nCommand Status: {(arg3.IsSuccess ? "Success" : $"Failure: {arg3.ErrorReason}")}", $"{arg2.User.Username} | {arg2.User.Id}", arg2.User.GetAvatarUrl());
     }
 }
