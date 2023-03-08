@@ -77,7 +77,7 @@ public class UserEventHandler
 
     private async Task AutoKick(SocketGuildUser user)
     {
-        if (user.GuildPermissions.Administrator || user.IsBot)
+        if (user.GuildPermissions.Administrator || user.IsBot || user.GuildPermissions.BanMembers || (user.PremiumSince is not null))
             return;
         await using var database = new DatabaseContext();
         Database.Models.Guild? guild = await database.Guilds.FirstOrDefaultAsync(x => x.id == user.Guild.Id);
@@ -91,7 +91,10 @@ public class UserEventHandler
             return;
         await Task.Delay(TimeSpan.FromMinutes(10));
         SocketGuild? socketGuild = _client.GetGuild(user.Guild.Id);
-        if (socketGuild.GetUser(user.Id).Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
+        var newUser = socketGuild.GetUser(user.Id);
+        if (newUser.Roles.FirstOrDefault(x => x.Id == guild.guildSettings.verifyRoleId) is not null)
+            return;
+        if (newUser.GuildPermissions.Administrator || newUser.IsBot || newUser.GuildPermissions.BanMembers || (newUser.PremiumSince is not null))
             return;
         await user.KickAsync();
     }
