@@ -21,7 +21,7 @@ internal class StartupService
     {
         LogLevel = LogSeverity.Verbose,
         AlwaysDownloadUsers = true,
-        GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.AllUnprivileged,// | GatewayIntents.MessageContent,
+        GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
         UseSystemClock = false,
         MessageCacheSize = 250,
         UseInteractionSnowflakeDate = true,
