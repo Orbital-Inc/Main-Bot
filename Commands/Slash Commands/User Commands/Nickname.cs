@@ -30,5 +30,10 @@ public class NicknameCommand : InteractionModuleBase<ShardedInteractionContext>
         }
         await Context.Guild.GetUser(user.Id).ModifyAsync(x => x.Nickname = nickname);
         await Context.ReplyWithEmbedAsync("Nickname", $"Successfully set {user.Mention}'s nickname to {nickname}.", deleteTimer: 120);
+        if (guildEntry is null) return;
+        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
+        if (logChannel is not null)
+            await logChannel.SendEmbedAsync("Changed User Nickname", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nChanged By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
     }
 }

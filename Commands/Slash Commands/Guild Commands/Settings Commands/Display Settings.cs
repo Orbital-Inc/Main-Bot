@@ -29,6 +29,8 @@ public class DisplaySettingsCommand : InteractionModuleBase<ShardedInteractionCo
             $"Verify Role: {(guildEntry.guildSettings.verifyRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.verifyRoleId}>")}\n" +
             $"Hidden Role: {(guildEntry.guildSettings.hiddenRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.hiddenRoleId}>")}\n" +
             $"Message Log Channel: {(guildEntry.guildSettings.messageLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.messageLogChannelId}>")}\n" +
-            $"User Log Channel: {(guildEntry.guildSettings.userLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.userLogChannelId}>")}", deleteTimer: 120, invisible: true);
+            $"User Log Channel: {(guildEntry.guildSettings.userLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.userLogChannelId}>")}\n" +
+            $"System Log Channel: {(guildEntry.guildSettings.systemLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.systemLogChannelId}>")}\n" +
+            $"Command Log Channel: {(guildEntry.guildSettings.commandLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.commandLogChannelId}>")}\n", deleteTimer: 120, invisible: true);
     }
 }

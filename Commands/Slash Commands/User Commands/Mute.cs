@@ -1,11 +1,17 @@
-﻿using Discord;
+﻿using System;
+
+using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 
 using MainBot.Database;
 using MainBot.Utilities.Attributes;
 using MainBot.Utilities.Extensions;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+
+using static System.Collections.Specialized.BitVector32;
 
 namespace MainBot.Commands.SlashCommands.UserCommands;
 
@@ -21,7 +27,7 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
     }
 
     [SlashCommand("mute", "Mutes a user for a specific amount of time.")]
-    public async Task MuteUserCommand(IUser user, muteDurationOptions durationOptions, int duration)
+    public async Task MuteUserCommand(IUser user, muteDurationOptions durationOptions, int duration, string? reason = "N/A")
     {
         await using var database = new DatabaseContext();
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
@@ -83,7 +89,11 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
         await database.ApplyChangesAsync();
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
-        DateTimeOffset yeet = mutedUserEntry.muteExpiryDate;
-        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{yeet.ToUnixTimeSeconds()}>", deleteTimer: 60);
+        DateTimeOffset mutedUntilDateTime = mutedUserEntry.muteExpiryDate;
+        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>");
+        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
+        if (logChannel is not null)
+            await logChannel.SendEmbedAsync("Muted User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nMuted Until: <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>\nMute Reason: {reason}\nMuted By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
     }
 }

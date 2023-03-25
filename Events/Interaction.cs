@@ -129,11 +129,16 @@ internal class InteractionEventHandler
     private async Task SlashCommandExecuted(SlashCommandInfo arg1, IInteractionContext arg2, IResult arg3)
     {
         if (arg2.Guild is not null)
+        {
             if (arg2.Guild.Id != 993960228913676308)
             {
                 _ = Task.Run(async () => await LogCommandAsync(arg1, arg2, arg3));
             }
-        _ = Task.Run(async () => await LogAllCommandsAsync(arg1, arg2, arg3));
+        }
+        else
+        {
+            _ = Task.Run(async () => await LogAllCommandsAsync(arg1, arg2, arg3));
+        }
         if (!arg3.IsSuccess)
         {
             switch (arg3.Error)

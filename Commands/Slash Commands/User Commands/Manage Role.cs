@@ -42,15 +42,22 @@ public class ManageRoleCommand : InteractionModuleBase<ShardedInteractionContext
             await Context.ReplyWithEmbedAsync("Error Occurred", "The user mentioned cannot be found, please try again", deleteTimer: 60, invisible: true);
             return;
         }
+        if (guildEntry is null) return;
+        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
         if (guildUser.RoleIds.Contains(role.Id))
         {
             //remove da role
             await guildUser.RemoveRoleAsync(role.Id);
             await Context.ReplyWithEmbedAsync("Role Management", $"Successfully removed {role.Mention} role from {user.Mention}", deleteTimer: 120);
+            if (logChannel is not null)
+                await logChannel.SendEmbedAsync("Removed User Role", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nRole: {role.Mention}\nTaken By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
             return;
         }
         //add da role
         await guildUser.AddRoleAsync(role);
         await Context.ReplyWithEmbedAsync("Role Management", $"Successfully added {role.Mention} role to {user.Mention}", deleteTimer: 120);
+        if (logChannel is not null)
+            await logChannel.SendEmbedAsync("Gave User Role", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nRole: {role.Mention}\nGiven By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
     }
 }

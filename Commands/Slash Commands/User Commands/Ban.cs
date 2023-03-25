@@ -24,5 +24,10 @@ public class BanCommand : InteractionModuleBase<ShardedInteractionContext>
         }
         await Context.Guild.GetUser(user.Id).BanAsync(pruneDays, reason);
         await Context.ReplyWithEmbedAsync("Ban", $"Beamed {user.Mention} lawl", deleteTimer: 240);
+        if (guildEntry is null) return;
+        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
+        if (logChannel is not null)
+            await logChannel.SendEmbedAsync("Banned User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nReason: {(string.IsNullOrWhiteSpace(reason) ? "N/A" : reason)}\nBanned By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
     }
 }

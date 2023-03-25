@@ -49,8 +49,8 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 guildEntry.guildSettings.verifyRoleId = role.Id;
                 break;
             case guildRoleOption.set_rainbow_role:
-                Discord.Rest.RestApplication? kkk = await Context.Client.GetApplicationInfoAsync();
-                if (kkk.Owner.Id != Context.User.Id)
+                Discord.Rest.RestApplication? application1 = await Context.Client.GetApplicationInfoAsync();
+                if (application1.Owner.Id != Context.User.Id)
                 {
                     await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
                     return;
@@ -66,8 +66,8 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 guildEntry.guildSettings.moderatorRoleId = role.Id;
                 break;
             case guildRoleOption.set_administrator_role:
-                Discord.Rest.RestApplication? application = await Context.Client.GetApplicationInfoAsync();
-                if (Context.User.Id != application.Owner.Id || Context.Guild.OwnerId != Context.User.Id)
+                Discord.Rest.RestApplication? application2 = await Context.Client.GetApplicationInfoAsync();
+                if (Context.User.Id != application2.Owner.Id || Context.Guild.OwnerId != Context.User.Id || Context.User.Id != application2.Owner.Id)
                 {
                     await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
                     return;

@@ -48,6 +48,11 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
         await database.ApplyChangesAsync();
         //remove mute role on user
         await Context.Guild.GetUser(user.Id).RemoveRoleAsync(role);
-        await Context.ReplyWithEmbedAsync("Unmute", $"Successfully unmuted {user.Mention}", deleteTimer: 60);
+        await Context.ReplyWithEmbedAsync("Unmute", $"Successfully unmuted {user.Mention}");
+        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
+        if (logChannel is not null)
+            await logChannel.SendEmbedAsync("Unmuted User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nUnmuted By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
+
     }
 }

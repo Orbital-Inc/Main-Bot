@@ -33,9 +33,8 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
             if (guild.guildSettings.administratorRoleId is not null)
                 await ticketChannel.AddPermissionOverwriteAsync(Context.Guild.GetRole((ulong)guild.guildSettings.administratorRoleId), Utilities.Miscallenous.TicketPermsChannel());
         }
-
+        _ = SendTicketMessage(ticketChannel);
         await Context.ReplyWithEmbedAsync("Ticket", $"Successfully opened ticket {ticketChannel.Mention}.", deleteTimer: 60, invisible: true);
-        await SendTicketMessage(ticketChannel);
     }
 
     private async Task SendTicketMessage(RestTextChannel channel)
@@ -75,6 +74,7 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
             },
             Description = "Click to close the ticket.",
         }.WithCurrentTimestamp().Build();
-        await channel.SendMessageAsync(embed: embed, components: msg);
+        var ticket = await channel.SendMessageAsync(embed: embed, components: msg);
+        _ = ticket.PinAsync();
     }
 }
