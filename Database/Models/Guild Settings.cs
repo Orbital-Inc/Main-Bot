@@ -16,5 +16,6 @@ public class GuildSettings
     public ulong? messageLogChannelId { get; set; }
     public ulong? systemLogChannelId { get; set; }
     public ulong? commandLogChannelId { get; set; }
+    public ulong? ticketCategoryId { get; set; }
     public uint[]? uglyColours { get; set; }
 }

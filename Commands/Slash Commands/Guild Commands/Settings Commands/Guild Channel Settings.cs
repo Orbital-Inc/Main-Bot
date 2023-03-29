@@ -19,14 +19,17 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
         set_user_log_channel,
         set_message_log_channel,
         set_system_log_channel,
-        set_command_log_channel
+        set_command_log_channel,
+        set_ticket_category
     }
 
     [SlashCommand("guild-channel-settings", "Guild settings that involve setting a channel.")]
     public async Task ExecuteCommand(guildChannelOption channelOption, IChannel channel)
     {
-        if (channel is not ITextChannel textChannel)
-            throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
+        var categoryChannel = (channel as ICategoryChannel);
+        var textChannel = (channel as ITextChannel);
+        if (categoryChannel is null && textChannel is null)
+            throw new ArgumentNullException(nameof(channel), "This channel is not a valid to perform action on channel.");
         await using var database = new DatabaseContext();
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
@@ -37,27 +40,46 @@ public class GuildChannelSettingsCommand : InteractionModuleBase<ShardedInteract
         switch (channelOption)
         {
             case guildChannelOption.set_message_log_channel:
+                if (textChannel is null)
+                    throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
                 guildEntry.guildSettings.messageLogChannelId = textChannel.Id;
                 await database.ApplyChangesAsync(guildEntry);
                 break;
             case guildChannelOption.set_user_log_channel:
+                if (textChannel is null)
+                    throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
                 guildEntry.guildSettings.userLogChannelId = textChannel.Id;
                 await database.ApplyChangesAsync(guildEntry);
                 break;
             case guildChannelOption.add_daily_nuke_channel:
+                if (textChannel is null)
+                    throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
                 await AddChannelToNukeListCommand(textChannel, database, Context);
                 return;
             case guildChannelOption.remove_daily_nuke_channel:
+                if (textChannel is null)
+                    throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
                 await RemoveChannelFromNukeListCommand(textChannel, database, Context);
                 return;
             case guildChannelOption.set_system_log_channel:
+                if (textChannel is null)
+                    throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
                 guildEntry.guildSettings.systemLogChannelId = textChannel.Id;
                 await database.ApplyChangesAsync(guildEntry);
                 break;
             case guildChannelOption.set_command_log_channel:
+                if (textChannel is null)
+                    throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
                 guildEntry.guildSettings.commandLogChannelId = textChannel.Id;
                 await database.ApplyChangesAsync(guildEntry);
                 break;
+            case guildChannelOption.set_ticket_category:
+                if (categoryChannel is null)
+                    throw new ArgumentNullException(nameof(categoryChannel), "This channel is not a category channel.");
+                guildEntry.guildSettings.ticketCategoryId = categoryChannel.Id;
+                await database.ApplyChangesAsync(guildEntry);
+                await Context.ReplyWithEmbedAsync("Guild Channel Settings", $"Successfully set the category to: {categoryChannel.Name}", deleteTimer: 60, invisible: true);
+                return;
             default:
                 await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;

@@ -11,14 +11,18 @@ namespace MainBot.Events;
 public class MessageEventHandler
 {
     private readonly DiscordShardedClient _client;
+    private ulong _ownerId;
     public MessageEventHandler(DiscordShardedClient client)
     {
         _client = client;
+        _client.ShardReady += ShardReady;
         _client.MessageDeleted += MessageDeleted;
         _client.MessagesBulkDeleted += MessagesDeleted;
         _client.MessageUpdated += MessageUpdated;
         _client.MessageReceived += MessageRecieved;
     }
+
+    private async Task ShardReady(DiscordSocketClient client) => _ownerId = (await client.GetApplicationInfoAsync()).Owner.Id;
 
     private async Task MessageRecieved(SocketMessage arg)
     {
@@ -28,7 +32,7 @@ public class MessageEventHandler
 
     private async ValueTask<bool> CheckMessageTextAsync(SocketMessage message)
     {
-        if (message.Author.IsBot || message.Author.IsWebhook || (await _client.GetApplicationInfoAsync()).Owner.Id == message.Author.Id)
+        if (message.Author.IsBot || message.Author.IsWebhook || _ownerId == message.Author.Id)
         {
             return false;
         }

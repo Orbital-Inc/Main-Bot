@@ -14,18 +14,22 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
     [ComponentInteraction("open-ticket-button")]
     public async Task OpenTicket()
     {
-        Discord.WebSocket.SocketGuildChannel? channel = Context.Guild.Channels.FirstOrDefault(x => x.Name.Contains($"ticket-{Context.Interaction.User.Username}", StringComparison.OrdinalIgnoreCase));
+        Discord.WebSocket.SocketGuildChannel? channel = Context.Guild.Channels.FirstOrDefault(x => x.Name.Contains($"ticket-{Context.Interaction.User.Username}-{Context.Interaction.User.DiscriminatorValue}", StringComparison.OrdinalIgnoreCase));
         if (channel is not null)
         {
             await Context.ReplyWithEmbedAsync("Error Occured", "Please close your open ticket, before opening a new one.", deleteTimer: 60, invisible: true);
             return;
         }
-        RestTextChannel? ticketChannel = await Context.Guild.CreateTextChannelAsync($"ticket-{Context.Interaction.User.Username}");
+        await using var databse = new DatabaseContext();
+        Database.Models.Guild? guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
+
+        RestTextChannel? ticketChannel = ticketChannel = await Context.Guild.CreateTextChannelAsync($"ticket-{Context.Interaction.User.Username}-{Context.Interaction.User.DiscriminatorValue}", x =>
+        {
+            x.CategoryId = guild?.guildSettings.ticketCategoryId;
+        });
 
         await ticketChannel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, Utilities.Miscallenous.EveryoneTicketPermsChannel());
         await ticketChannel.AddPermissionOverwriteAsync(Context.User, Utilities.Miscallenous.TicketPermsChannel());
-        await using var databse = new DatabaseContext();
-        Database.Models.Guild? guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guild is not null)
         {
             if (guild.guildSettings.moderatorRoleId is not null)
