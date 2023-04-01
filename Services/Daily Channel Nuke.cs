@@ -43,8 +43,9 @@ public class DailyChannelNukeService : BackgroundService
                     }
                     SocketTextChannel? socketChannel = guild.GetTextChannel(channel.id);
                     if (socketChannel is not null)
+                    {
                         await NukeChannelAsync(socketChannel, database);
-
+                    }
                 }
                 await database.ApplyChangesAsync();
                 await database.DisposeAsync();
@@ -60,7 +61,9 @@ public class DailyChannelNukeService : BackgroundService
     {
         //check if channel is even a text channel
         if (channel is not ITextChannel textChannel)
+        {
             throw new ArgumentNullException(nameof(channel), "Cannot nuke channel, this channel is not a text channel.");
+        }
         //create new text channel with same exact settings
         ITextChannel? newTextChannel = await textChannel.Guild.CreateTextChannelAsync(textChannel.Name, x =>
         {
@@ -71,14 +74,18 @@ public class DailyChannelNukeService : BackgroundService
             x.Position = textChannel.Position;
             x.SlowModeInterval = textChannel.SlowModeInterval;
             if (string.IsNullOrEmpty(textChannel.Topic) is false)
+            {
                 x.Topic = textChannel.Topic;
+            }
         });
         //sync permissions if in a category
         ICategoryChannel? categoryChannel = await textChannel.GetCategoryAsync();
         if (categoryChannel is not null)
         {
             if (textChannel.PermissionOverwrites == categoryChannel.PermissionOverwrites)
+            {
                 await textChannel.SyncPermissionsAsync();
+            }
         }
         //delete old channel
         await textChannel.DeleteAsync();
@@ -86,13 +93,13 @@ public class DailyChannelNukeService : BackgroundService
         switch (new Random().Next(1, 3))
         {
             case 1:
-                await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/nuke.gif");
                 break;
             case 2:
-                await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/chicken-nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/chicken-nuke.gif");
                 break;
             case 3:
-                await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/world-nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/world-nuke.gif");
                 break;
         }
         bool nullDB = false;
@@ -109,6 +116,8 @@ public class DailyChannelNukeService : BackgroundService
             await database.ApplyChangesAsync(nukeChannel);
         }
         if (nullDB)
+        {
             await database.DisposeAsync();
+        }
     }
 }

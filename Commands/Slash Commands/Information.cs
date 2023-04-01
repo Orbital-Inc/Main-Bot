@@ -13,7 +13,7 @@ public class InformationCommand : InteractionModuleBase<ShardedInteractionContex
     public async Task ExecuteCommand()
     {
         Discord.Rest.RestApplication? appInfo = await Context.Client.GetApplicationInfoAsync();
-        await Context.ReplyWithEmbedAsync("Information",
+        _ = await Context.ReplyWithEmbedAsync("Information",
             $"Guild Count: {Context.Client.Guilds.Count}\n" +
             $"Guild Member Count: {(Context.Guild is null ? "N/A" : Context.Guild.MemberCount)}\n" +
             $"Developer: {(Context.Guild is null ? $"{appInfo.Owner.Username}#{appInfo.Owner.Discriminator}" : appInfo.Owner.Mention)}\n" +

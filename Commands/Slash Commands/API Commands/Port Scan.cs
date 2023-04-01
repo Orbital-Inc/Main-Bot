@@ -20,23 +20,23 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         if (string.IsNullOrWhiteSpace(host))
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
-        await Context.ReplyWithEmbedAsync("Port Scan", MainDescription);
+        _ = await Context.ReplyWithEmbedAsync("Port Scan", MainDescription);
 
         #region Info Checks
         //max port count is 10
         string[]? portSplit = ports.Split(',');
         if (portSplit.Length > 10)
         {
-            await Context.ReplyWithEmbedAsync("Port Scanner Ports Error", "The specified amount of ports is too high, please try again.");
+            _ = await Context.ReplyWithEmbedAsync("Port Scanner Ports Error", "The specified amount of ports is too high, please try again.");
             return;
         }
         if (Uri.CheckHostName(host) is not (UriHostNameType.IPv4 or UriHostNameType.Dns))
         {
-            await Context.ReplyWithEmbedAsync("Port Scanner Invalid Host Error", "The specified hostname/IPv4 address is not valid, please try again.");
+            _ = await Context.ReplyWithEmbedAsync("Port Scanner Invalid Host Error", "The specified hostname/IPv4 address is not valid, please try again.");
             return;
         }
 
@@ -46,11 +46,11 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             {
                 try
                 {
-                    Convert.ToUInt16(ports);
+                    _ = Convert.ToUInt16(ports);
                 }
                 catch
                 {
-                    await Context.ReplyWithEmbedAsync("Port Scanner Invalid Port Error", "The specified port is not valid, please try again.");
+                    _ = await Context.ReplyWithEmbedAsync("Port Scanner Invalid Port Error", "The specified port is not valid, please try again.");
                     return;
                 }
             }
@@ -62,11 +62,13 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         Models.APIModels.PortScanModel? PortScanResult = null;
         HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/portscan/{host}/{ports}");
         if (result.IsSuccessStatusCode)
+        {
             PortScanResult = JsonConvert.DeserializeObject<Models.APIModels.PortScanModel>(await result.Content.ReadAsStringAsync());
+        }
 
         if (PortScanResult is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to port scan, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to port scan, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -84,6 +86,6 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             }
         };
 
-        await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PortScanResult.host}", string.Empty, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PortScanResult.host}", string.Empty, string.Empty, Fields);
     }
 }

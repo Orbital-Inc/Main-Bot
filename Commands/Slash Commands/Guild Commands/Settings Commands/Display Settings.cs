@@ -18,10 +18,10 @@ public class DisplaySettingsCommand : InteractionModuleBase<ShardedInteractionCo
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
-        await Context.ReplyWithEmbedAsync("Guild Settings",
+        _ = await Context.ReplyWithEmbedAsync("Guild Settings",
             $"Mute Role: {(guildEntry.guildSettings.muteRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.muteRoleId}>")}\n" +
             $"Administrator Role: {(guildEntry.guildSettings.administratorRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.administratorRoleId}>")}\n" +
             $"Moderator Role: {(guildEntry.guildSettings.moderatorRoleId is null ? "N/A" : $"<@&{guildEntry.guildSettings.moderatorRoleId}>")}\n" +
@@ -31,6 +31,7 @@ public class DisplaySettingsCommand : InteractionModuleBase<ShardedInteractionCo
             $"Message Log Channel: {(guildEntry.guildSettings.messageLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.messageLogChannelId}>")}\n" +
             $"User Log Channel: {(guildEntry.guildSettings.userLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.userLogChannelId}>")}\n" +
             $"System Log Channel: {(guildEntry.guildSettings.systemLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.systemLogChannelId}>")}\n" +
-            $"Command Log Channel: {(guildEntry.guildSettings.commandLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.commandLogChannelId}>")}\n", deleteTimer: 120, invisible: true);
+            $"Command Log Channel: {(guildEntry.guildSettings.commandLogChannelId is null ? "N/A" : $"<#{guildEntry.guildSettings.commandLogChannelId}>")}\n" +
+            $"Ticket Category: {(guildEntry.guildSettings.ticketCategoryId is null ? "N/A" : $"<#{guildEntry.guildSettings.ticketCategoryId}>")}\n", deleteTimer: 120, invisible: true);
     }
 }

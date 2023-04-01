@@ -19,40 +19,45 @@ public class UnmuteCommand : InteractionModuleBase<ShardedInteractionContext>
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
         Database.Models.MuteUser? mutedUserEntry = await database.MutedUsers.FirstOrDefaultAsync(x => x.id == user.Id && x.guildId == Context.Guild.Id);
         if (mutedUserEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Unmute User", $"User is not muted.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Unmute User", $"User is not muted.", deleteTimer: 60, invisible: true);
             return;
         }
         if (guildEntry.guildSettings.muteRoleId is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
         if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
             return;
         }
         Discord.WebSocket.SocketRole? role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
         if (role is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
         database.Remove(mutedUserEntry);
         await database.ApplyChangesAsync();
         //remove mute role on user
         await Context.Guild.GetUser(user.Id).RemoveRoleAsync(role);
-        await Context.ReplyWithEmbedAsync("Unmute", $"Successfully unmuted {user.Mention}");
-        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        _ = await Context.ReplyWithEmbedAsync("Unmute", $"Successfully unmuted {user.Mention}");
+        if (guildEntry.guildSettings.userLogChannelId is null)
+        {
+            return;
+        }
+
         var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
         if (logChannel is not null)
-            await logChannel.SendEmbedAsync("Unmuted User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nUnmuted By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
-
+        {
+            _ = await logChannel.SendEmbedAsync("Unmuted User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nUnmuted By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
+        }
     }
 }

@@ -19,15 +19,25 @@ public class BanCommand : InteractionModuleBase<ShardedInteractionContext>
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
             return;
         }
         await Context.Guild.GetUser(user.Id).BanAsync(pruneDays, reason);
-        await Context.ReplyWithEmbedAsync("Ban", $"Beamed {user.Mention} lawl", deleteTimer: 240);
-        if (guildEntry is null) return;
-        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        _ = await Context.ReplyWithEmbedAsync("Ban", $"Beamed {user.Mention} lawl", deleteTimer: 240);
+        if (guildEntry is null)
+        {
+            return;
+        }
+
+        if (guildEntry.guildSettings.userLogChannelId is null)
+        {
+            return;
+        }
+
         var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
         if (logChannel is not null)
-            await logChannel.SendEmbedAsync("Banned User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nReason: {(string.IsNullOrWhiteSpace(reason) ? "N/A" : reason)}\nBanned By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
+        {
+            _ = await logChannel.SendEmbedAsync("Banned User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nReason: {(string.IsNullOrWhiteSpace(reason) ? "N/A" : reason)}\nBanned By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
+        }
     }
 }

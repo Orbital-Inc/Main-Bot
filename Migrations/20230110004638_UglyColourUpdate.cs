@@ -2,27 +2,26 @@
 
 #nullable disable
 
-namespace MainBot.Migrations
+namespace MainBot.Migrations;
+
+/// <inheritdoc />
+public partial class UglyColourUpdate : Migration
 {
     /// <inheritdoc />
-    public partial class UglyColourUpdate : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<long[]>(
-                name: "uglyColours",
-                table: "GuildSettings",
-                type: "bigint[]",
-                nullable: true);
-        }
+        _ = migrationBuilder.AddColumn<long[]>(
+            name: "uglyColours",
+            table: "GuildSettings",
+            type: "bigint[]",
+            nullable: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "uglyColours",
-                table: "GuildSettings");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        _ = migrationBuilder.DropColumn(
+            name: "uglyColours",
+            table: "GuildSettings");
     }
 }

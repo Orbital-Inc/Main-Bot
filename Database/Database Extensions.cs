@@ -7,10 +7,13 @@ internal static class DatabaseExtensions
         try
         {
             if (entity is not null)
+            {
                 database.Update(entity);
+            }
+
             return await database.SaveChangesAsync();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             await ex.LogErrorAsync();
             return 0;

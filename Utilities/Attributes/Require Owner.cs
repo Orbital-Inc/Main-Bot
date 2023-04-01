@@ -12,10 +12,16 @@ public class RequireOwnerAttribute : PreconditionAttribute
             case TokenType.Bot:
                 IDMChannel? privateChannel = await context.Client.GetDMChannelAsync(context.Channel.Id).ConfigureAwait(false);
                 if (privateChannel is not null)
+                {
                     return PreconditionResult.FromError(ErrorMessage ?? "Command must be executed in a guild.");
+                }
+
                 IApplication? application = await context.Client.GetApplicationInfoAsync().ConfigureAwait(false);
                 if (context.User.Id == application.Owner.Id || context.Guild.OwnerId == context.User.Id)
+                {
                     return PreconditionResult.FromSuccess();
+                }
+
                 return PreconditionResult.FromError(ErrorMessage ?? "Command can only be executed by the owner of the guild.");
             default:
                 return PreconditionResult.FromError($"{nameof(RequireOwnerAttribute)} is not supported by this {nameof(TokenType)}.");

@@ -9,11 +9,17 @@ internal class Miscallenous
     {
         Color colour = RandomDiscordColour();
         if (uglyColours is null)
+        {
             return colour;
-        for(int i = 0; i < 10; i++)
+        }
+
+        for (int i = 0; i < 10; i++)
         {
             if (uglyColours.Contains(colour.RawValue) is false)
+            {
                 return colour;
+            }
+
             colour = RandomDiscordColour();
         }
         return colour;

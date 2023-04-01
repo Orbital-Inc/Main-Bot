@@ -24,21 +24,31 @@ internal class ChannelEventHandler
         {
             Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == text.GuildId);
             if (guildEntry is null)
+            {
                 return;
+            }
+
             if (guildEntry.guildSettings.muteRoleId is null)
+            {
                 return;
+            }
+
             ICategoryChannel? category = await text.GetCategoryAsync();
             if (category is not null)
             {
                 if (text.PermissionOverwrites == category.PermissionOverwrites)
+                {
                     return;
+                }
             }
             IRole? role = text.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
             if (role is not null)
             {
                 OverwritePermissions? perms = text.GetPermissionOverwrite(role);
                 if (perms is null)
+                {
                     await text.AddPermissionOverwriteAsync(role, Utilities.Miscallenous.MutePermsChannel());
+                }
             }
             return;
         }
@@ -47,18 +57,29 @@ internal class ChannelEventHandler
         {
             Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == voice.GuildId);
             if (guildEntry is null)
+            {
                 return;
+            }
+
             if (guildEntry.guildSettings.muteRoleId is null)
+            {
                 return;
+            }
+
             ICategoryChannel? category = await voice.GetCategoryAsync();
             if (category is not null)
             {
                 if (voice.PermissionOverwrites == category.PermissionOverwrites)
+                {
                     return;
+                }
             }
             IRole? role = voice.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
             if (role is not null)
+            {
                 await voice.AddPermissionOverwriteAsync(role, Utilities.Miscallenous.MutePermsChannel());
+            }
+
             return;
         }
         var catgeorySocket = arg as ICategoryChannel;
@@ -66,12 +87,21 @@ internal class ChannelEventHandler
         {
             Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == catgeorySocket.GuildId);
             if (guildEntry is null)
+            {
                 return;
+            }
+
             if (guildEntry.guildSettings.muteRoleId is null)
+            {
                 return;
+            }
+
             IRole? role = catgeorySocket.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
             if (role is not null)
+            {
                 await catgeorySocket.AddPermissionOverwriteAsync(role, Utilities.Miscallenous.MutePermsChannel());
+            }
+
             return;
         }
     }

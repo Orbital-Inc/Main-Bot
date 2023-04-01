@@ -12,7 +12,10 @@ public class RequireDeveloperAttribute : PreconditionAttribute
             case TokenType.Bot:
                 IApplication? application = await context.Client.GetApplicationInfoAsync().ConfigureAwait(false);
                 if (context.User.Id == application.Owner.Id)
+                {
                     return PreconditionResult.FromSuccess();
+                }
+
                 return PreconditionResult.FromError(ErrorMessage ?? "Command can only be executed by the owner of the bot.");
             default:
                 return PreconditionResult.FromError($"{nameof(RequireDeveloperAttribute)} is not supported by this {nameof(TokenType)}.");

@@ -1,17 +1,11 @@
-﻿using System;
-
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
-using Discord.WebSocket;
 
 using MainBot.Database;
 using MainBot.Utilities.Attributes;
 using MainBot.Utilities.Extensions;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-
-using static System.Collections.Specialized.BitVector32;
 
 namespace MainBot.Commands.SlashCommands.UserCommands;
 
@@ -33,23 +27,23 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
         Database.Models.MuteUser? mutedUserEntry = await database.MutedUsers.FirstOrDefaultAsync(x => x.id == user.Id && x.guildId == Context.Guild.Id);
         if (mutedUserEntry is not null)
         {
-            await Context.ReplyWithEmbedAsync("Mute User", $"Failed to mute {user.Mention}, user is already muted.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Mute User", $"Failed to mute {user.Mention}, user is already muted.", deleteTimer: 60, invisible: true);
             return;
         }
         if (guildEntry.guildSettings.muteRoleId is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
         if (DiscordExtensions.IsCommandExecutorPermsHigher(Context.User, user, guildEntry) is false)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
             return;
         }
         DateTime muteTime = DateTime.UtcNow;
@@ -68,14 +62,14 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
                 muteTime = DateTime.UtcNow.AddDays(duration);
                 break;
             default:
-                await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
+                _ = await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;
         }
         //get mute role
         Discord.WebSocket.SocketRole? role = Context.Guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
         if (role is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "Role doesn't exist.", deleteTimer: 60, invisible: true);
             return;
         }
         mutedUserEntry = new Database.Models.MuteUser
@@ -85,15 +79,21 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             muteRoleId = role.Id,
             muteExpiryDate = muteTime,
         };
-        await database.MutedUsers.AddAsync(mutedUserEntry);
+        _ = await database.MutedUsers.AddAsync(mutedUserEntry);
         await database.ApplyChangesAsync();
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
         DateTimeOffset mutedUntilDateTime = mutedUserEntry.muteExpiryDate;
-        await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>");
-        if (guildEntry.guildSettings.userLogChannelId is null) return;
+        _ = await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>");
+        if (guildEntry.guildSettings.userLogChannelId is null)
+        {
+            return;
+        }
+
         var logChannel = Context.Guild.GetChannel((ulong)guildEntry.guildSettings.userLogChannelId);
         if (logChannel is not null)
-            await logChannel.SendEmbedAsync("Muted User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nMuted Until: <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>\nMute Reason: {reason}\nMuted By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
+        {
+            _ = await logChannel.SendEmbedAsync("Muted User", $"User: {user.Username}#{user.Discriminator} - {user.Mention}\nMuted Until: <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>\nMute Reason: {reason}\nMuted By: {Context.Interaction.User.Mention}", $"{user.Id}", user.GetAvatarUrl());
+        }
     }
 }

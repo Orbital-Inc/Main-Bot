@@ -37,7 +37,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
         switch (roleOption)
@@ -52,7 +52,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 Discord.Rest.RestApplication? application1 = await Context.Client.GetApplicationInfoAsync();
                 if (application1.Owner.Id != Context.User.Id)
                 {
-                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
+                    _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
                     return;
                 }
                 guildEntry.guildSettings.rainbowRoleId = role.Id;
@@ -69,7 +69,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 Discord.Rest.RestApplication? application2 = await Context.Client.GetApplicationInfoAsync();
                 if (Context.User.Id != application2.Owner.Id || Context.Guild.OwnerId != Context.User.Id || Context.User.Id != application2.Owner.Id)
                 {
-                    await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
+                    _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
                     return;
                 }
                 guildEntry.guildSettings.administratorRoleId = role.Id;
@@ -78,12 +78,14 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 guildEntry.guildSettings.hiddenRoleId = role.Id;
                 break;
             default:
-                await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
+                _ = await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;
         }
         await database.ApplyChangesAsync(guildEntry);
-        await Context.ReplyWithEmbedAsync("Guild Role Settings", $"Successfully set the role to: {role.Mention}", deleteTimer: 60, invisible: true);
         if (roleOption == guildRoleOption.set_mute_role)
+        {
             await Context.Guild.UpdateGuildChannelsForMute(guildEntry);
+        }
+        _ = await Context.ReplyWithEmbedAsync("Guild Role Settings", $"Successfully set the role to: {role.Mention}", deleteTimer: 60, invisible: true);
     }
 }

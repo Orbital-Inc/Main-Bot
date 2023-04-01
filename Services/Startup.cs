@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
@@ -48,17 +46,18 @@ internal class StartupService
         await provider.GetRequiredService<DailyChannelNukeService>().StartAsync(new CancellationToken());
         await provider.GetRequiredService<AutoUnmuteUserService>().StartAsync(new CancellationToken());
         await provider.GetRequiredService<RainbowRoleService>().StartAsync(new CancellationToken());
-        if (Debugger.IsAttached)
-            await _client.LoginAsync(TokenType.Bot, Properties.Resources.TestToken);
-        else
+#if DEBUG
+        await _client.LoginAsync(TokenType.Bot, Properties.Resources.TestToken);
+#else
             await _client.LoginAsync(TokenType.Bot, Properties.Resources.Token);
+#endif
         await _client.StartAsync();
         await Task.Delay(Timeout.Infinite);
     }
 
     private void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton(_client)
+        _ = services.AddSingleton(_client)
         .AddSingleton<DiscordLogger>()
         .AddSingleton<InteractionEventHandler>()
         .AddSingleton<MessageEventHandler>()

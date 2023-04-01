@@ -26,12 +26,15 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
     public async Task ExecuteCommand(guildEmbedOption embedOption, IChannel channel, string? description = null)
     {
         if (channel is not ITextChannel textChannel)
+        {
             throw new ArgumentNullException(nameof(textChannel), "This channel is not a text channel.");
+        }
+
         await using var database = new DatabaseContext();
         Database.Models.Guild? guildEntry = await database.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
         if (guildEntry is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "This requires the guild to be backed up.", deleteTimer: 60, invisible: true);
             return;
         }
         switch (embedOption)
@@ -48,7 +51,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             case guildEmbedOption.send_announcement:
                 if (description is null)
                 {
-                    await Context.ReplyWithEmbedAsync("Error Occured", "This requires a message to be sent with the embed.", deleteTimer: 60, invisible: true);
+                    _ = await Context.ReplyWithEmbedAsync("Error Occured", "This requires a message to be sent with the embed.", deleteTimer: 60, invisible: true);
                     return;
                 }
                 await SendAnnoucementMessage(textChannel, description);
@@ -60,10 +63,10 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
                 await SendRulesMessage(textChannel, true, true);
                 break;
             default:
-                await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
+                _ = await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;
         }
-        await Context.ReplyWithEmbedAsync("Guild Embed Settings", $"Successfully sent the embed to: {textChannel.Mention}", deleteTimer: 60, invisible: true);
+        _ = await Context.ReplyWithEmbedAsync("Guild Embed Settings", $"Successfully sent the embed to: {textChannel.Mention}", deleteTimer: 60, invisible: true);
     }
 
     private async Task SendVerifyMessage(ITextChannel channel, string? description = "Click to verify.")
@@ -103,7 +106,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             },
             Description = description is null ? "Click to verify." : description,
         }.Build();
-        await channel.SendMessageAsync(embed: embed, components: msg);
+        _ = await channel.SendMessageAsync(embed: embed, components: msg);
     }
 
     private async Task SendTicketMessage(ITextChannel channel, string title, string description, string buttonLabel)
@@ -225,10 +228,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
                 "Owners, and staff will take action (warnings, mute, kick, ban) for breaking the rules. We also reverse the right to act on misbehaviour/violations not explicitly listed.\n" +
                 "Once you said a message in this server, you agree to all above rules."
         }.WithCurrentTimestamp().Build();
-        if (ticketButton)
-            await channel.SendMessageAsync(embed: embed, components: msg);
-        else
-            await channel.SendMessageAsync(embed: embed);
+        _ = ticketButton ? await channel.SendMessageAsync(embed: embed, components: msg) : await channel.SendMessageAsync(embed: embed);
     }
 
     private async Task SendAnnoucementMessage(ITextChannel channel, string description)
@@ -250,6 +250,6 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             },
             Description = description
         }.WithCurrentTimestamp().Build();
-        await channel.SendMessageAsync(Context.Guild.EveryoneRole.Mention, embed: embed);
+        _ = await channel.SendMessageAsync(Context.Guild.EveryoneRole.Mention, embed: embed);
     }
 }

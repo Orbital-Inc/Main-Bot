@@ -11,12 +11,15 @@ namespace MainBot.Utilities.Extensions;
 
 internal static class DiscordExtensions
 {
-    internal static async ValueTask<IUserMessage?> ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string url = "", string thumbnailUrl = "", string imageUrl = "", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false, string? txtMessage = null)
+    internal static async Task<IUserMessage?> ReplyWithEmbedAsync(this IInteractionContext context, string title, string description, string? url = null, string? thumbnailUrl = null, string? imageUrl = null, List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null, bool invisible = false, string? txtMessage = null)
     {
         try
         {
             if (context is not ShardedInteractionContext shardedContext)
+            {
                 throw new ArgumentNullException(nameof(shardedContext), "Failed to convert context to a sharded context.");
+            }
+
             Embed? embed = new EmbedBuilder()
             {
                 Title = title,
@@ -38,16 +41,23 @@ internal static class DiscordExtensions
                 ImageUrl = imageUrl,
             }.WithCurrentTimestamp().Build();
             if (embeds is not null)
+            {
                 embed = embed.ToEmbedBuilder().WithFields(embeds).Build();
+            }
+
             IUserMessage? msgSent = null;
             if (shardedContext.Interaction.HasResponded)
+            {
                 msgSent = await context.Interaction.ModifyOriginalResponseAsync(x =>
                 {
                     x.Embed = embed;
                     x.Content = txtMessage;
                 });
+            }
             else
+            {
                 await context.Interaction.RespondAsync(txtMessage, embed: embed, ephemeral: invisible);
+            }
 
             try
             {
@@ -57,7 +67,7 @@ internal static class DiscordExtensions
                     {
                         Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
                         IUserMessage? msg = context.Interaction.GetOriginalResponseAsync().Result;
-                        msg?.DeleteAsync();
+                        _ = (msg?.DeleteAsync());
                     });
                     return null;
                 }
@@ -65,17 +75,20 @@ internal static class DiscordExtensions
             }
             catch { return null; }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             await ex.LogErrorAsync();
             return null;
         }
     }
 
-    internal static async ValueTask<IUserMessage?> SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon = "https://nebulamods.ca/content/media/images/Home.png", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
+    internal static async Task<IUserMessage?> SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon = "https://nebulamods.ca/content/media/images/Home.png", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
     {
         if (channel is not ITextChannel textChannel)
+        {
             throw new ArgumentNullException(nameof(textChannel), "Channel was not a text channel");
+        }
+
         Embed? embed = new EmbedBuilder()
         {
             Title = title,
@@ -94,7 +107,10 @@ internal static class DiscordExtensions
             Description = description,
         }.WithCurrentTimestamp().Build();
         if (embeds is not null)
+        {
             embed = embed.ToEmbedBuilder().WithFields(embeds).Build();
+        }
+
         IUserMessage msg = await textChannel.SendMessageAsync(embed: embed);
         try
         {
@@ -103,7 +119,7 @@ internal static class DiscordExtensions
                 _ = Task.Run(() =>
                 {
                     Thread.Sleep(TimeSpan.FromSeconds((int)deleteTimer));
-                    msg.DeleteAsync();
+                    _ = msg.DeleteAsync();
                 });
                 return null;
             }
@@ -115,7 +131,10 @@ internal static class DiscordExtensions
     internal static async Task UpdateGuildChannelsForMute(this IGuild guild, Guild guildEntry)
     {
         if (guildEntry.guildSettings.muteRoleId is null)
+        {
             throw new ArgumentException("Mute role is null");
+        }
+
         IRole? role = guild.GetRole((ulong)guildEntry.guildSettings.muteRoleId);
         IReadOnlyCollection<ICategoryChannel>? categories = await guild.GetCategoriesAsync();
         foreach (ICategoryChannel? channel in categories)
@@ -136,10 +155,15 @@ internal static class DiscordExtensions
                 {
                     var textChannel = channel as ITextChannel;
                     if (textChannel is not null)
+                    {
                         await textChannel.SyncPermissionsAsync();
+                    }
+
                     var voiceChannel = channel as IVoiceChannel;
                     if (voiceChannel is not null)
+                    {
                         await voiceChannel.SyncPermissionsAsync();
+                    }
                 }
                 else
                 {
@@ -151,23 +175,36 @@ internal static class DiscordExtensions
     private static int GetUserPermissionLevel(this IUser regUser, Guild? guild)
     {
         if (regUser is not SocketGuildUser user)
+        {
             throw new ArgumentNullException(nameof(user), "Cannot convert to socket guild user.");
+        }
+
         if ($"{user.Username}#{user.Discriminator}" == "Nebula#0911")
+        {
             return 6969;
+        }
+
         IReadOnlyCollection<SocketRole>? roles = user.Roles;
         if (user.Guild.OwnerId == user.Id)
+        {
             return 1000;
+        }
+
         if (guild is not null)
         {
             if (guild.guildSettings.administratorRoleId is not null)
             {
                 if (roles.FirstOrDefault(x => x.Id == guild.guildSettings.administratorRoleId) is not null)
+                {
                     return 999;
+                }
             }
             if (guild.guildSettings.moderatorRoleId is not null)
             {
                 if (roles.FirstOrDefault(x => x.Id == guild.guildSettings.moderatorRoleId) is not null)
+                {
                     return 99;
+                }
             }
         }
         return user.Hierarchy;
@@ -175,11 +212,8 @@ internal static class DiscordExtensions
 
     internal static bool IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild)
     {
-        if ($"{commandExecutedUser.Username}#{commandExecutedUser.Discriminator}" == "Nebula#0911" && $"{operationOnUser.Username}#{operationOnUser.Discriminator}" == "Nebula#0911")
-            return true;
-        if (commandExecutedUser.GetUserPermissionLevel(guild) > operationOnUser.GetUserPermissionLevel(guild))
-            return true;
-        return false;
+        return ($"{commandExecutedUser.Username}#{commandExecutedUser.Discriminator}" == "Nebula#0911" && $"{operationOnUser.Username}#{operationOnUser.Discriminator}" == "Nebula#0911")
+|| commandExecutedUser.GetUserPermissionLevel(guild) > operationOnUser.GetUserPermissionLevel(guild);
     }
     internal static (string emoteName, ulong emoteId, string fileType) ReturnEmote(string str)
     {

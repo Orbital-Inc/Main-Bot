@@ -2,13 +2,13 @@
 
 internal class ICMPPingModel
 {
-    public string host { get; set; }
-    public string responseTime { get; set; }
-    public string serverUsed { get; set; }
+    public string? host { get; set; }
+    public string? responseTime { get; set; }
+    public string? serverUsed { get; set; }
     public double? averageResponseTime { get; set; }
     public double? maximumResponseTime { get; set; }
     public double? minimumResponseTime { get; set; }
-    public List<PingResult> results { get; set; }
+    public List<PingResult>? results { get; set; }
 }
 internal class PingResult
 {

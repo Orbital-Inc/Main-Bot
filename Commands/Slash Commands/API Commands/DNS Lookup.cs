@@ -13,11 +13,11 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("dns-lookup", "Lookup a DNS record for the specified host.")]
     public async Task PingHost(string host)
     {
-        await Context.ReplyWithEmbedAsync("DNS Lookup", $"Attempting to lookup {host}, please wait...");
+        _ = await Context.ReplyWithEmbedAsync("DNS Lookup", $"Attempting to lookup {host}, please wait...");
 
-        if (Uri.CheckHostName(host) is not (UriHostNameType.Dns))
+        if (Uri.CheckHostName(host) is not UriHostNameType.Dns)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -27,7 +27,7 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
         HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/dns-lookup/{host}");
         if (result.IsSuccessStatusCode)
         {
-            await Context.ReplyWithEmbedAsync($"DNS Lookup Complete For: {host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={host}", string.Empty, string.Empty, new List<EmbedFieldBuilder>()
+            _ = await Context.ReplyWithEmbedAsync($"DNS Lookup Complete For: {host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={host}", string.Empty, string.Empty, new List<EmbedFieldBuilder>()
             {
                 new EmbedFieldBuilder()
                 {
@@ -38,7 +38,7 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
         }
         else
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to lookup record, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to lookup record, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
     }

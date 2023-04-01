@@ -16,13 +16,13 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("ping-tcp", "Attempts to start & complete a TCP handshake to a specified host.")]
     public async Task TCPPingHost(string host, ushort port = 80)
     {
-        await Context.ReplyWithEmbedAsync("TCP Ping", $"Attempting to TCP ping {host} through port {port}, please wait...");
+        _ = await Context.ReplyWithEmbedAsync("TCP Ping", $"Attempting to TCP ping {host} through port {port}, please wait...");
 
         #region Info Checks
 
         if (Uri.CheckHostName(host) is not (UriHostNameType.IPv4 or UriHostNameType.IPv6 or UriHostNameType.Dns))
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -32,10 +32,13 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
         Models.APIModels.TCPPingModel? PingResults = null;
         HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/tcp-ping/{host}/{port}");
         if (result.IsSuccessStatusCode)
+        {
             PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await result.Content.ReadAsStringAsync());
+        }
+
         if (PingResults is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
         string embedvalue = string.Empty;
@@ -44,7 +47,10 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
             embedvalue += $"[{PingResults.host}](https://check-host.net/check-tcp?host={PingResults.host}%3A{PingResults.dstPort}) {(value.recievedResponse ? $"replied back on {PingResults.dstPort} in" : $"failed to reply back on {PingResults.dstPort}")}{(value.recievedResponse ? $" `{value.responseTime}`ms\n" : "\n")}";
         });
         if (PingResults.averageResponseTime is not null)
+        {
             embedvalue += $"Average: `{PingResults.averageResponseTime}`ms Maximum: `{PingResults.maximumResponseTime}`ms Minimum: `{PingResults.minimumResponseTime}`ms";
+        }
+
         List<EmbedFieldBuilder> Fields = new()
         {
             new EmbedFieldBuilder
@@ -53,6 +59,6 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
                 Value = embedvalue
             }
         };
-        await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }

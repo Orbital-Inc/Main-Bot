@@ -5,13 +5,13 @@
 namespace MainBot.Migrations;
 
 /// <inheritdoc />
-public partial class CommandLogChannel : Migration
+public partial class TicketCategoryIdSchemaUpdate : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         _ = migrationBuilder.AddColumn<decimal>(
-            name: "commandLogChannelId",
+            name: "ticketCategoryId",
             table: "GuildSettings",
             type: "numeric(20,0)",
             nullable: true);
@@ -21,7 +21,7 @@ public partial class CommandLogChannel : Migration
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         _ = migrationBuilder.DropColumn(
-            name: "commandLogChannelId",
+            name: "ticketCategoryId",
             table: "GuildSettings");
     }
 }

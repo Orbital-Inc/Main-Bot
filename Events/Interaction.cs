@@ -41,7 +41,7 @@ internal class InteractionEventHandler
     {
         try
         {
-            await _commands.RegisterCommandsGloballyAsync(true);
+            _ = await _commands.RegisterCommandsGloballyAsync(true);
         }
         catch (Exception e)
         {
@@ -53,7 +53,7 @@ internal class InteractionEventHandler
     {
         try
         {
-            await _commands.ExecuteCommandAsync(new ShardedInteractionContext(_client, arg), _services);
+            _ = await _commands.ExecuteCommandAsync(new ShardedInteractionContext(_client, arg), _services);
         }
         catch (Exception e)
         {
@@ -69,10 +69,10 @@ internal class InteractionEventHandler
             switch (arg3.Error)
             {
                 case InteractionCommandError.UnmetPrecondition:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.BadArgs:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Exception:
                     await using (var database = new Database.DatabaseContext())
@@ -86,10 +86,10 @@ internal class InteractionEventHandler
                         await database.AddAsync(entry);
                         await database.ApplyChangesAsync();
                     };
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Unsuccessful:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 default:
                     break;
@@ -128,26 +128,18 @@ internal class InteractionEventHandler
 
     private async Task SlashCommandExecuted(SlashCommandInfo arg1, IInteractionContext arg2, IResult arg3)
     {
-        if (arg2.Guild is not null)
-        {
-            if (arg2.Guild.Id != 993960228913676308)
-            {
-                _ = Task.Run(async () => await LogCommandAsync(arg1, arg2, arg3));
-            }
-        }
-        else
-        {
-            _ = Task.Run(async () => await LogAllCommandsAsync(arg1, arg2, arg3));
-        }
+        _ = arg2.Guild is not null
+            ? Task.Run(async () => await LogCommandAsync(arg1, arg2, arg3))
+            : Task.Run(async () => await LogAllCommandsAsync(arg1, arg2, arg3));
         if (!arg3.IsSuccess)
         {
             switch (arg3.Error)
             {
                 case InteractionCommandError.UnmetPrecondition:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.BadArgs:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Exception:
                     await using (var database = new Database.DatabaseContext())
@@ -161,10 +153,10 @@ internal class InteractionEventHandler
                         await database.AddAsync(entry);
                         await database.ApplyChangesAsync();
                     };
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 case InteractionCommandError.Unsuccessful:
-                    await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
+                    _ = await arg2.ReplyWithEmbedAsync("Error Occured", arg3.ErrorReason, deleteTimer: 60);
                     break;
                 default:
                     break;
@@ -185,7 +177,7 @@ internal class InteractionEventHandler
             return;
         }
         var commandLogChannel = await arg2.Guild.GetChannelAsync(guildEntry.guildSettings.commandLogChannelId.Value);
-        await commandLogChannel.SendEmbedAsync("Command Executed", $"{arg2.User.Mention} has executed {arg1.Name}\nCommand Status: {(arg3.IsSuccess ? "Success" : $"Failure: {arg3.ErrorReason}")}", $"{arg2.User.Username} | {arg2.User.Id}", arg2.User.GetAvatarUrl());
+        _ = await commandLogChannel.SendEmbedAsync("Command Executed", $"{arg2.User.Mention} has executed {arg1.Name}\nCommand Status: {(arg3.IsSuccess ? "Success" : $"Failure: {arg3.ErrorReason}")}", $"{arg2.User.Username} | {arg2.User.Id}", arg2.User.GetAvatarUrl());
     }
     private async Task LogAllCommandsAsync(ICommandInfo arg1, IInteractionContext arg2, IResult arg3)
     {
@@ -203,6 +195,6 @@ internal class InteractionEventHandler
         }
         var guild = await arg2.Client.GetGuildAsync(guildEntry.id);
         var commandLogChannel = await guild.GetChannelAsync(guildEntry.guildSettings.commandLogChannelId.Value);
-        await commandLogChannel.SendEmbedAsync("Command Executed", $"{arg2.User.Mention} has executed {arg1.Name}\nCommand Status: {(arg3.IsSuccess ? "Success" : $"Failure: {arg3.ErrorReason}")}", $"{arg2.User.Username} | {arg2.User.Id}", arg2.User.GetAvatarUrl());
+        _ = await commandLogChannel.SendEmbedAsync("Command Executed", $"{arg2.User.Mention} has executed {arg1.Name}\nCommand Status: {(arg3.IsSuccess ? "Success" : $"Failure: {arg3.ErrorReason}")}", $"{arg2.User.Username} | {arg2.User.Id}", arg2.User.GetAvatarUrl());
     }
 }

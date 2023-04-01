@@ -34,6 +34,6 @@ public class BackupCommand : InteractionModuleBase<ShardedInteractionContext>
             guildEntry.name = Context.Guild.Name;
             await database.ApplyChangesAsync(guildEntry);
         }
-        await Context.ReplyWithEmbedAsync("Server Backup", $"Sucessfully completed backing up the server.", deleteTimer: 60);
+        _ = await Context.ReplyWithEmbedAsync("Server Backup", $"Sucessfully completed backing up the server.", deleteTimer: 60);
     }
 }

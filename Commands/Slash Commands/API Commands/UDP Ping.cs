@@ -15,11 +15,11 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
     [SlashCommand("ping-udp", "Sends an UDP packet to a specified host in hopes for a reponse.")]
     public async Task PingHost(string host)
     {
-        await Context.ReplyWithEmbedAsync("UDP Ping", $"Attempting to UDP ping {host}, please wait...");
+        _ = await Context.ReplyWithEmbedAsync("UDP Ping", $"Attempting to UDP ping {host}, please wait...");
 
         if (Uri.CheckHostName(host) is not (UriHostNameType.IPv4 or UriHostNameType.IPv6 or UriHostNameType.Dns))
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
 
@@ -34,7 +34,12 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
         }
         if (PingResults is null)
         {
-            await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to ping, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to ping, please try again.", deleteTimer: 60, invisible: true);
+            return;
+        }
+        if (PingResults.results is null)
+        {
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to ping, please try again.", deleteTimer: 60, invisible: true);
             return;
         }
         string embedvalue = string.Empty;
@@ -43,7 +48,10 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
             embedvalue += $"[{PingResults.host}](https://check-host.net/check-ping?host={PingResults.host}) {(value.recievedResponse ? $"replied back in `{value.responseTime}`ms" : "failed to reply back")}\n";
         });
         if (PingResults.averageResponseTime is not null)
+        {
             embedvalue += $"Average: `{PingResults.averageResponseTime}`ms Maximum: `{PingResults.maximumResponseTime}`ms Minimum: `{PingResults.minimumResponseTime}`ms";
+        }
+
         List<EmbedFieldBuilder> Fields = new()
         {
             new EmbedFieldBuilder
@@ -52,6 +60,6 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
                 Value = embedvalue
             }
         };
-        await Context.ReplyWithEmbedAsync($"UDP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"UDP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }
