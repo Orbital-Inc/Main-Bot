@@ -60,6 +60,6 @@ public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext
 
         GuildEmote? guildemote = await Context.Guild.CreateEmoteAsync(emoteName, new Image(ms));
 
-        _ = await Context.ReplyWithEmbedAsync("Emote Stealer", "Successfully added emote.", "https://nebulamods.ca", guildemote.Url, string.Empty, deleteTimer: 120);
+        _ = await Context.ReplyWithEmbedAsync("Emote Stealer", "Successfully added emote.", "https://orbitalsolutions.ca", guildemote.Url, string.Empty, deleteTimer: 120);
     }
 }

@@ -60,7 +60,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.PortScanModel? PortScanResult = null;
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/portscan/{host}/{ports}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/portscan/{host}/{ports}");
         if (result.IsSuccessStatusCode)
         {
             PortScanResult = JsonConvert.DeserializeObject<Models.APIModels.PortScanModel>(await result.Content.ReadAsStringAsync());
@@ -86,6 +86,6 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             }
         };
 
-        _ = await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PortScanResult.host}", string.Empty, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"Port Scan Complete For: {PortScanResult.host}", string.Empty, $"https://orbitalsolutions.ca/geolocation?ip={PortScanResult.host}", string.Empty, string.Empty, Fields);
     }
 }

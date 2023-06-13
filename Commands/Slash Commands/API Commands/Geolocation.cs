@@ -26,7 +26,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 
         //adding header for request
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/geolocation/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/geolocation/{host}");
         Models.APIModels.GeolocationModel? Information = null;
         //deserializing request response if successful
         if (result.IsSuccessStatusCode)
@@ -122,6 +122,6 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
            $"{(string.IsNullOrWhiteSpace(Information.city) ? "" : $"`City`: {Information.city}\n")}"
         });
 
-        _ = await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={Information.ip}", Information.flag, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"Geolocate Complete For: {host}", string.Empty, $"https://orbitalsolutions.ca/geolocation?ip={Information.ip}", Information.flag, string.Empty, Fields);
     }
 }

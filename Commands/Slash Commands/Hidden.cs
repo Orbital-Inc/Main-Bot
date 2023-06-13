@@ -176,14 +176,14 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
             Color = Miscallenous.RandomDiscordColour(),
             Author = new EmbedAuthorBuilder
             {
-                Url = "https://nebulamods.ca",
-                Name = "Nebula Mods, Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                Url = "https://orbitalsolutions.ca",
+                Name = "Orbital, Inc.",
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
             {
                 Text = "GiveAway Time! Enjoy!",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Description = description is null ? $"Monthly Nitro giveaway, react with {guildEmote} in order to entered. Draw is in <t:{drawDate.ToUnixTimeSeconds()}:R>" : description + $"\nDraw is in <t:{drawDate.ToUnixTimeSeconds()}:R>",
         }.WithCurrentTimestamp().Build();

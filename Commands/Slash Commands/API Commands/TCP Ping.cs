@@ -30,7 +30,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.TCPPingModel? PingResults = null;
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/tcp-ping/{host}/{port}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/tcp-ping/{host}/{port}");
         if (result.IsSuccessStatusCode)
         {
             PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await result.Content.ReadAsStringAsync());
@@ -59,6 +59,6 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
                 Value = embedvalue
             }
         };
-        _ = await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"TCP Ping Complete For: {PingResults.host}", string.Empty, $"https://orbitalsolutions.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }

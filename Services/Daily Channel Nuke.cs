@@ -93,13 +93,13 @@ public class DailyChannelNukeService : BackgroundService
         switch (new Random().Next(1, 3))
         {
             case 1:
-                _ = await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/content/media/images/nuke.gif");
                 break;
             case 2:
-                _ = await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/chicken-nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/content/media/images/chicken-nuke.gif");
                 break;
             case 3:
-                _ = await newTextChannel.SendMessageAsync("https://nebulamods.ca/content/media/images/world-nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/content/media/images/world-nuke.gif");
                 break;
         }
         bool nullDB = false;

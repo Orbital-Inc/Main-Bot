@@ -26,7 +26,7 @@ public class HTTPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/http-ping/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/http-ping/{host}");
         Models.APIModels.ICMPPingModel? PingResults = null;
         if (result.IsSuccessStatusCode)
         {
@@ -60,6 +60,6 @@ public class HTTPPing : InteractionModuleBase<ShardedInteractionContext>
                 Value = embedvalue
             }
         };
-        _ = await Context.ReplyWithEmbedAsync($"HTTP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"HTTP Ping Complete For: {PingResults.host}", string.Empty, $"https://orbitalsolutions.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }

@@ -24,10 +24,10 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/dns-lookup/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/dns-lookup/{host}");
         if (result.IsSuccessStatusCode)
         {
-            _ = await Context.ReplyWithEmbedAsync($"DNS Lookup Complete For: {host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={host}", string.Empty, string.Empty, new List<EmbedFieldBuilder>()
+            _ = await Context.ReplyWithEmbedAsync($"DNS Lookup Complete For: {host}", string.Empty, $"https://orbitalsolutions.ca/geolocation?ip={host}", string.Empty, string.Empty, new List<EmbedFieldBuilder>()
             {
                 new EmbedFieldBuilder()
                 {

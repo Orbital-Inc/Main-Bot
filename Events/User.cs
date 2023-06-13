@@ -196,11 +196,11 @@ public class UserEventHandler
 
                 Embed? RichEmbed = new EmbedBuilder()
                 .WithTitle("Nickname Status")
-                .WithAuthor("Nebula Mods, Inc.", "https://nebulamods.ca/content/media/images/Home.png", "https://nebulamods.ca")
+                .WithAuthor("Orbital, Inc.", "https://orbitalsolutions.ca/content/media/images/Home.png", "https://orbitalsolutions.ca")
                 .WithDescription($"Hello {user.Username}, your nickname in our server has just been set to {uncanceredname} as your username/nickname violates our username/nickname guidelines.")
                 .WithColor(Miscallenous.RandomDiscordColour())
                 .WithCurrentTimestamp()
-                .WithFooter("Enjoy your stay", "https://nebulamods.ca/content/media/images/Home.png")
+                .WithFooter("Enjoy your stay", "https://orbitalsolutions.ca/content/media/images/Home.png")
                 .Build();
                 try { _ = await user.SendMessageAsync(embed: RichEmbed); } catch { }
             }

@@ -9,7 +9,7 @@ public class DatabaseContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string _connectionString = $"host=chicago-database-node-1.nebulamods.ca;user id=bot;database=nebulamods_discord_bot;password={Properties.Resources.MySql_Pass}";
+        string _connectionString = $"host=chicago-database-node-1.orbitalsolutions.ca;user id=bot;database=nebulamods_discord_bot;password={Properties.Resources.MySql_Pass}";
 #if DEBUG
         _connectionString = $"host=localhost;user id=discord_db;database=discord_test;password=Test1234";
 #endif

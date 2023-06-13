@@ -26,7 +26,7 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.nebulamods.ca/network/udp-ping/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/udp-ping/{host}");
         Models.APIModels.UDPPingModel? PingResults = null;
         if (result.IsSuccessStatusCode)
         {
@@ -60,6 +60,6 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
                 Value = embedvalue
             }
         };
-        _ = await Context.ReplyWithEmbedAsync($"UDP Ping Complete For: {PingResults.host}", string.Empty, $"https://nebulamods.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
+        _ = await Context.ReplyWithEmbedAsync($"UDP Ping Complete For: {PingResults.host}", string.Empty, $"https://orbitalsolutions.ca/geolocation?ip={PingResults.host}", string.Empty, string.Empty, Fields);
     }
 }

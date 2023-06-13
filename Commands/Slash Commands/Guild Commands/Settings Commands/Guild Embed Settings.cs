@@ -95,9 +95,9 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Color = Utilities.Miscallenous.RandomDiscordColour(),
             Author = new EmbedAuthorBuilder
             {
-                Url = "https://nebulamods.ca",
-                Name = "Nebula Mods, Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                Url = "https://orbitalsolutions.ca",
+                Name = "Orbital, Inc.",
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
             {
@@ -135,9 +135,9 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Color = Utilities.Miscallenous.RandomDiscordColour(),
             Author = new EmbedAuthorBuilder
             {
-                Url = "https://nebulamods.ca",
-                Name = "Nebula Mods, Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                Url = "https://orbitalsolutions.ca",
+                Name = "Orbital, Inc.",
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
             {
@@ -206,9 +206,9 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Color = Utilities.Miscallenous.RandomDiscordColour(),
             Author = new EmbedAuthorBuilder
             {
-                Url = "https://nebulamods.ca",
-                Name = "Nebula Mods, Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                Url = "https://orbitalsolutions.ca",
+                Name = "Orbital, Inc.",
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
             {
@@ -239,9 +239,9 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             Color = Utilities.Miscallenous.RandomDiscordColour(),
             Author = new EmbedAuthorBuilder
             {
-                Url = "https://nebulamods.ca",
-                Name = "Nebula Mods, Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                Url = "https://orbitalsolutions.ca",
+                Name = "Orbital, Inc.",
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
             {

@@ -22,7 +22,7 @@ public class CustomService
     {
         var rainbowRole = _roleService;
         await _client.SetStatusAsync(Discord.UserStatus.Idle);
-        await _client.SetGameAsync("nebulamods.ca", null, Discord.ActivityType.Watching);
+        await _client.SetGameAsync("orbitalsolutions.ca", null, Discord.ActivityType.Watching);
         if (rainbowRole._rainbowRoleGuilds.IsEmpty)
         {
             await using var database = new DatabaseContext();

@@ -72,9 +72,9 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
             Color = Utilities.Miscallenous.RandomDiscordColour(),
             Author = new EmbedAuthorBuilder
             {
-                Url = "https://nebulamods.ca",
+                Url = "https://orbitalsolutions.ca",
                 Name = "Nebula Mods Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
             {

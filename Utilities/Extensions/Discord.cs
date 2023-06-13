@@ -26,9 +26,9 @@ internal static class DiscordExtensions
                 Color = Miscallenous.RandomDiscordColour(),
                 Author = new EmbedAuthorBuilder
                 {
-                    Url = "https://nebulamods.ca",
-                    Name = "Nebula Mods, Inc.",
-                    IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                    Url = "https://orbitalsolutions.ca",
+                    Name = "Orbital, Inc.",
+                    IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
                 },
                 Footer = new EmbedFooterBuilder
                 {
@@ -82,7 +82,7 @@ internal static class DiscordExtensions
         }
     }
 
-    internal static async Task<IUserMessage?> SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon = "https://nebulamods.ca/content/media/images/Home.png", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
+    internal static async Task<IUserMessage?> SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon = "https://orbitalsolutions.ca/content/media/images/Home.png", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
     {
         if (channel is not ITextChannel textChannel)
         {
@@ -95,9 +95,9 @@ internal static class DiscordExtensions
             Color = Miscallenous.RandomDiscordColour(),
             Author = new EmbedAuthorBuilder
             {
-                Url = "https://nebulamods.ca",
-                Name = "Nebula Mods, Inc.",
-                IconUrl = "https://nebulamods.ca/content/media/images/Home.png"
+                Url = "https://orbitalsolutions.ca",
+                Name = "Orbital, Inc.",
+                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
             },
             Footer = new EmbedFooterBuilder
             {
@@ -179,7 +179,7 @@ internal static class DiscordExtensions
             throw new ArgumentNullException(nameof(user), "Cannot convert to socket guild user.");
         }
 
-        if ($"{user.Username}#{user.Discriminator}" == "Nebula#0911")
+        if ($"{user.Username}#{user.Discriminator}" == "Nebula#0911" || user.Id == 970752861933797376 || user.Username == "nebulamods")
         {
             return 6969;
         }
@@ -212,8 +212,7 @@ internal static class DiscordExtensions
 
     internal static bool IsCommandExecutorPermsHigher(IUser commandExecutedUser, IUser operationOnUser, Guild? guild)
     {
-        return ($"{commandExecutedUser.Username}#{commandExecutedUser.Discriminator}" == "Nebula#0911" && $"{operationOnUser.Username}#{operationOnUser.Discriminator}" == "Nebula#0911")
-|| commandExecutedUser.GetUserPermissionLevel(guild) > operationOnUser.GetUserPermissionLevel(guild);
+        return commandExecutedUser.GetUserPermissionLevel(guild) > operationOnUser.GetUserPermissionLevel(guild);
     }
     internal static (string emoteName, ulong emoteId, string fileType) ReturnEmote(string str)
     {

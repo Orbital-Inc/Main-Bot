@@ -52,28 +52,28 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 Discord.Rest.RestApplication? application1 = await Context.Client.GetApplicationInfoAsync();
                 if (application1.Owner.Id != Context.User.Id)
                 {
-                    _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
-                    return;
+                    guildEntry.guildSettings.rainbowRoleId = role.Id;
+                    rainbowRole._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
+                    {
+                        roleId = role.Id,
+                        guildId = Context.Guild.Id,
+                    });
+                    break;
                 }
-                guildEntry.guildSettings.rainbowRoleId = role.Id;
-                rainbowRole._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
-                {
-                    roleId = role.Id,
-                    guildId = Context.Guild.Id,
-                });
-                break;
+                _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
+                return;
             case guildRoleOption.set_moderator_role:
                 guildEntry.guildSettings.moderatorRoleId = role.Id;
                 break;
             case guildRoleOption.set_administrator_role:
                 Discord.Rest.RestApplication? application2 = await Context.Client.GetApplicationInfoAsync();
-                if (Context.User.Id != application2.Owner.Id || Context.Guild.OwnerId != Context.User.Id || Context.User.Id != application2.Owner.Id)
+                if (Context.Guild.OwnerId == Context.User.Id || Context.User.Id == application2.Owner.Id)
                 {
-                    _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
-                    return;
+                    guildEntry.guildSettings.administratorRoleId = role.Id;
+                    break;
                 }
-                guildEntry.guildSettings.administratorRoleId = role.Id;
-                break;
+                _ = await Context.ReplyWithEmbedAsync("Error Occured", "Please check your permissions then try again.", deleteTimer: 60, invisible: true);
+                return;
             case guildRoleOption.set_hidden_role:
                 guildEntry.guildSettings.hiddenRoleId = role.Id;
                 break;
