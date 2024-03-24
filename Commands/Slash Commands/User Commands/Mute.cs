@@ -52,15 +52,19 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
             case muteDurationOptions.minutes:
                 muteTime = DateTime.UtcNow.AddMinutes(duration);
                 break;
+
             case muteDurationOptions.seconds:
                 muteTime = DateTime.UtcNow.AddSeconds(duration);
                 break;
+
             case muteDurationOptions.hours:
                 muteTime = DateTime.UtcNow.AddHours(duration);
                 break;
+
             case muteDurationOptions.days:
                 muteTime = DateTime.UtcNow.AddDays(duration);
                 break;
+
             default:
                 _ = await Context.ReplyWithEmbedAsync("Error Occured", "Invalid option selected.", deleteTimer: 60, invisible: true);
                 return;
@@ -84,7 +88,7 @@ public class MuteCommand : InteractionModuleBase<ShardedInteractionContext>
         //set mute role on user
         await Context.Guild.GetUser(user.Id).AddRoleAsync(role);
         DateTimeOffset mutedUntilDateTime = mutedUserEntry.muteExpiryDate;
-        _ = await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>");
+        _ = await Context.ReplyWithEmbedAsync("Mute", $"Successfully muted {user.Mention} until <t:{mutedUntilDateTime.ToUnixTimeSeconds()}>{(string.IsNullOrWhiteSpace(reason) ? "" : $"\nReason: {reason}")}");
         if (guildEntry.guildSettings.userLogChannelId is null)
         {
             return;

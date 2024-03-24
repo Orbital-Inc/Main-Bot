@@ -17,7 +17,7 @@ namespace MainBot.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -58,7 +58,6 @@ namespace MainBot.Migrations
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("key");

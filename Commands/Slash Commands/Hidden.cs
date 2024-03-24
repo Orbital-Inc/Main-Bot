@@ -178,12 +178,12 @@ public class HiddenCommands : InteractionModuleBase<ShardedInteractionContext>
             {
                 Url = "https://orbitalsolutions.ca",
                 Name = "Orbital, Inc.",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
             },
             Footer = new EmbedFooterBuilder
             {
                 Text = "GiveAway Time! Enjoy!",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
             },
             Description = description is null ? $"Monthly Nitro giveaway, react with {guildEmote} in order to entered. Draw is in <t:{drawDate.ToUnixTimeSeconds()}:R>" : description + $"\nDraw is in <t:{drawDate.ToUnixTimeSeconds()}:R>",
         }.WithCurrentTimestamp().Build();

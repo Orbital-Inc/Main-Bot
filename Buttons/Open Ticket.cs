@@ -23,13 +23,19 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
         await using var databse = new DatabaseContext();
         Database.Models.Guild? guild = await databse.Guilds.FirstOrDefaultAsync(x => x.id == Context.Guild.Id);
 
-        RestTextChannel? ticketChannel = ticketChannel = await Context.Guild.CreateTextChannelAsync($"ticket-{Context.Interaction.User.Username}-{Context.Interaction.User.DiscriminatorValue}", x =>
+        RestTextChannel? ticketChannel = ticketChannel = await Context.Guild.CreateTextChannelAsync($"ticket-{Context.Interaction.User.Username}-{new Random().Next(0, 9999)}", x =>
         {
-            //x.CategoryId = guild?.guildSettings.ticketCategoryId;
+            x.CategoryId = guild?.guildSettings.ticketCategoryId;
+            x.Topic = $"Ticket for {Context.Interaction.User.Username}#{Context.Interaction.User.DiscriminatorValue}";
+            x.PermissionOverwrites = new List<Overwrite>()
+            {
+                new Overwrite(Context.Guild.EveryoneRole.Id, PermissionTarget.Role, Utilities.Miscallenous.EveryoneTicketPermsChannel()),
+                new Overwrite(Context.User.Id, PermissionTarget.User, Utilities.Miscallenous.TicketPermsChannel()),
+            };
         });
-        await ticketChannel.ModifyAsync(x => x.CategoryId = guild?.guildSettings.ticketCategoryId);
-        await ticketChannel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, Utilities.Miscallenous.EveryoneTicketPermsChannel());
-        await ticketChannel.AddPermissionOverwriteAsync(Context.User, Utilities.Miscallenous.TicketPermsChannel());
+        //await ticketChannel.ModifyAsync(x => x.CategoryId = guild?.guildSettings.ticketCategoryId);
+        //await ticketChannel.AddPermissionOverwriteAsync(Context.Guild.EveryoneRole, Utilities.Miscallenous.EveryoneTicketPermsChannel());
+        //await ticketChannel.AddPermissionOverwriteAsync(Context.User, Utilities.Miscallenous.TicketPermsChannel());
         if (guild is not null)
         {
             if (guild.guildSettings.moderatorRoleId is not null)
@@ -73,8 +79,8 @@ public class OpenTicketButton : InteractionModuleBase<ShardedInteractionContext>
             Author = new EmbedAuthorBuilder
             {
                 Url = "https://orbitalsolutions.ca",
-                Name = "Nebula Mods Inc.",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                Name = "Orbital, Inc.",
+                IconUrl = "https://orbitalsolutions.ca/assets/img/logo.png"
             },
             Footer = new EmbedFooterBuilder
             {

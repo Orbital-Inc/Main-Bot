@@ -26,11 +26,11 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
             return;
         }
 
-        #endregion
+        #endregion Info Checks
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.TCPPingModel? PingResults = null;
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/tcp-ping/{host}/{port}");
+        HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/networkping/{host}/tcp?port={port}");
         if (result.IsSuccessStatusCode)
         {
             PingResults = JsonConvert.DeserializeObject<Models.APIModels.TCPPingModel>(await result.Content.ReadAsStringAsync());
@@ -38,7 +38,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         if (PingResults is null)
         {
-            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to tcp ping, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", $"An error occurred while attempting to tcp ping, please try again.\nResponse Status: {result.StatusCode}", deleteTimer: 60, invisible: true);
             return;
         }
         string embedvalue = string.Empty;

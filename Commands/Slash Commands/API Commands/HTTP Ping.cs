@@ -26,7 +26,7 @@ public class HTTPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/http-ping/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/network/http-ping/{host}");
         Models.APIModels.ICMPPingModel? PingResults = null;
         if (result.IsSuccessStatusCode)
         {

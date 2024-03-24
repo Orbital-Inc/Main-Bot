@@ -50,7 +50,8 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
                 break;
             case guildRoleOption.set_rainbow_role:
                 Discord.Rest.RestApplication? application1 = await Context.Client.GetApplicationInfoAsync();
-                if (application1.Owner.Id != Context.User.Id)
+                Console.WriteLine(application1.Owner.Id);
+                if (application1.Owner.Id == Context.User.Id)
                 {
                     guildEntry.guildSettings.rainbowRoleId = role.Id;
                     rainbowRole._rainbowRoleGuilds.Add(new Models.RainbowRoleModel
@@ -84,6 +85,7 @@ public class GuildRoleSettingsCommand : InteractionModuleBase<ShardedInteraction
         await database.ApplyChangesAsync(guildEntry);
         if (roleOption == guildRoleOption.set_mute_role)
         {
+            await Context.Interaction.DeferAsync();
             await Context.Guild.UpdateGuildChannelsForMute(guildEntry);
         }
         _ = await Context.ReplyWithEmbedAsync("Guild Role Settings", $"Successfully set the role to: {role.Mention}", deleteTimer: 60, invisible: true);

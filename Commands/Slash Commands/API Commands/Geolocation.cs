@@ -26,7 +26,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 
         //adding header for request
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/geolocation/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/geolocation/{host}");
         Models.APIModels.GeolocationModel? Information = null;
         //deserializing request response if successful
         if (result.IsSuccessStatusCode)
@@ -36,11 +36,13 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 
         if (Information is null)
         {
-            _ = await Context.ReplyWithEmbedAsync("Error Occured", "The specified hostname/IPv4 address is not valid, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", $"An error occurred when attempting to geolocate the specified host, please try again.\nResponse status: {result.StatusCode}", deleteTimer: 60, invisible: true);
             return;
         }
         List<EmbedFieldBuilder> Fields = new();
+
         #region Security
+
         string ExtraInfo = string.Empty;
         if (Information.cloudProvider is not null && (bool)Information.cloudProvider)
         {
@@ -91,7 +93,16 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
         {
             ExtraInfo += $"`Threat`: True\n";
         }
-        #endregion
+        if (Information.icloudRelay is not null && (bool)Information.icloudRelay)
+        {
+            ExtraInfo += $"`iCloud Relay`: True\n";
+        }
+        if (Information.datacenter is not null && (bool)Information.datacenter)
+        {
+            ExtraInfo += $"`Datacenter`: True\n";
+        }
+
+        #endregion Security
 
         Fields.Add(new EmbedFieldBuilder
         {
@@ -109,8 +120,8 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
             Value = $"{(string.IsNullOrWhiteSpace(Information.domain) ? "" : $"`Domain`: [{Information.domain}](http://{Information.domain})\n")}" +
             $"{(string.IsNullOrWhiteSpace(Information.organization) ? "" : $"`Organization`: {Information.organization}\n")}" +
             $"{(string.IsNullOrWhiteSpace(Information.isp) ? "" : $"`ISP`: {Information.isp}\n")}" +
-            $"{(string.IsNullOrWhiteSpace(Information.asnName) ? "" : $"`ASN Name`: {Information.asnName}\n")}" +
-            $"{(Information.asnNumber is null ? "" : $"`ASN Number`: {Information.asnNumber}\n")}"
+            $"{(string.IsNullOrWhiteSpace(Information.asName) ? "" : $"`AS Name`: {Information.asName}\n")}" +
+            $"{(Information.asNumber is null ? "" : $"`AS Number`: {Information.asNumber}\n")}"
         });
 
         Fields.Add(new EmbedFieldBuilder
