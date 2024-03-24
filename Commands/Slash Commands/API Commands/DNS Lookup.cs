@@ -3,7 +3,10 @@ using Discord.Interactions;
 
 using MainBot.Utilities.Extensions;
 
+using Newtonsoft.Json;
+
 namespace MainBot.Commands.SlashCommands.APICommands;
+
 public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
@@ -24,15 +27,16 @@ public class DNSLookup : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/dns-lookup/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/dnslookup/{host}");
         if (result.IsSuccessStatusCode)
         {
+            var Information = JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync());
             _ = await Context.ReplyWithEmbedAsync($"DNS Lookup Complete For: {host}", string.Empty, $"https://orbitalsolutions.ca/geolocation?ip={host}", string.Empty, string.Empty, new List<EmbedFieldBuilder>()
             {
                 new EmbedFieldBuilder()
                 {
                     Name = "Domain System Name",
-                    Value = await result.Content.ReadAsStringAsync()
+                    Value = Information.details
                 }
             });
         }

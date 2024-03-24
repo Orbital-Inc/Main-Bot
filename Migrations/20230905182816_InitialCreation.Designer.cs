@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MainBot.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230107141534_CommandLogChannel")]
-    partial class CommandLogChannel
+    [Migration("20230905182816_InitialCreation")]
+    partial class InitialCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -61,7 +61,6 @@ namespace MainBot.Migrations
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("key");
@@ -100,6 +99,12 @@ namespace MainBot.Migrations
 
                     b.Property<decimal?>("systemLogChannelId")
                         .HasColumnType("numeric(20,0)");
+
+                    b.Property<decimal?>("ticketCategoryId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<long[]>("uglyColours")
+                        .HasColumnType("bigint[]");
 
                     b.Property<decimal?>("userLogChannelId")
                         .HasColumnType("numeric(20,0)");

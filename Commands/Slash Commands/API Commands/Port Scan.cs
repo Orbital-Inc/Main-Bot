@@ -27,6 +27,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
         _ = await Context.ReplyWithEmbedAsync("Port Scan", MainDescription);
 
         #region Info Checks
+
         //max port count is 10
         string[]? portSplit = ports.Split(',');
         if (portSplit.Length > 10)
@@ -56,11 +57,11 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
             }
         }
 
-        #endregion
+        #endregion Info Checks
 
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         Models.APIModels.PortScanModel? PortScanResult = null;
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/portscan/{host}/{ports}");
+        HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/portscan/{host}/{ports}");
         if (result.IsSuccessStatusCode)
         {
             PortScanResult = JsonConvert.DeserializeObject<Models.APIModels.PortScanModel>(await result.Content.ReadAsStringAsync());
@@ -68,7 +69,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         if (PortScanResult is null)
         {
-            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to port scan, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", $"An error occurred while attempting to port scan, please try again.\nResponse Staus: {result.StatusCode}", deleteTimer: 60, invisible: true);
             return;
         }
 

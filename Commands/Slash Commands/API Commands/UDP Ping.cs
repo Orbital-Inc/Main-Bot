@@ -6,6 +6,7 @@ using MainBot.Utilities.Extensions;
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
+
 public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
@@ -13,7 +14,7 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
     internal UDPPing(HttpClient http) => _http = http;
 
     [SlashCommand("ping-udp", "Sends an UDP packet to a specified host in hopes for a reponse.")]
-    public async Task PingHost(string host)
+    public async Task PingHost(string host, ushort port = 53)
     {
         _ = await Context.ReplyWithEmbedAsync("UDP Ping", $"Attempting to UDP ping {host}, please wait...");
 
@@ -26,7 +27,7 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/udp-ping/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/network/networkping/{host}/udp?{port}");
         Models.APIModels.UDPPingModel? PingResults = null;
         if (result.IsSuccessStatusCode)
         {

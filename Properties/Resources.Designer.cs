@@ -61,7 +61,7 @@ namespace MainBot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to eRk6Uf6XmTlDqdaYAd3q+df/f4nErdka8jcmCDJWVQZxrPaE3/CMdNQDuksmRlOPPZVAkU+430/sHA0IsXbwQ8FRPLJjCfCUlVD2boetxEDFVtdbB1vV4SegxX9yb6EKV8rU/zktIhNOjGSdTrCD3w0xYOA8rnPQdh25UNiQ94QXISJHUJMuyaVzd9/iDt9mJw5+9M18CjDvHUgnx7zszOSRNBOMooShpHzYTS7iYyYUu/sgQUEtvozLZiIAFMD7Pi0sZ/8U1Nt/NrW/WftcFw==.
+        ///   Looks up a localized string similar to eyJhbGciOiJSU0EtT0FFUC01MTIiLCJ0eXAiOiJKV1QgQ3VzdG9tIiwiZW5jIjoiQTI1NkdDTSJ9.B81gGADL6oWF3qnPY4CWZbJ5dgMDSYD7c4x5nPNmhOxyfwtyNvg3H6UZkQxW6Mw4YWnAwKi_Qw3Qc_HQgYr6CZGzJ-wqt1g5MO9E4-KQcrByFTjkiZdUbXKqYe-BuDfLjxWoApyHnTWEdSpWEAigodaKzeeOCjFJ82tj8WPmsEt7Cd3N0qgI7oJMX3otmSJIskgW5zTy9m-Csrx8xhBRFUsTIkCKganR3Xg1S6vtyMjgRkwo3HPPXteccuVQjEs49KIwj4a2914U6gHmgd8JTFrye2Z8uY-QVnuEyhgcjkOUIA-_0ExQgrE968avJba3RYksUDy5gL0ltbQL7bF9prLhGGe30BoMDt3l8awsAMzhcat_EQ2TRk5IZN8vM5L6wMsKK6eZmsXv6lV15OtemnHaY5qelCP4_J6y1VdBOrw.b6Hl4_t [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string APIToken {
             get {

@@ -27,7 +27,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         //add header
         _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
         //response
-        HttpResponseMessage? result = await _http.GetAsync($"https://api.orbitalsolutions.ca/network/icmp-ping/{host}");
+        HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/networkping/{host}/icmp");
         Models.APIModels.ICMPPingModel? PingResults = null;
         if (result.IsSuccessStatusCode)
         {
@@ -35,7 +35,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         }
         if (PingResults is null)
         {
-            _ = await Context.ReplyWithEmbedAsync("Error Occured", "An error occurred while attempting to ping, please try again.", deleteTimer: 60, invisible: true);
+            _ = await Context.ReplyWithEmbedAsync("Error Occured", $"An error occurred while attempting to ping, please try again.\nResponse Status: {result.StatusCode}", deleteTimer: 60, invisible: true);
             return;
         }
         string embedvalue = string.Empty;

@@ -1,6 +1,6 @@
 ﻿namespace MainBot.Models.APIModels;
 
-internal record GeolocationModel
+public class GeolocationModel
 {
     public string? ip { get; set; }
     public string? hostname { get; set; }
@@ -8,6 +8,8 @@ internal record GeolocationModel
     public string? route { get; set; }
     public string? type { get; set; }
     public bool? cloudProvider { get; set; }
+    public bool? icloudRelay { get; set; }
+    public bool? datacenter { get; set; }
     public bool? tor { get; set; }
     public bool? proxy { get; set; }
     public bool? abuser { get; set; }
@@ -22,8 +24,8 @@ internal record GeolocationModel
     public string? district { get; set; }
     public string? city { get; set; }
     public string? flag { get; set; }
-    public string? asnName { get; set; }
-    public int? asnNumber { get; set; }
+    public string? asName { get; set; }
+    public int? asNumber { get; set; }
     public string? isp { get; set; }
     public string? organization { get; set; }
     public string? responseTime { get; set; }

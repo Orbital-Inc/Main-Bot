@@ -97,7 +97,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             {
                 Url = "https://orbitalsolutions.ca",
                 Name = "Orbital, Inc.",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
             },
             Footer = new EmbedFooterBuilder
             {
@@ -137,7 +137,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             {
                 Url = "https://orbitalsolutions.ca",
                 Name = "Orbital, Inc.",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
             },
             Footer = new EmbedFooterBuilder
             {
@@ -208,7 +208,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             {
                 Url = "https://orbitalsolutions.ca",
                 Name = "Orbital, Inc.",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
             },
             Footer = new EmbedFooterBuilder
             {
@@ -241,7 +241,7 @@ public class GuildEmbedSettingsCommand : InteractionModuleBase<ShardedInteractio
             {
                 Url = "https://orbitalsolutions.ca",
                 Name = "Orbital, Inc.",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
             },
             Footer = new EmbedFooterBuilder
             {

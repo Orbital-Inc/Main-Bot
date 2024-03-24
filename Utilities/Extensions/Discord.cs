@@ -28,7 +28,7 @@ internal static class DiscordExtensions
                 {
                     Url = "https://orbitalsolutions.ca",
                     Name = "Orbital, Inc.",
-                    IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                    IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
                 },
                 Footer = new EmbedFooterBuilder
                 {
@@ -82,7 +82,7 @@ internal static class DiscordExtensions
         }
     }
 
-    internal static async Task<IUserMessage?> SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon = "https://orbitalsolutions.ca/content/media/images/Home.png", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
+    internal static async Task<IUserMessage?> SendEmbedAsync(this IChannel channel, string title, string description, string footer, string footerIcon = "https://orbitalsolutions.ca/assets/img/orbital-logo.png", List<EmbedFieldBuilder>? embeds = null, int? deleteTimer = null)
     {
         if (channel is not ITextChannel textChannel)
         {
@@ -97,7 +97,7 @@ internal static class DiscordExtensions
             {
                 Url = "https://orbitalsolutions.ca",
                 Name = "Orbital, Inc.",
-                IconUrl = "https://orbitalsolutions.ca/content/media/images/Home.png"
+                IconUrl = "https://orbitalsolutions.ca/assets/img/orbital-logo.png"
             },
             Footer = new EmbedFooterBuilder
             {

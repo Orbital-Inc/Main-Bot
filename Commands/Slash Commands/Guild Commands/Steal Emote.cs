@@ -8,6 +8,7 @@ namespace MainBot.Commands.SlashCommands.GuildCommands;
 public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
+
     public StealEmoteCommand(HttpClient http) => _http = http;
 
     [SlashCommand("steal-emote", "Steal an emote from another server.")]
@@ -39,7 +40,8 @@ public class StealEmoteCommand : InteractionModuleBase<ShardedInteractionContext
                     return;
                 }
                 emoteUrl = $"https://cdn.discordapp.com/emojis/{emoteFunc.emoteId}.{emoteFunc.fileType}?size=96";
-                emoteName = emoteFunc.emoteName;
+                if (string.IsNullOrWhiteSpace(emoteName))
+                    emoteName = emoteFunc.emoteName;
             }
         }
         else if (string.IsNullOrWhiteSpace(imageUrl) is false)

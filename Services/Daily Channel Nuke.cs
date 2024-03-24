@@ -11,7 +11,9 @@ namespace MainBot.Services;
 public class DailyChannelNukeService : BackgroundService
 {
     private readonly DiscordShardedClient _client;
+
     public DailyChannelNukeService(DiscordShardedClient client) => _client = client;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         _ = Task.Factory.StartNew(async () => await AutoNukeChannels(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
@@ -90,16 +92,25 @@ public class DailyChannelNukeService : BackgroundService
         //delete old channel
         await textChannel.DeleteAsync();
         //post image to new channel
-        switch (new Random().Next(1, 3))
+        switch (new Random().Next(1, 6))
         {
             case 1:
-                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/content/media/images/nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/assets/img/cat-nuke.gif");
                 break;
             case 2:
-                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/content/media/images/chicken-nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/assets/img/chicken-nuke.gif");
                 break;
             case 3:
-                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/content/media/images/world-nuke.gif");
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/assets/img/world-nuke.gif");
+                break;
+            case 4:
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/assets/img/noot-noot-nuke.gif");
+                break;
+            case 5:
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/assets/img/nuke-press-button.gif");
+                break;
+            case 6:
+                _ = await newTextChannel.SendMessageAsync("https://orbitalsolutions.ca/assets/img/pepe-glasses-watching-nuke.gif");
                 break;
         }
         bool nullDB = false;
