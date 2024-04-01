@@ -24,6 +24,7 @@ internal class StartupService
         _configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("secrets.json", optional: false, reloadOnChange: true)
+            .AddUserSecrets<Program>()
             .Build();
 
         _client = new DiscordShardedClient(new DiscordSocketConfig
@@ -70,23 +71,23 @@ internal class StartupService
     private void ConfigureServices(IServiceCollection services)
     {
         _ = services.AddSingleton(_client)
-        .AddSingleton(_configuration)
-        .AddSingleton<DiscordLogger>()
-        .AddSingleton<InteractionEventHandler>()
-        .AddSingleton<MessageEventHandler>()
-        .AddSingleton<UserEventHandler>()
-        .AddSingleton<DailyChannelNukeService>()
-        .AddSingleton<RainbowRoleService>()
-        .AddSingleton<ChannelEventHandler>()
-        .AddSingleton<AutoUnmuteUserService>()
-        .AddSingleton<CustomService>()
-        .AddSingleton<GuildRoleSettingsCommand>()
-        .AddSingleton(new Random())
-        .AddSingleton(new HttpClient())
-        .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordShardedClient>(), new InteractionServiceConfig
-        {
-            DefaultRunMode = RunMode.Async,
-            LogLevel = LogSeverity.Verbose
-        }));
+            .AddSingleton(_configuration)
+            .AddSingleton<DiscordLogger>()
+            .AddSingleton<InteractionEventHandler>()
+            .AddSingleton<MessageEventHandler>()
+            .AddSingleton<UserEventHandler>()
+            .AddSingleton<DailyChannelNukeService>()
+            .AddSingleton<RainbowRoleService>()
+            .AddSingleton<ChannelEventHandler>()
+            .AddSingleton<AutoUnmuteUserService>()
+            .AddSingleton<CustomService>()
+            .AddSingleton<GuildRoleSettingsCommand>()
+            .AddSingleton(new Random())
+            .AddSingleton(new HttpClient())
+            .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordShardedClient>(), new InteractionServiceConfig
+            {
+                DefaultRunMode = RunMode.Async,
+                LogLevel = LogSeverity.Verbose
+            }));
     }
 }
