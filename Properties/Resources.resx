@@ -117,16 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="APIToken" xml:space="preserve">
-    <value>eyJhbGciOiJSU0EtT0FFUC01MTIiLCJ0eXAiOiJKV1QgQ3VzdG9tIiwiZW5jIjoiQTI1NkdDTSJ9.B81gGADL6oWF3qnPY4CWZbJ5dgMDSYD7c4x5nPNmhOxyfwtyNvg3H6UZkQxW6Mw4YWnAwKi_Qw3Qc_HQgYr6CZGzJ-wqt1g5MO9E4-KQcrByFTjkiZdUbXKqYe-BuDfLjxWoApyHnTWEdSpWEAigodaKzeeOCjFJ82tj8WPmsEt7Cd3N0qgI7oJMX3otmSJIskgW5zTy9m-Csrx8xhBRFUsTIkCKganR3Xg1S6vtyMjgRkwo3HPPXteccuVQjEs49KIwj4a2914U6gHmgd8JTFrye2Z8uY-QVnuEyhgcjkOUIA-_0ExQgrE968avJba3RYksUDy5gL0ltbQL7bF9prLhGGe30BoMDt3l8awsAMzhcat_EQ2TRk5IZN8vM5L6wMsKK6eZmsXv6lV15OtemnHaY5qelCP4_J6y1VdBOrw.b6Hl4_tNTcY0QavnRGEviuuqtEdbdMfo5JZs4EoksRjRzbnX40d2A_CJDOJ_LzamTgi6s3hX3mFv7tOzhiafzfRRHXHgdYqOFAftBTzC6NJHHyiA4E2-AA3O3_4vVFkFFYcQJ3phxJXH_Vqbx1WouFtxMWojbohOjbL8_i3NSLDH0mkwjH5HPZzUAjTeorG0oTbK-lNubgNE9ANzu2iUaS9iJUGWw9uRd53NkJIauHhj8vFZzR2iz8WzoDgvhPMSBzVBJB49tsE9fENPu8YJVLRHLPBRZJLSWSDkOW3zPfn-AtAp3y4q6zTsZWSex8P0QjQPRGHEze_fXalkFkeppJQ2KBrls1beULva8Ur9-9iUYviIq4qKSIvlZDQYfjyZLo2_TNZwJAhsIbc-2VIOWxAne9WdWT5FrQFx8Ph2kGTQ4kZ40u3qRV0cD9MFYtLVqtn9CVl8vqexTJ19GytzKPZMQnjqV2F_R9yXR0Yq96TrgdZ0nau9gOmwYrHeFA7Vvh8Y2ZVigO0ryNT_Vqbr2wjqQG6HqI_2YlaZa0EJVVD0f4JzHbDtrClOGRXgdGoG6arZ4DnA5dUf3affvxSFSMSgZncPY_JE7u_YeBfDdlwVm39UuvnKB4nLGmdZT9O5Pmkq6OrO_j5_FgvtiUeh5FXiOhVrEYi0rZ12t1wV2Nc</value>
-  </data>
-  <data name="MySql_Pass" xml:space="preserve">
-    <value>sNCa7dyszVdWqW9W4nKfNge9VvTd3gn2</value>
-  </data>
-  <data name="TestToken" xml:space="preserve">
-    <value>OTcwNzU3MTY3MDEzNTg5MDMz.GK-wQ2.j8gEEjUDrnpVS0t48NOjQhQFJ32hJZNcKl1aSc</value>
-  </data>
-  <data name="Token" xml:space="preserve">
-    <value>OTcwNzU3Mzc3MjMyMTA5NjM4.YnAmQg.rJ9Z23WGjedy_koRxciWP9xJIPk</value>
-  </data>
 </root>

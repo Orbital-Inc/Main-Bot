@@ -8,10 +8,10 @@
     <Nullable>enable</Nullable>
     <AssemblyName>Main Bot</AssemblyName>
     <Authors>Nebula</Authors>
-    <Version>1.0.0.21</Version>
+    <Version>1.0.1.0</Version>
     <Company>Orbital, Inc.</Company>
     <Copyright>Orbital, Inc.</Copyright>
-    <RepositoryUrl>https://github.com/NebulaMods/Main-Bot</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Orbital-Inc/Main-Bot</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://orbitalsolutions.ca</PackageProjectUrl>
     <AnalysisLevel>latest</AnalysisLevel>
