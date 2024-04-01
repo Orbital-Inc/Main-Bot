@@ -3,6 +3,8 @@ using Discord.Interactions;
 
 using MainBot.Utilities.Extensions;
 
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -11,7 +13,14 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
 
-    public PortScan(HttpClient http) => _http = http;
+    private readonly IConfiguration _configuration;
+
+    public PortScan(HttpClient http, IConfiguration configuration)
+    {
+        _configuration = configuration;
+        _http = http;
+    }
+
 
     [SlashCommand("port-scan", "Scan specified host to see if the specified port(s) is open using either TCP/UDP.")]
     public async Task Scan(string host, string ports = "22,53,80,443,1194")
@@ -59,7 +68,7 @@ public class PortScan : InteractionModuleBase<ShardedInteractionContext>
 
         #endregion Info Checks
 
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", _configuration.GetSection("General")["APIToken"]);
         Models.APIModels.PortScanModel? PortScanResult = null;
         HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/portscan/{host}/{ports}");
         if (result.IsSuccessStatusCode)

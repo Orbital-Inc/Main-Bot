@@ -3,6 +3,8 @@ using Discord.Interactions;
 
 using MainBot.Utilities.Extensions;
 
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -11,7 +13,13 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
 
-    internal Geolocation(HttpClient http) => _http = http;
+    private readonly IConfiguration _configuration;
+
+    internal Geolocation(HttpClient http, IConfiguration configuration)
+    {
+        _configuration = configuration;
+        _http = http;
+    }
 
     [SlashCommand("geolocate", "Retrives the geographic location & network details of the specified host.")]
     public async Task GeoLocate(string host)
@@ -25,7 +33,7 @@ public class Geolocation : InteractionModuleBase<ShardedInteractionContext>
         }
 
         //adding header for request
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", _configuration.GetSection("General")["APIToken"]);
         HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/geolocation/{host}");
         Models.APIModels.GeolocationModel? Information = null;
         //deserializing request response if successful

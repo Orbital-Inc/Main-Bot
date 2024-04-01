@@ -8,6 +8,7 @@ using MainBot.Events;
 using MainBot.Loggers;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MainBot.Services;
@@ -15,18 +16,29 @@ namespace MainBot.Services;
 internal class StartupService
 {
     private readonly DiscordShardedClient _client;
-    internal StartupService() => _client = new DiscordShardedClient(new DiscordSocketConfig
+
+    private readonly IConfiguration _configuration;
+
+    internal StartupService()
     {
-        LogLevel = LogSeverity.Verbose,
-        AlwaysDownloadUsers = true,
-        GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
-        UseSystemClock = false,
-        MessageCacheSize = 250,
-        UseInteractionSnowflakeDate = true,
-        LogGatewayIntentWarnings = false,
-        AlwaysDownloadDefaultStickers = false,
-        AlwaysResolveStickers = false,
-    });
+        _configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("secrets.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        _client = new DiscordShardedClient(new DiscordSocketConfig
+        {
+            LogLevel = LogSeverity.Verbose,
+            AlwaysDownloadUsers = true,
+            GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
+            UseSystemClock = false,
+            MessageCacheSize = 250,
+            UseInteractionSnowflakeDate = true,
+            LogGatewayIntentWarnings = false,
+            AlwaysDownloadDefaultStickers = false,
+            AlwaysResolveStickers = false,
+        });
+    }
 
     internal async Task RunAsync()
     {
@@ -47,9 +59,9 @@ internal class StartupService
         await provider.GetRequiredService<AutoUnmuteUserService>().StartAsync(new CancellationToken());
         await provider.GetRequiredService<RainbowRoleService>().StartAsync(new CancellationToken());
 #if DEBUG
-        await _client.LoginAsync(TokenType.Bot, Properties.Resources.TestToken);
+        await _client.LoginAsync(TokenType.Bot, _configuration.GetSection("General")["TestToken"]);
 #else
-            await _client.LoginAsync(TokenType.Bot, Properties.Resources.Token);
+            await _client.LoginAsync(TokenType.Bot, _configuration.GetSection("General")["Token"]);
 #endif
         await _client.StartAsync();
         await Task.Delay(Timeout.Infinite);
@@ -58,6 +70,7 @@ internal class StartupService
     private void ConfigureServices(IServiceCollection services)
     {
         _ = services.AddSingleton(_client)
+        .AddSingleton(_configuration)
         .AddSingleton<DiscordLogger>()
         .AddSingleton<InteractionEventHandler>()
         .AddSingleton<MessageEventHandler>()
