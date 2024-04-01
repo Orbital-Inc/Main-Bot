@@ -3,14 +3,22 @@ using Discord.Interactions;
 
 using MainBot.Utilities.Extensions;
 
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
 public class HTTPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
+
+    private readonly IConfiguration _configuration;
     //fix me
-    internal HTTPPing(HttpClient http) => _http = http;
+    internal HTTPPing(HttpClient http, IConfiguration configuration)
+    {
+        _configuration = configuration;
+        _http = http;
+    }
 
     [SlashCommand("ping-http", "Sends an HTTP packet to a specified host in hopes for a reponse.")]
     public async Task PingHost(string host)
@@ -24,7 +32,7 @@ public class HTTPPing : InteractionModuleBase<ShardedInteractionContext>
         }
 
         //add header
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", _configuration.GetSection("General")["APIToken"]);
         //response
         HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/network/http-ping/{host}");
         Models.APIModels.ICMPPingModel? PingResults = null;

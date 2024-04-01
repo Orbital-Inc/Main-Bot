@@ -3,6 +3,8 @@ using Discord.Interactions;
 
 using MainBot.Utilities.Extensions;
 
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -11,7 +13,13 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
 
-    public TCPPing(HttpClient http) => _http = http;
+    private readonly IConfiguration _configuration;
+
+    public TCPPing(HttpClient http, IConfiguration configuration)
+    {
+        _configuration = configuration;
+        _http = http;
+    }
 
     [SlashCommand("ping-tcp", "Attempts to start & complete a TCP handshake to a specified host.")]
     public async Task TCPPingHost(string host, ushort port = 80)
@@ -28,7 +36,7 @@ public class TCPPing : InteractionModuleBase<ShardedInteractionContext>
 
         #endregion Info Checks
 
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", _configuration.GetSection("General")["APIToken"]);
         Models.APIModels.TCPPingModel? PingResults = null;
         HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/networkping/{host}/tcp?port={port}");
         if (result.IsSuccessStatusCode)

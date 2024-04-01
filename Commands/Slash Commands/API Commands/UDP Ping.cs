@@ -3,6 +3,8 @@ using Discord.Interactions;
 
 using MainBot.Utilities.Extensions;
 
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -11,7 +13,13 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
 
-    internal UDPPing(HttpClient http) => _http = http;
+    private readonly IConfiguration _configuration;
+
+    internal UDPPing(HttpClient http, IConfiguration configuration) 
+    {
+        _configuration = configuration;
+        _http = http; 
+    }
 
     [SlashCommand("ping-udp", "Sends an UDP packet to a specified host in hopes for a reponse.")]
     public async Task PingHost(string host, ushort port = 53)
@@ -25,7 +33,7 @@ public class UDPPing : InteractionModuleBase<ShardedInteractionContext>
         }
 
         //add header
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", _configuration.GetSection("General")["APIToken"]);
         //response
         HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/network/networkping/{host}/udp?{port}");
         Models.APIModels.UDPPingModel? PingResults = null;

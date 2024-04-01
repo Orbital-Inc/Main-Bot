@@ -3,6 +3,8 @@ using Discord.Interactions;
 
 using MainBot.Utilities.Extensions;
 
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 namespace MainBot.Commands.SlashCommands.APICommands;
@@ -11,7 +13,13 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
 {
     private readonly HttpClient _http;
 
-    internal ICMPPing(HttpClient http) => _http = http;
+    private readonly IConfiguration _configuration;
+
+    internal ICMPPing(HttpClient http, IConfiguration configuration)
+    {
+        _configuration = configuration;
+        _http = http;
+    }
 
     [SlashCommand("ping-icmp", "Sends an ICMP packet to a specified host in hopes for a reponse.")]
     public async Task PingHost(string host)
@@ -25,7 +33,7 @@ public class ICMPPing : InteractionModuleBase<ShardedInteractionContext>
         }
 
         //add header
-        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", Properties.Resources.APIToken);
+        _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", _configuration.GetSection("General")["APIToken"]);
         //response
         HttpResponseMessage? result = await _http.GetAsync($"http://127.0.0.1:1337/v1/network/networkping/{host}/icmp");
         Models.APIModels.ICMPPingModel? PingResults = null;
